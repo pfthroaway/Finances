@@ -24,5 +24,10 @@ namespace Finances
         {
             InitializeComponent();
         }
+
+        private async void windowMain_Loaded(object sender, RoutedEventArgs e)
+        {
+            await AppState.LoadAll();
+        }
     }
 }

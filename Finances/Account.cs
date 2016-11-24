@@ -18,7 +18,7 @@ namespace Finances
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
+            set { _name = value; OnPropertyChanged("Name"); }
         }
 
         /// <summary>Balance of the account</summary>
@@ -131,7 +131,7 @@ namespace Finances
         {
         }
 
-        /// <summary>Initializes an instance of Account by assigning Properties</summary>
+        /// <summary>Initializes an instance of Account by assigning Properties.</summary>
         /// <param name="name">Name of the account</param>
         /// <param name="balance">Balance of the account</param>
         /// <param name="transactions">Collection of all the transactions in the account</param>

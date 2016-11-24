@@ -16,49 +16,49 @@ namespace Finances
         public DateTime Date
         {
             get { return _date; }
-            set { _date = value; }
+            set { _date = value; OnPropertyChanged("Date"); }
         }
 
         /// <summary>The entity the transaction revolves around</summary>
         public string Payee
         {
             get { return _payee; }
-            set { _payee = value; }
+            set { _payee = value; OnPropertyChanged("Payee"); }
         }
 
         /// <summary>Primary category of which the transaction regards</summary>
         public string MajorCategory
         {
             get { return _majorCategory; }
-            set { _majorCategory = value; }
+            set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
         }
 
         /// <summary>Secondary category of which the transaction regards</summary>
         public string MinorCategory
         {
             get { return _minorCategory; }
-            set { _minorCategory = value; }
+            set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
         /// <summary>Extra information regarding the transaction</summary>
         public string Memo
         {
             get { return _memo; }
-            set { _memo = value; }
+            set { _memo = value; OnPropertyChanged("Memo"); }
         }
 
         /// <summary>How much money left the account during this transaction</summary>
         public decimal Outflow
         {
             get { return _outflow; }
-            set { _outflow = value; }
+            set { _outflow = value; OnPropertyChanged("Outflow"); OnPropertyChanged("OutflowToString"); }
         }
 
         /// <summary>How much money entered the account during this transaction</summary>
         public decimal Inflow
         {
             get { return _inflow; }
-            set { _inflow = value; }
+            set { _inflow = value; OnPropertyChanged("Inflow"); OnPropertyChanged("InflowToString"); }
         }
 
         #endregion Modifying Properties
@@ -138,7 +138,7 @@ namespace Finances
         {
         }
 
-        /// <summary>Initializes an instance of Transaction by assigning Properties</summary>
+        /// <summary>Initializes an instance of Transaction by assigning Properties.</summary>
         /// <param name="date">Date the transaction occurred</param>
         /// <param name="payee">The entity the transaction revolves around</param>
         /// <param name="majorCategory">Primary category of which the transaction regards</param>
