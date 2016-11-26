@@ -78,30 +78,58 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppState.cs" />
-    <Compile Include="Category.cs" />
-    <Compile Include="Transaction.cs" />
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Classes\AppState.cs" />
+    <Compile Include="Classes\Category.cs" />
+    <Compile Include="Classes\Transaction.cs" />
+    <Page Include="Windows\ManageAccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ManageCategoriesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\NewTransferWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ViewTransactionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Account.cs" />
+    <Compile Include="Classes\Account.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Classes\Extensions.cs" />
+    <Compile Include="Windows\ManageAccountWindow.xaml.cs">
+      <DependentUpon>ManageAccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ManageCategoriesWindow.xaml.cs">
+      <DependentUpon>ManageCategoriesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\NewTransferWindow.xaml.cs">
+      <DependentUpon>NewTransferWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ViewTransactionsWindow.xaml.cs">
+      <DependentUpon>ViewTransactionsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NewTransactionWindow.xaml">
+    <Page Include="Windows\NewTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NewTransactionWindow.xaml.cs">
+    <Compile Include="Windows\NewTransactionWindow.xaml.cs">
       <DependentUpon>NewTransactionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -132,7 +160,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Money.ico" />
+    <Resource Include="Windows\Money.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.103\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net451\System.Data.SQLite.Core.targets')" />
