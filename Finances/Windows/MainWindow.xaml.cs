@@ -56,6 +56,23 @@ namespace Finances
 
         private void lvAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (lvAccounts.SelectedIndex >= 0)
+                btnViewTransactions.IsEnabled = true;
+            else
+                btnViewTransactions.IsEnabled = false;
+        }
+
+        private void btnManageCategories_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void btnViewTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            ViewTransactionsWindow viewTransactionsWindow = new ViewTransactionsWindow();
+            viewTransactionsWindow.RefToMainWindow = this;
+            viewTransactionsWindow.LoadAccount((Account)lvAccounts.SelectedValue);
+            viewTransactionsWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         #endregion Button-Click Methods
@@ -95,48 +112,5 @@ namespace Finances
         }
 
         #endregion Window-Manipulation Methods
-
-        private void btnManageCategories_Click(object sender, RoutedEventArgs e)
-        {
-        }
-    }
-
-    public class SortAdorner : Adorner
-    {
-        private static Geometry ascGeometry =
-                Geometry.Parse("M 0 4 L 3.5 0 L 7 4 Z");
-
-        private static Geometry descGeometry =
-                Geometry.Parse("M 0 0 L 3.5 4 L 7 0 Z");
-
-        public ListSortDirection Direction { get; private set; }
-
-        public SortAdorner(UIElement element, ListSortDirection dir)
-                : base(element)
-        {
-            this.Direction = dir;
-        }
-
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-
-            if (AdornedElement.RenderSize.Width < 20)
-                return;
-
-            TranslateTransform transform = new TranslateTransform
-                    (
-                            AdornedElement.RenderSize.Width - 15,
-                            (AdornedElement.RenderSize.Height - 5) / 2
-                    );
-            drawingContext.PushTransform(transform);
-
-            Geometry geometry = ascGeometry;
-            if (this.Direction == ListSortDirection.Descending)
-                geometry = descGeometry;
-            drawingContext.DrawGeometry(Brushes.Black, null, geometry);
-
-            drawingContext.Pop();
-        }
     }
 }

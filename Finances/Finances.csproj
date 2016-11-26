@@ -107,6 +107,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Extensions.cs" />
+    <Compile Include="SortAdorner.cs" />
     <Compile Include="Windows\ManageAccountWindow.xaml.cs">
       <DependentUpon>ManageAccountWindow.xaml</DependentUpon>
     </Compile>

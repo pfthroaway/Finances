@@ -65,6 +65,12 @@ namespace Finances
 
         #region Helper Properties
 
+        /// <summary>Date the transaction occurred, formatted properly</summary>
+        public string DateToString
+        {
+            get { return Date.ToString("yyyy/MM/dd"); }
+        }
+
         /// <summary>How much money left the account during this transaction, formatted to currency</summary>
         public string OutflowToString
         {

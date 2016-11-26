@@ -111,7 +111,7 @@ namespace Finances
             SQLiteConnection con = new SQLiteConnection();
             con.ConnectionString = _DBPROVIDERANDSOURCE;
             SQLiteCommand cmd = con.CreateCommand();
-            cmd.CommandText = "INSERT INTO Transactions([Date],[Payee],[MajorCategory],[MinorCategory],[Memo],[Outflow],[Inflow],[Account])Values('" + transaction.Date + "','" + transaction.Payee + "','" + transaction.MajorCategory + "','" + transaction.MinorCategory + "','" + transaction.Memo + "','" + transaction.Outflow + "','" + transaction.Inflow + "','" + account.Name + "')";
+            cmd.CommandText = "INSERT INTO Transactions([Date],[Payee],[MajorCategory],[MinorCategory],[Memo],[Outflow],[Inflow],[Account])Values('" + transaction.DateToString + "','" + transaction.Payee + "','" + transaction.MajorCategory + "','" + transaction.MinorCategory + "','" + transaction.Memo + "','" + transaction.Outflow + "','" + transaction.Inflow + "','" + account.Name + "')";
 
             await Task.Factory.StartNew(() =>
             {

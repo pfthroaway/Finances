@@ -2,11 +2,10 @@
 
 namespace Finances
 {
+    /// <summary>Extension class to more easily parse Decimals.</summary>
     internal static class DecimalHelper
     {
-        /// <summary>
-        /// Utilizes decimal.TryParse to easily Parse a Decimal.
-        /// </summary>
+        /// <summary>Utilizes decimal.TryParse to easily Parse a Decimal.</summary>
         /// <param name="text">Text to be parsed</param>
         /// <returns>Parsed Decimal</returns>
         internal static decimal Parse(string text)
@@ -16,9 +15,7 @@ namespace Finances
             return temp;
         }
 
-        /// <summary>
-        /// Utilizes decimal.TryParse to easily Parse a Decimal.
-        /// </summary>
+        /// <summary>Utilizes decimal.TryParse to easily Parse a Decimal.</summary>
         /// <param name="obj">Object to be parsed</param>
         /// <returns>Parsed Decimal</returns>
         internal static decimal Parse(object obj)
@@ -29,15 +26,11 @@ namespace Finances
         }
     }
 
-    /// <summary>
-    /// Extension class to more easily parse DateTimes.
-    /// </summary>
+    /// <summary>Extension class to more easily parse DateTimes.</summary>
     internal static class DateTimeHelper
     {
-        /// <summary>
-        /// Utilizes DateTime.TryParse to easily Parse a DateTime.
-        /// </summary>
-        /// <param name="text">Text to be parsed.</param>
+        /// <summary>Utilizes DateTime.TryParse to easily Parse a DateTime.</summary>
+        /// <param name="text">Text to be parsed</param>
         /// <returns>Parsed DateTime</returns>
         internal static DateTime Parse(string text)
         {
@@ -46,9 +39,7 @@ namespace Finances
             return temp;
         }
 
-        /// <summary>
-        /// Utilizes DateTime.TryParse to easily Parse a DateTime.
-        /// </summary>
+        /// <summary>Utilizes DateTime.TryParse to easily Parse a DateTime.</summary>
         /// <param name="obj">Object to be parsed</param>
         /// <returns>Parsed DateTime</returns>
         internal static DateTime Parse(object obj)
