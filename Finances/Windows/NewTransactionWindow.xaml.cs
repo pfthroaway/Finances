@@ -38,8 +38,12 @@ namespace Finances
 
         #region Button-Click Methods
 
-        private void btnSubmit_Click(object sender, RoutedEventArgs e)
+        private async void btnSubmit_Click(object sender, RoutedEventArgs e)
         {
+            Transaction newTransaction = new Transaction(new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), txtPayee.Text, cmbMajorCategory.SelectedValue.ToString(), cmbMinorCategory.SelectedValue.ToString(), txtMemo.Text, DecimalHelper.Parse(txtOutflow.Text), DecimalHelper.Parse(txtInflow.Text)));
+            selectedAccount.AddTransaction(newTransaction);
+            if (await AppState.AddTransaction(newTransaction, selectedAccount))
+                CloseWindow();
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
@@ -65,7 +69,9 @@ namespace Finances
         private void TextChanged()
         {
             if (datePicker.SelectedDate != null && cmbMajorCategory.SelectedIndex >= 0 && cmbMinorCategory.SelectedIndex >= 0 && txtPayee.Text.Length > 0 && (txtInflow.Text.Length > 0 | txtOutflow.Text.Length > 0) && cmbAccount.SelectedIndex >= 0)
-            { }
+                btnSubmit.IsEnabled = true;
+            else
+                btnSubmit.IsEnabled = false;
         }
 
         private void txt_TextChanged(object sender, TextChangedEventArgs e)
@@ -78,7 +84,7 @@ namespace Finances
             TextChanged();
         }
 
-        private void cmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbMajorCategory.SelectedIndex >= 0)
             {
@@ -92,6 +98,16 @@ namespace Finances
                 selectedCategory = new Category();
                 cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
             }
+
+            TextChanged();
+        }
+
+        private void cmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbAccount.SelectedIndex >= 0)
+                selectedAccount = (Account)cmbAccount.SelectedValue;
+            else
+                selectedAccount = new Account();
             TextChanged();
         }
 

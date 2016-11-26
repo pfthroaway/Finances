@@ -105,10 +105,29 @@ namespace Finances
         /// <summary>Adds a transaction to an account and the database</summary>
         /// <param name="transaction">Transaction to be added</param>
         /// <returns>Returns true if successful</returns>
-        internal static async Task<bool> AddTransaction(Transaction transaction)
+        internal static async Task<bool> AddTransaction(Transaction transaction, Account account)
         {
             bool success = false;
-            await Task.Factory.StartNew(() => { });
+            SQLiteConnection con = new SQLiteConnection();
+            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = "INSERT INTO Transactions([Date],[Payee],[MajorCategory],[MinorCategory],[Memo],[Outflow],[Inflow],[Account])Values('" + transaction.Date + "','" + transaction.Payee + "','" + transaction.MajorCategory + "','" + transaction.MinorCategory + "','" + transaction.Memo + "','" + transaction.Outflow + "','" + transaction.Inflow + "','" + account.Name + "')";
+
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Creating New Transaction", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
 
             return success;
         }

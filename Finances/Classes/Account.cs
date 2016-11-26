@@ -72,6 +72,7 @@ namespace Finances
         internal void AddTransaction(Transaction transaction)
         {
             _allTransactions.Add(transaction);
+            OnPropertyChanged("BalanceToString");
         }
 
         /// <summary>Removes a transaction to this account.</summary>
