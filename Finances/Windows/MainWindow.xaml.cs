@@ -52,6 +52,10 @@ namespace Finances
 
         private void btnNewAccount_Click(object sender, RoutedEventArgs e)
         {
+            NewAccountWindow newAccountWindow = new NewAccountWindow();
+            newAccountWindow.RefToMainWindow = this;
+            newAccountWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         private void lvAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
