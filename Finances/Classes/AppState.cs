@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Finances
 {
@@ -130,6 +131,17 @@ namespace Finances
             });
 
             return success;
+        }
+
+        /// <summary>Turns several Keyboard.Keys into a list of Keys which can be tested using List.Any.</summary>
+        /// <param name="keys">Array of Keys</param>
+        /// <returns>List of Keyboard.IsKeyDown states</returns>
+        internal static List<bool> GetListOfKeys(params Key[] keys)
+        {
+            List<bool> allKeys = new List<bool>();
+            foreach (Key key in keys)
+                allKeys.Add(Keyboard.IsKeyDown(key));
+            return allKeys;
         }
     }
 }
