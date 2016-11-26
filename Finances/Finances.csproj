@@ -80,6 +80,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\Category.cs" />
+    <Compile Include="Classes\SortAdorner.cs" />
     <Compile Include="Classes\Transaction.cs" />
     <Page Include="Windows\ManageAccountWindow.xaml">
       <SubType>Designer</SubType>
@@ -107,7 +108,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Extensions.cs" />
-    <Compile Include="SortAdorner.cs" />
     <Compile Include="Windows\ManageAccountWindow.xaml.cs">
       <DependentUpon>ManageAccountWindow.xaml</DependentUpon>
     </Compile>
