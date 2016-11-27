@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -91,8 +89,9 @@ namespace Finances
                             selectedAccount.AddTransaction(new Transaction(DateTimeHelper.Parse(ds.Tables[0].Rows[i]["Date"]), ds.Tables[0].Rows[i]["Payee"].ToString(), ds.Tables[0].Rows[i]["MajorCategory"].ToString(), ds.Tables[0].Rows[i]["MinorCategory"].ToString(), ds.Tables[0].Rows[i]["Memo"].ToString(), DecimalHelper.Parse(ds.Tables[0].Rows[i]["Outflow"]), DecimalHelper.Parse(ds.Tables[0].Rows[i]["Inflow"])));
                         }
                     }
-
                     AllAccounts = AllAccounts.OrderBy(account => account.Name).ToList();
+                    for (int i = 0; i < AllAccounts.Count; i++)
+                        AllAccounts[i].Sort();
                 }
                 catch (Exception ex)
                 {

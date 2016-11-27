@@ -80,6 +80,11 @@ namespace Finances
 
         #endregion Transaction Management
 
+        internal void Sort()
+        {
+            _allTransactions = _allTransactions.OrderBy(transaction => transaction.Date).ToList();
+        }
+
         #region Override Operators
 
         public static bool Equals(Account left, Account right)
