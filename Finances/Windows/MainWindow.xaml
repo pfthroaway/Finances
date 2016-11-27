@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="lvAccounts" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" Margin="0,0,0,10" SelectionChanged="lvAccounts_SelectionChanged">
+        <ListView x:Name="lvAccounts" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" SelectionChanged="lvAccounts_SelectionChanged" Margin="0,0,0,10">
             <ListView.View>
                 <GridView ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <GridViewColumn Width="350" DisplayMemberBinding="{Binding Path=Name}">
@@ -33,10 +33,11 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="btnNewTransaction" Grid.Column="0" Grid.Row="1" Width="175" Height="30" Content="_New Transaction" Click="btnNewTransaction_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnNewTransfer" Grid.Column="1" Grid.Row="1" Width="175" Height="30" Content="New _Transfer" Click="btnNewTransfer_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnNewAccount" Grid.Column="0" Grid.Row="2" Width="175" Height="30" Content="New _Account" Click="btnNewAccount_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Height="30" Content="_Manage Categories" Click="btnManageCategories_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnViewTransactions" Grid.Column="0" Grid.Row="3" Width="175" Height="30" Content="_View Transactions" Click="btnViewTransactions_Click" IsEnabled="False" />
+
+        <Button x:Name="btnViewTransactions" Grid.Column="0" Grid.Row="1" Width="175" Height="30" Content="_View Transactions" Click="btnViewTransactions_Click" IsEnabled="False" Margin="0,0,0,10" />
+        <Button x:Name="btnNewTransaction" Grid.Column="1" Grid.Row="1" Width="175" Height="30" Content="_New Transaction" Click="btnNewTransaction_Click" Margin="0,0,0,10" />
+        <Button x:Name="btnNewTransfer" Grid.Column="0" Grid.Row="2" Width="175" Height="30" Content="New _Transfer" Click="btnNewTransfer_Click" Margin="0,0,0,10" />
+        <Button x:Name="btnNewAccount" Grid.Column="1" Grid.Row="2" Width="175" Height="30" Content="New _Account" Click="btnNewAccount_Click" Margin="0,0,0,10" />
+        <Button x:Name="btnManageCategories" Grid.Column="0" Grid.Row="3" Width="175" Height="30" Content="_Manage Categories" Click="btnManageCategories_Click" />
     </Grid>
 </Window>

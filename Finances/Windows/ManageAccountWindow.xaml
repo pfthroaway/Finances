@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Finances"
         mc:Ignorable="d"
-        Title="ManageAccountWindow" Height="300" Width="300">
-    <Grid>
-        
+        Title="Manage Account" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico">
+    <Grid Margin="10">
     </Grid>
 </Window>

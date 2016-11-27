@@ -49,4 +49,23 @@ namespace Finances
             return temp;
         }
     }
+
+    public static class Extension
+    {
+        /// <summary>Determines if this character is a period.</summary>
+        /// <param name="c">Character to be evaluated</param>
+        /// <returns>Returns true if character is a period</returns>
+        public static bool IsPeriod(this char c)
+        {
+            return c.Equals('.');
+        }
+
+        /// <summary>Determines if this character is a period or comma.</summary>
+        /// <param name="c">Character to be evaluated</param>
+        /// <returns>Returns true if character is a period or comma</returns>
+        public static bool IsPeriodOrComma(this char c)
+        {
+            return c.Equals('.') || c.Equals(',');
+        }
+    }
 }

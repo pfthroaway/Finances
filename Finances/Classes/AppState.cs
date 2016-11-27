@@ -11,6 +11,7 @@ using System.Windows.Input;
 
 namespace Finances
 {
+    /// <summary>Represents the current state of the application.</summary>
     internal static class AppState
     {
         private const string _DBPROVIDERANDSOURCE = "Data Source = Finances.sqlite;Version=3";
@@ -40,7 +41,7 @@ namespace Finances
                     {
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
-                            Account newAccount = new Account(ds.Tables[0].Rows[i]["Name"].ToString(), DecimalHelper.Parse(ds.Tables[0].Rows[i]["Balance"]), new List<Transaction>());
+                            Account newAccount = new Account(ds.Tables[0].Rows[i]["Name"].ToString(), new List<Transaction>());
 
                             AllAccounts.Add(newAccount);
                         }
@@ -121,15 +122,50 @@ namespace Finances
                     con.Open();
                     cmd.Connection = con;
                     cmd.ExecuteNonQuery();
+
+                    cmd = new SQLiteCommand();
+                    cmd.Connection = con;
+                    cmd.CommandText = "UPDATE Accounts SET [Balance] = @balance WHERE [Name] = @name";
+                    cmd.Parameters.AddWithValue("@balance", account.Balance);
+                    cmd.Parameters.AddWithValue("@name", account.Name);
+                    cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Creating New Transaction", MessageBoxButton.OK);
+                    MessageBox.Show(ex.Message, "Error Adding New Transaction", MessageBoxButton.OK);
                 }
                 finally { con.Close(); }
             });
 
+            return success;
+        }
+
+        /// <summary>Adds an account to the database.</summary>
+        /// <param name="account">Account to be added</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> AddAccount(Account account)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection();
+            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = "INSERT INTO Accounts([Name],[Balance])Values('" + account.Name + "','" + account.Balance + "')";
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Creating New Account", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
             return success;
         }
 

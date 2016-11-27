@@ -48,6 +48,10 @@ namespace Finances
 
         private void btnNewTransfer_Click(object sender, RoutedEventArgs e)
         {
+            NewTransferWindow newTransferWindow = new NewTransferWindow();
+            newTransferWindow.RefToMainWindow = this;
+            newTransferWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         private void btnNewAccount_Click(object sender, RoutedEventArgs e)
@@ -86,6 +90,13 @@ namespace Finances
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        /// <summary>Refreshes the ListView's ItemsSource.</summary>
+        internal void RefreshItemsSource()
+        {
+            lvAccounts.ItemsSource = AllAccounts;
+            lvAccounts.Items.Refresh();
         }
 
         private async void windowMain_Loaded(object sender, RoutedEventArgs e)

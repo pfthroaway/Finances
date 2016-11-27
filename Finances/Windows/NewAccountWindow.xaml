@@ -5,24 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Finances"
         mc:Ignorable="d"
-        Title="NewAccountWindow" Width="350" Height="150" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowNewAccount_Closing">
+        Title="New Account" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowNewAccount_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" Text="Account Name:" Margin="0,0,10,5" TextAlignment="Center" Width="229"/>
-        <TextBlock Grid.Column="1" Grid.Row="0" Text="Balance:" Margin="0,0,10,5" TextAlignment="Center" Width="79"/>
-        <TextBox x:Name="txtAccName" TextChanged="txt_TextChanged"  Grid.Column="0" Margin="0,0,10,10" Grid.Row="1" Padding="5" TextAlignment="Center" Width="229"/>
-        <TextBox x:Name="txtBalance" TextChanged="txt_TextChanged" Grid.Column="1" Margin="0,0,10,10" Grid.Row="1" Padding="5" TextAlignment="Center" Width="79"/>
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button x:Name="btnSubmit" Width="229" Content="Submit" Margin="0,0,10,0" IsDefault="True" IsEnabled="False" Click="btnSubmit_Click"/>
-            <Button x:Name="btnCancel" Width="79" Content="Cancel" Click="btnCancel_Click"/>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Account Name:" TextAlignment="Center" Margin="0,0,10,5" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="Balance:" TextAlignment="Center" Margin="0,0,0,5" />
+        <TextBox x:Name="txtAccountName" Grid.Column="0" Grid.Row="1" Width="200" TextAlignment="Center" TextChanged="txtAccountName_TextChanged" Margin="0,0,10,10" Padding="5" GotFocus="txtAccountName_GotFocus" />
+        <TextBox x:Name="txtBalance" Grid.Column="1" Grid.Row="1" TextChanged="txtBalance_TextChanged" Margin="0,0,0,10" Padding="5" TextAlignment="Center" Width="100" GotFocus="txtBalance_GotFocus" />
+        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="btnSubmit" Width="125" Content="Submit" Margin="0,0,20,0" IsDefault="True" IsEnabled="False" Click="btnSubmit_Click" />
+            <Button x:Name="btnCancel" Width="125" Content="Cancel" Click="btnCancel_Click" />
         </StackPanel>
     </Grid>
 </Window>

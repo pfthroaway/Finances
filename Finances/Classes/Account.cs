@@ -9,7 +9,6 @@ namespace Finances
     internal class Account : INotifyPropertyChanged
     {
         private string _name;
-        private decimal _balance;
         private List<Transaction> _allTransactions = new List<Transaction>();
 
         #region Modifying Properties
@@ -24,7 +23,13 @@ namespace Finances
         /// <summary>Balance of the account</summary>
         public decimal Balance
         {
-            get { return CalculateBalance(); }
+            get
+            {
+                decimal balance = 0.00M;
+                for (int i = 0; i < AllTransactions.Count; i++)
+                    balance += (-1 * AllTransactions[i].Outflow) + AllTransactions[i].Inflow;
+                return balance;
+            }
         }
 
         /// <summary>Collection of all the transactions in the account</summary>
@@ -56,16 +61,7 @@ namespace Finances
 
         #endregion Data-Binding
 
-        #region Account Management
-
-        /// <summary>Calculates the balance based on all transactions in this account.</summary>
-        private decimal CalculateBalance()
-        {
-            decimal balance = 0.00M;
-            for (int i = 0; i < AllTransactions.Count; i++)
-                balance += (-1 * AllTransactions[i].Outflow) + AllTransactions[i].Inflow;
-            return balance;
-        }
+        #region Transaction Management
 
         /// <summary>Adds a transaction to this account.</summary>
         /// <param name="transaction">Transaction to be added</param>
@@ -82,7 +78,7 @@ namespace Finances
             _allTransactions.Remove(transaction);
         }
 
-        #endregion Account Management
+        #endregion Transaction Management
 
         #region Override Operators
 
@@ -136,10 +132,9 @@ namespace Finances
         /// <param name="name">Name of the account</param>
         /// <param name="balance">Balance of the account</param>
         /// <param name="transactions">Collection of all the transactions in the account</param>
-        public Account(string name, decimal balance, IEnumerable<Transaction> transactions)
+        public Account(string name, IEnumerable<Transaction> transactions)
         {
             Name = name;
-            _balance = balance;
             List<Transaction> newTransactions = new List<Transaction>();
             newTransactions.AddRange(transactions);
             _allTransactions = newTransactions;
@@ -150,7 +145,6 @@ namespace Finances
         public Account(Account otherAccount)
         {
             Name = otherAccount.Name;
-            _balance = otherAccount.Balance;
             _allTransactions = new List<Transaction>(otherAccount.AllTransactions);
         }
 

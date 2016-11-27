@@ -80,13 +80,16 @@
     </ApplicationDefinition>
     <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\Category.cs" />
-    <Compile Include="Classes\SortAdorner.cs" />
     <Compile Include="Classes\Transaction.cs" />
     <Page Include="Windows\ManageAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ManageCategoriesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\NewAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,11 +111,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Extensions.cs" />
+    <Compile Include="Classes\SortAdorner.cs" />
     <Compile Include="Windows\ManageAccountWindow.xaml.cs">
       <DependentUpon>ManageAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ManageCategoriesWindow.xaml.cs">
       <DependentUpon>ManageCategoriesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\NewAccountWindow.xaml.cs">
+      <DependentUpon>NewAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\NewTransferWindow.xaml.cs">
       <DependentUpon>NewTransferWindow.xaml</DependentUpon>

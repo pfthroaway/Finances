@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Finances
 {
@@ -66,6 +58,7 @@ namespace Finances
 
         #region Text/Selection Changed
 
+        /// <summary>Checks whether or not the Submit button should be enabled.</summary>
         private void TextChanged()
         {
             if (datePicker.SelectedDate != null && cmbMajorCategory.SelectedIndex >= 0 && cmbMinorCategory.SelectedIndex >= 0 && txtPayee.Text.Length > 0 && (txtInflow.Text.Length > 0 | txtOutflow.Text.Length > 0) && cmbAccount.SelectedIndex >= 0)
@@ -77,6 +70,22 @@ namespace Finances
         private void txt_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextChanged();
+        }
+
+        private void txtInflow_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            txtInflow.Text = new string((from c in txtInflow.Text
+                                         where char.IsDigit(c) || c.IsPeriod()
+                                         select c).ToArray());
+            txtInflow.CaretIndex = txtInflow.Text.Length;
+        }
+
+        private void txtOutflow_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            txtOutflow.Text = new string((from c in txtOutflow.Text
+                                          where char.IsDigit(c) || c.IsPeriod()
+                                          select c).ToArray());
+            txtOutflow.CaretIndex = txtOutflow.Text.Length;
         }
 
         private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -134,8 +143,6 @@ namespace Finances
             RefToMainWindow.Show();
         }
 
-        #endregion Window-Manipulation Methods
-
         private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             Key k = e.Key;
@@ -167,5 +174,7 @@ namespace Finances
         {
             txtInflow.SelectAll();
         }
+
+        #endregion Window-Manipulation Methods
     }
 }
