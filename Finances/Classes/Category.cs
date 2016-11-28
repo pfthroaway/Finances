@@ -6,6 +6,7 @@ namespace Finances
     internal class Category : INotifyPropertyChanged
     {
         private string _name;
+        private bool _isMajor;
         private List<string> _minorCategories = new List<string>();
 
         #region Properties
@@ -15,8 +16,8 @@ namespace Finances
         {
             get { return _name; }
             set { _name = value; OnPropertyChanged("Name"); }
-        }
-
+        }    
+              
         /// <summary>List of minor categories related to the major category</summary>
         public List<string> MinorCategories
         {

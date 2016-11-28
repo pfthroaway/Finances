@@ -168,6 +168,40 @@ namespace Finances
             return success;
         }
 
+        /// <summary>
+        /// Rename a category in the database.
+        /// </summary>
+        /// <param name="category">Category to rename</param>
+        /// <param name="newName">New name of the Category</param>
+        /// <returns></returns>
+        internal static async Task<bool> RenameCategory(String oldName, String newName)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection();
+            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = "UPDATE MajorCategories SET [Name] = @new WHERE [Name] = @old ; UPDATE MinorCategories SET [MajorCategory] = @new WHERE [MajorCategory] = @old; UPDATE MinorCategories SET [MinorCategory] = @new WHERE [MinorCategory] = @old";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.AddWithValue("@new", newName);
+            cmd.Parameters.AddWithValue("@old", oldName);
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Renaming Category.", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
         /// <summary>Turns several Keyboard.Keys into a list of Keys which can be tested using List.Any.</summary>
         /// <param name="keys">Array of Keys</param>
         /// <returns>List of Keyboard.IsKeyDown states</returns>

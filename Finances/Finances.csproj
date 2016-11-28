@@ -81,13 +81,17 @@
     <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\Category.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Page Include="Windows\CategoryRenamePopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\ManageAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ManageCategoriesWindow.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\NewAccountWindow.xaml">
       <SubType>Designer</SubType>
@@ -112,6 +116,9 @@
     </Compile>
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\SortAdorner.cs" />
+    <Compile Include="Windows\CategoryRenamePopup.xaml.cs">
+      <DependentUpon>CategoryRenamePopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ManageAccountWindow.xaml.cs">
       <DependentUpon>ManageAccountWindow.xaml</DependentUpon>
     </Compile>
@@ -158,7 +165,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Finances.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
