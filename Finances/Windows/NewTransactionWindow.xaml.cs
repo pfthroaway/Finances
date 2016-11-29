@@ -15,7 +15,7 @@ namespace Finances
         private Category selectedCategory = new Category();
         private Account selectedAccount = new Account();
 
-        internal MainWindow RefToMainWindow { get; set; }
+        internal ViewAccountWindow RefToViewAccountWindow { get; set; }
 
         #region Data-Binding
 
@@ -35,7 +35,10 @@ namespace Finances
             Transaction newTransaction = new Transaction(new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), txtPayee.Text, cmbMajorCategory.SelectedValue.ToString(), cmbMinorCategory.SelectedValue.ToString(), txtMemo.Text, DecimalHelper.Parse(txtOutflow.Text), DecimalHelper.Parse(txtInflow.Text)));
             selectedAccount.AddTransaction(newTransaction);
             if (await AppState.AddTransaction(newTransaction, selectedAccount))
+            {
+                RefToViewAccountWindow.RefreshItemsSource();
                 CloseWindow();
+            }
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
@@ -78,6 +81,7 @@ namespace Finances
                                          where char.IsDigit(c) || c.IsPeriod()
                                          select c).ToArray());
             txtInflow.CaretIndex = txtInflow.Text.Length;
+            TextChanged();
         }
 
         private void txtOutflow_TextChanged(object sender, TextChangedEventArgs e)
@@ -86,6 +90,7 @@ namespace Finances
                                           where char.IsDigit(c) || c.IsPeriod()
                                           select c).ToArray());
             txtOutflow.CaretIndex = txtOutflow.Text.Length;
+            TextChanged();
         }
 
         private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -140,7 +145,7 @@ namespace Finances
 
         private void windowNewTransaction_Closing(object sender, CancelEventArgs e)
         {
-            RefToMainWindow.Show();
+            RefToViewAccountWindow.Show();
         }
 
         private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)

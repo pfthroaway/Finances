@@ -103,6 +103,8 @@ namespace Finances
             return success;
         }
 
+        #region Transaction Manipulation
+
         /// <summary>Adds a transaction to an account and the database</summary>
         /// <param name="transaction">Transaction to be added</param>
         /// <returns>Returns true if successful</returns>
@@ -140,6 +142,47 @@ namespace Finances
             return success;
         }
 
+        /// <summary>Deletes a transaction from the database.</summary>
+        /// <param name="transaction">Transaction to be deleted</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> DeleteTransaction(Transaction transaction, Account account)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection();
+            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = "DELETE FROM Transactions WHERE [Date] = @date AND [Payee] = @payee AND [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory AND [Memo] = @memo AND [Outflow] = @outflow AND [Inflow] = @inflow AND [Account] = @account";
+            cmd.Parameters.AddWithValue("@date", transaction.DateToString);
+            cmd.Parameters.AddWithValue("@payee", transaction.Payee);
+            cmd.Parameters.AddWithValue("@majorCategory", transaction.MajorCategory);
+            cmd.Parameters.AddWithValue("@minorCategory", transaction.MinorCategory);
+            cmd.Parameters.AddWithValue("@memo", transaction.Memo);
+            cmd.Parameters.AddWithValue("@outflow", transaction.Outflow);
+            cmd.Parameters.AddWithValue("@inflow", transaction.Inflow);
+            cmd.Parameters.AddWithValue("@account", account.Name);
+
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Deleting Transaction", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
+        #endregion Transaction Manipulation
+
+        #region Account Manipulation
+
         /// <summary>Adds an account to the database.</summary>
         /// <param name="account">Account to be added</param>
         /// <returns>Returns true if successful</returns>
@@ -167,6 +210,43 @@ namespace Finances
             });
             return success;
         }
+
+        /// <summary>Deletes an account from the database.</summary>
+        /// <param name="account">Account to be deleted</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> DeleteAccount(Account account)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection();
+            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = "DELETE FROM Accounts WHERE [Name] = @name";
+            cmd.Parameters.AddWithValue("@name", account.Name);
+
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DELETE FROM Transactions WHERE [Account] = @name";
+                    cmd.ExecuteNonQuery();
+
+                    AllAccounts.Remove(account);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
+        #endregion Account Manipulation
 
         /// <summary>Turns several Keyboard.Keys into a list of Keys which can be tested using List.Any.</summary>
         /// <param name="keys">Array of Keys</param>

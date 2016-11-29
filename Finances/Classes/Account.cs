@@ -48,6 +48,12 @@ namespace Finances
             get { return Balance.ToString("C2"); }
         }
 
+        /// <summary>Balance of the account, formatted to currency, with preceding text</summary>
+        public string BalanceToStringWithText
+        {
+            get { return "Balance: " + BalanceToString; }
+        }
+
         #endregion Helper Properties
 
         #region Data-Binding
@@ -68,7 +74,8 @@ namespace Finances
         internal void AddTransaction(Transaction transaction)
         {
             _allTransactions.Add(transaction);
-            OnPropertyChanged("BalanceToString");
+            Sort();
+            OnPropertyChanged("BalanceToStringWithText");
         }
 
         /// <summary>Removes a transaction to this account.</summary>
@@ -76,13 +83,14 @@ namespace Finances
         internal void RemoveTransaction(Transaction transaction)
         {
             _allTransactions.Remove(transaction);
+            OnPropertyChanged("BalanceToStringWithText");
         }
 
         #endregion Transaction Management
 
         internal void Sort()
         {
-            _allTransactions = _allTransactions.OrderBy(transaction => transaction.Date).ToList();
+            _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date).ToList();
         }
 
         #region Override Operators

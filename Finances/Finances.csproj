@@ -97,7 +97,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ViewTransactionsWindow.xaml">
+    <Page Include="Windows\ViewAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -124,8 +124,8 @@
     <Compile Include="Windows\NewTransferWindow.xaml.cs">
       <DependentUpon>NewTransferWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ViewTransactionsWindow.xaml.cs">
-      <DependentUpon>ViewTransactionsWindow.xaml</DependentUpon>
+    <Compile Include="Windows\ViewAccountWindow.xaml.cs">
+      <DependentUpon>ViewAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

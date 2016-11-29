@@ -27,7 +27,7 @@
         <DatePicker x:Name="datePicker" Grid.Column="0" Grid.Row="1" Width="200" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="datePicker_SelectedDateChanged" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbMajorCategory" Grid.Column="1" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="cmbCategory_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbMinorCategory" Grid.Column="2" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="cmbCategory_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
-        <TextBox x:Name="txtMemo" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextChanged="txt_TextChanged" TextAlignment="Center" GotFocus="txtMemo_GotFocus" Margin="0,0,0,10" />
+        <TextBox x:Name="txtMemo" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" GotFocus="txtMemo_GotFocus" Margin="0,0,0,10" />
         <TextBlock Grid.Column="0" Grid.Row="2" Text="Payee:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="1" Grid.Row="2" Text="Outflow:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="2" Grid.Row="2" Text="Inflow:" TextAlignment="Center" Margin="0,0,10,5" />

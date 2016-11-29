@@ -24,6 +24,7 @@ namespace Finances
                 Transaction newTransaction = new Transaction(DateTime.Now, "Income", "Income", "Starting Balance", "", 0.00M, DecimalHelper.Parse(txtBalance.Text));
                 newAccount.AddTransaction(new Transaction(newTransaction));
                 AppState.AllAccounts.Add(newAccount);
+                AppState.AllAccounts = AppState.AllAccounts.OrderBy(account => account.Name).ToList();
                 if (await AppState.AddAccount(newAccount))
                 {
                     if (await AppState.AddTransaction(newTransaction, newAccount))

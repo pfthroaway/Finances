@@ -38,22 +38,6 @@ namespace Finances
 
         #region Button-Click Methods
 
-        private void btnNewTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            NewTransactionWindow newTransactionWindow = new NewTransactionWindow();
-            newTransactionWindow.RefToMainWindow = this;
-            newTransactionWindow.Show();
-            this.Visibility = Visibility.Hidden;
-        }
-
-        private void btnNewTransfer_Click(object sender, RoutedEventArgs e)
-        {
-            NewTransferWindow newTransferWindow = new NewTransferWindow();
-            newTransferWindow.RefToMainWindow = this;
-            newTransferWindow.Show();
-            this.Visibility = Visibility.Hidden;
-        }
-
         private void btnNewAccount_Click(object sender, RoutedEventArgs e)
         {
             NewAccountWindow newAccountWindow = new NewAccountWindow();
@@ -74,12 +58,13 @@ namespace Finances
         {
         }
 
-        private void btnViewTransactions_Click(object sender, RoutedEventArgs e)
+        private void btnViewAccount_Click(object sender, RoutedEventArgs e)
         {
-            ViewTransactionsWindow viewTransactionsWindow = new ViewTransactionsWindow();
-            viewTransactionsWindow.RefToMainWindow = this;
-            viewTransactionsWindow.LoadAccount((Account)lvAccounts.SelectedValue);
-            viewTransactionsWindow.Show();
+            Account selectedAccount = (Account)(lvAccounts.SelectedValue);
+            ViewAccountWindow viewAccountWindow = new ViewAccountWindow();
+            viewAccountWindow.RefToMainWindow = this;
+            viewAccountWindow.LoadAccount(selectedAccount);
+            viewAccountWindow.Show();
             this.Visibility = Visibility.Hidden;
         }
 
@@ -95,6 +80,7 @@ namespace Finances
         /// <summary>Refreshes the ListView's ItemsSource.</summary>
         internal void RefreshItemsSource()
         {
+            AllAccounts = AppState.AllAccounts;
             lvAccounts.ItemsSource = AllAccounts;
             lvAccounts.Items.Refresh();
         }
