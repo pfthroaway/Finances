@@ -16,7 +16,7 @@ namespace Finances
         private Account transferFromAccount = new Account();
         private Account transferToAccount = new Account();
 
-        internal MainWindow RefToMainWindow { get; set; }
+        internal ViewAccountWindow RefToViewAccountWindow { get; set; }
 
         #region Text/Selection Changed
 
@@ -74,12 +74,15 @@ namespace Finances
         {
             Transaction transferFrom = new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), "Transfer", "Transfer", transferToAccount.Name, txtMemo.Text, DecimalHelper.Parse(txtTransferAmount.Text), 0.00M);
             transferFromAccount.AddTransaction(transferFrom);
-            Transaction transferTo = new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), "Transfer", "Transfer", transferToAccount.Name, txtMemo.Text, 0.00M, DecimalHelper.Parse(txtTransferAmount.Text));
+            Transaction transferTo = new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), "Transfer", "Transfer", transferFromAccount.Name, txtMemo.Text, 0.00M, DecimalHelper.Parse(txtTransferAmount.Text));
             transferToAccount.AddTransaction(transferTo);
             if (await AppState.AddTransaction(transferFrom, transferFromAccount))
             {
                 if (await AppState.AddTransaction(transferTo, transferToAccount))
+                {
+                    RefToViewAccountWindow.RefreshItemsSource();
                     CloseWindow();
+                }
             }
         }
 
@@ -137,7 +140,7 @@ namespace Finances
 
         private void windowNewTransfer_Closing(object sender, CancelEventArgs e)
         {
-            RefToMainWindow.Show();
+            RefToViewAccountWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

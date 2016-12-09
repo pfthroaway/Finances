@@ -103,6 +103,8 @@ namespace Finances
             return success;
         }
 
+        #region Transaction Manipulation
+
         /// <summary>Adds a transaction to an account and the database</summary>
         /// <param name="transaction">Transaction to be added</param>
         /// <returns>Returns true if successful</returns>
@@ -140,6 +142,47 @@ namespace Finances
             return success;
         }
 
+        /// <summary>Deletes a transaction from the database.</summary>
+        /// <param name="transaction">Transaction to be deleted</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> DeleteTransaction(Transaction transaction, Account account)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection();
+            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = "DELETE FROM Transactions WHERE [Date] = @date AND [Payee] = @payee AND [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory AND [Memo] = @memo AND [Outflow] = @outflow AND [Inflow] = @inflow AND [Account] = @account";
+            cmd.Parameters.AddWithValue("@date", transaction.DateToString);
+            cmd.Parameters.AddWithValue("@payee", transaction.Payee);
+            cmd.Parameters.AddWithValue("@majorCategory", transaction.MajorCategory);
+            cmd.Parameters.AddWithValue("@minorCategory", transaction.MinorCategory);
+            cmd.Parameters.AddWithValue("@memo", transaction.Memo);
+            cmd.Parameters.AddWithValue("@outflow", transaction.Outflow);
+            cmd.Parameters.AddWithValue("@inflow", transaction.Inflow);
+            cmd.Parameters.AddWithValue("@account", account.Name);
+
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Deleting Transaction", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
+        #endregion Transaction Manipulation
+
+        #region Account Manipulation
+
         /// <summary>Adds an account to the database.</summary>
         /// <param name="account">Account to be added</param>
         /// <returns>Returns true if successful</returns>
@@ -168,6 +211,7 @@ namespace Finances
             return success;
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Rename a category in the database.
         /// </summary>
@@ -175,15 +219,27 @@ namespace Finances
         /// <param name="newName">New name of the Category</param>
         /// <returns></returns>
         internal static async Task<bool> RenameCategory(String oldName, String newName)
+=======
+        /// <summary>Deletes an account from the database.</summary>
+        /// <param name="account">Account to be deleted</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> DeleteAccount(Account account)
+>>>>>>> refs/remotes/origin/master
         {
             bool success = false;
             SQLiteConnection con = new SQLiteConnection();
             con.ConnectionString = _DBPROVIDERANDSOURCE;
             SQLiteCommand cmd = con.CreateCommand();
+<<<<<<< HEAD
             cmd.CommandText = "UPDATE MajorCategories SET [Name] = @new WHERE [Name] = @old ; UPDATE MinorCategories SET [MajorCategory] = @new WHERE [MajorCategory] = @old; UPDATE MinorCategories SET [MinorCategory] = @new WHERE [MinorCategory] = @old";
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.AddWithValue("@new", newName);
             cmd.Parameters.AddWithValue("@old", oldName);
+=======
+            cmd.CommandText = "DELETE FROM Accounts WHERE [Name] = @name";
+            cmd.Parameters.AddWithValue("@name", account.Name);
+
+>>>>>>> refs/remotes/origin/master
             await Task.Factory.StartNew(() =>
             {
                 try
@@ -191,17 +247,34 @@ namespace Finances
                     con.Open();
                     cmd.Connection = con;
                     cmd.ExecuteNonQuery();
+<<<<<<< HEAD
+=======
+
+                    cmd.CommandText = "DELETE FROM Transactions WHERE [Account] = @name";
+                    cmd.ExecuteNonQuery();
+
+                    AllAccounts.Remove(account);
+>>>>>>> refs/remotes/origin/master
                     success = true;
                 }
                 catch (Exception ex)
                 {
+<<<<<<< HEAD
                     MessageBox.Show(ex.Message, "Error Renaming Category.", MessageBoxButton.OK);
+=======
+                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+>>>>>>> refs/remotes/origin/master
                 }
                 finally { con.Close(); }
             });
             return success;
         }
 
+<<<<<<< HEAD
+=======
+        #endregion Account Manipulation
+
+>>>>>>> refs/remotes/origin/master
         /// <summary>Turns several Keyboard.Keys into a list of Keys which can be tested using List.Any.</summary>
         /// <param name="keys">Array of Keys</param>
         /// <returns>List of Keyboard.IsKeyDown states</returns>

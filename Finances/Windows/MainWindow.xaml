@@ -33,11 +33,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
-        <Button x:Name="btnViewTransactions" Grid.Column="0" Grid.Row="1" Width="175" Height="30" Content="_View Transactions" Click="btnViewTransactions_Click" IsEnabled="False" Margin="0,0,0,10" />
-        <Button x:Name="btnNewTransaction" Grid.Column="1" Grid.Row="1" Width="175" Height="30" Content="_New Transaction" Click="btnNewTransaction_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnNewTransfer" Grid.Column="0" Grid.Row="2" Width="175" Height="30" Content="New _Transfer" Click="btnNewTransfer_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnNewAccount" Grid.Column="1" Grid.Row="2" Width="175" Height="30" Content="New _Account" Click="btnNewAccount_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnManageCategories" Grid.Column="0" Grid.Row="3" Width="175" Height="30" Content="_Manage Categories" Click="btnManageCategories_Click" />
+        <Button x:Name="btnViewTransactions" Grid.Column="0" Grid.Row="1" Width="175" Height="30" Content="_View Account" Click="btnViewAccount_Click" IsEnabled="False" IsDefault="True" Margin="0,0,0,10" />
+        <Button x:Name="btnNewAccount" Grid.Column="1" Grid.Row="1" Width="175" Height="30" Content="New _Account" Click="btnNewAccount_Click" Margin="0,0,0,10" />
+        <Button x:Name="btnManageCategories" Grid.Column="0" Grid.Row="2" Width="175" Height="30" Content="_Manage Categories" Click="btnManageCategories_Click" />
     </Grid>
 </Window>
