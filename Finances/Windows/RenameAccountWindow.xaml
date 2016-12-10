@@ -1,0 +1,22 @@
+﻿<Window x:Name="windowRenameAccount" x:Class="Finances.RenameAccountWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Finances"
+        mc:Ignorable="d"
+        Title="Rename Account" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowRenameAccount_Closing">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="What name would you like this account to have?" Width="250" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,5" />
+        <TextBox x:Name="txtAccountName" Grid.Row="1" Width="250" Padding="5" Margin="0,0,0,10" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="btnSubmit" Width="120" Height="30" Content="_Submit" Click="btnSubmit_Click" IsDefault="True" Margin="0,0,10,0" />
+            <Button x:Name="btnCancel" Width="120" Height="30" Content="_Cancel" Click="btnCancel_Click" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

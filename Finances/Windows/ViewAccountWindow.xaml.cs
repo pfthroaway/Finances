@@ -100,10 +100,20 @@ namespace Finances
 
         private void btnModifyTransaction_Click(object sender, RoutedEventArgs e)
         {
+            ModifyTransactionWindow modifyTransactionWindow = new ModifyTransactionWindow();
+            modifyTransactionWindow.RefToViewAccountWindow = this;
+            modifyTransactionWindow.SetCurrentTransaction(selectedTransaction, selectedAccount);
+            modifyTransactionWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         private void btnRenameAccount_Click(object sender, RoutedEventArgs e)
         {
+            RenameAccountWindow renameAccountWindow = new RenameAccountWindow();
+            renameAccountWindow.RefToViewAccountWindow = this;
+            renameAccountWindow.LoadAccountName(selectedAccount);
+            renameAccountWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         private async void btnDeleteAccount_Click(object sender, RoutedEventArgs e)
@@ -138,7 +148,10 @@ namespace Finances
             {
                 selectedAccount.RemoveTransaction(selectedTransaction);
                 if (await AppState.DeleteTransaction(selectedTransaction, selectedAccount))
+                {
                     lvTransactions.UnselectAll();
+                    RefreshItemsSource();
+                }
             }
         }
 

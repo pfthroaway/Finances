@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,9 +25,15 @@ namespace Finances
         private void TextChanged()
         {
             if (datePicker.SelectedDate != null && cmbTransferFrom.SelectedIndex >= 0 && cmbTransferFrom.SelectedIndex >= 0 && txtTransferAmount.Text.Length > 0)
-                btnSubmit.IsEnabled = true;
+            {
+                btnSaveAndDone.IsEnabled = true;
+                btnSaveAndNew.IsEnabled = true;
+            }
             else
-                btnSubmit.IsEnabled = false;
+            {
+                btnSaveAndDone.IsEnabled = false;
+                btnSaveAndNew.IsEnabled = false;
+            }
         }
 
         private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -68,30 +75,72 @@ namespace Finances
 
         #endregion Text/Selection Changed
 
-        #region Button-Click Methods
-
-        private async void btnSubmit_Click(object sender, RoutedEventArgs e)
+        private async Task<bool> AddTransfer()
         {
-            Transaction transferFrom = new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), "Transfer", "Transfer", transferToAccount.Name, txtMemo.Text, DecimalHelper.Parse(txtTransferAmount.Text), 0.00M);
+            Transaction transferFrom = new Transaction(
+                date: DateTimeHelper.Parse(datePicker.SelectedDate),
+                payee: "Transfer",
+                majorCategory: "Transfer",
+                minorCategory: "Transfer",
+                memo: transferToAccount.Name,
+                outflow: DecimalHelper.Parse(txtTransferAmount.Text),
+                inflow: 0.00M,
+                account: transferFromAccount.Name);
             transferFromAccount.AddTransaction(transferFrom);
-            Transaction transferTo = new Transaction(DateTimeHelper.Parse(datePicker.SelectedDate), "Transfer", "Transfer", transferFromAccount.Name, txtMemo.Text, 0.00M, DecimalHelper.Parse(txtTransferAmount.Text));
+            Transaction transferTo = new Transaction(
+                date: DateTimeHelper.Parse(datePicker.SelectedDate),
+                payee: "Transfer",
+                majorCategory: "Transfer",
+                minorCategory: "Transfer",
+                memo: transferFromAccount.Name,
+                outflow: 0.00M,
+                inflow: DecimalHelper.Parse(txtTransferAmount.Text),
+                account: transferToAccount.Name);
             transferToAccount.AddTransaction(transferTo);
             if (await AppState.AddTransaction(transferFrom, transferFromAccount))
             {
                 if (await AppState.AddTransaction(transferTo, transferToAccount))
-                {
-                    RefToViewAccountWindow.RefreshItemsSource();
-                    CloseWindow();
-                }
+                    return true;
             }
+            return false;
+        }
+
+        /// <summary>Resets all values to default status.</summary>
+        private void Reset()
+        {
+            cmbTransferFrom.SelectedIndex = -1;
+            cmbTransferTo.SelectedIndex = -1;
+            txtTransferAmount.Text = "";
+        }
+
+        #region Button-Click Methods
+
+        private async void btnSaveAndDone_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbTransferFrom.SelectedValue != cmbTransferTo.SelectedValue && await AddTransfer())
+                CloseWindow();
+            else if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
+                MessageBox.Show("The source account and the destination account cannot be the same.", "Finances", MessageBoxButton.OK);
+            else
+                MessageBox.Show("Unable to process transfer.", "Finances", MessageBoxButton.OK);
+        }
+
+        private async void btnSaveAndNew_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbTransferFrom.SelectedValue != cmbTransferTo.SelectedValue && await AddTransfer())
+            {
+                Reset();
+                cmbTransferFrom.Focus();
+            }
+            else if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
+                MessageBox.Show("The source account and the destination account cannot be the same.", "Finances", MessageBoxButton.OK);
+            else
+                MessageBox.Show("Unable to process transfer.", "Finances", MessageBoxButton.OK);
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            cmbTransferFrom.SelectedIndex = -1;
-            cmbTransferTo.SelectedIndex = -1;
-            txtMemo.Text = "";
-            txtTransferAmount.Text = "";
+            Reset();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -133,13 +182,9 @@ namespace Finances
             txtTransferAmount.SelectAll();
         }
 
-        private void txtMemo_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtMemo.SelectAll();
-        }
-
         private void windowNewTransfer_Closing(object sender, CancelEventArgs e)
         {
+            RefToViewAccountWindow.RefreshItemsSource();
             RefToViewAccountWindow.Show();
         }
 

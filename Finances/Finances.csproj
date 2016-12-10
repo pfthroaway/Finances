@@ -81,7 +81,7 @@
     <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\Category.cs" />
     <Compile Include="Classes\Transaction.cs" />
-    <Page Include="Windows\ManageAccountWindow.xaml">
+    <Page Include="Windows\ModifyTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -94,6 +94,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\NewTransferWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RenameAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -112,8 +116,8 @@
     </Compile>
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\SortAdorner.cs" />
-    <Compile Include="Windows\ManageAccountWindow.xaml.cs">
-      <DependentUpon>ManageAccountWindow.xaml</DependentUpon>
+    <Compile Include="Windows\ModifyTransactionWindow.xaml.cs">
+      <DependentUpon>ModifyTransactionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ManageCategoriesWindow.xaml.cs">
       <DependentUpon>ManageCategoriesWindow.xaml</DependentUpon>
@@ -123,6 +127,9 @@
     </Compile>
     <Compile Include="Windows\NewTransferWindow.xaml.cs">
       <DependentUpon>NewTransferWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\RenameAccountWindow.xaml.cs">
+      <DependentUpon>RenameAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ViewAccountWindow.xaml.cs">
       <DependentUpon>ViewAccountWindow.xaml</DependentUpon>
@@ -153,6 +160,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Finances.sqlite" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

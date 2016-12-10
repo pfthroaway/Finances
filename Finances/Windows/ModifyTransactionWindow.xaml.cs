@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Finances
 {
-    /// <summary>Interaction logic for NewTransactionWindow.xaml</summary>
-    public partial class NewTransactionWindow : Window, INotifyPropertyChanged
+    /// <summary>
+    /// Interaction logic for ModifyTransactionWindow.xaml
+    /// </summary>
+    public partial class ModifyTransactionWindow : Window, INotifyPropertyChanged
     {
         private List<Account> AllAccounts = AppState.AllAccounts;
         private List<Category> AllCategories = AppState.AllCategories;
         private Category selectedCategory = new Category();
         private Account selectedAccount = new Account();
 
+        private Transaction modifyTransaction = new Transaction();
         internal ViewAccountWindow RefToViewAccountWindow { get; set; }
 
         #region Data-Binding
@@ -29,59 +31,43 @@ namespace Finances
 
         #endregion Data-Binding
 
-        private async Task<bool> AddTransaction()
+        internal void SetCurrentTransaction(Transaction setTransaction, Account setAccount)
         {
-            Transaction newTransaction = new Transaction(
-                date: DateTimeHelper.Parse(datePicker.SelectedDate),
-                payee: txtPayee.Text,
-                majorCategory: cmbMajorCategory.SelectedValue.ToString(),
-                minorCategory: cmbMinorCategory.SelectedValue.ToString(),
-                memo: txtMemo.Text,
-                outflow: DecimalHelper.Parse(txtOutflow.Text),
-                inflow: DecimalHelper.Parse(txtInflow.Text),
-                account: selectedAccount.Name);
-            selectedAccount.AddTransaction(newTransaction);
-            AppState.AllTransactions.Add(newTransaction);
-
-            return await AppState.AddTransaction(newTransaction, selectedAccount);
-        }
-
-        /// <summary>Resets all values to default status.</summary>
-        private void Reset()
-        {
-            cmbMajorCategory.SelectedIndex = -1;
-            cmbMinorCategory.SelectedIndex = -1;
-            txtMemo.Text = "";
-            txtPayee.Text = "";
-            txtInflow.Text = "";
-            txtOutflow.Text = "";
-            cmbAccount.SelectedIndex = -1;
+            datePicker.SelectedDate = setTransaction.Date;
+            cmbAccount.SelectedValue = setAccount;
+            cmbMajorCategory.SelectedItem = AllCategories.Find(category => category.Name == setTransaction.MajorCategory);
+            cmbMinorCategory.SelectedItem = setTransaction.MinorCategory;
+            txtPayee.Text = setTransaction.Payee;
+            txtOutflow.Text = setTransaction.Outflow.ToString();
+            txtInflow.Text = setTransaction.Inflow.ToString();
+            modifyTransaction = setTransaction;
+            selectedAccount = setAccount;
         }
 
         #region Button-Click Methods
 
-        private async void btnSaveAndDone_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (await AddTransaction())
-                CloseWindow();
-            else
-                MessageBox.Show("Unable to process transaction.", "Finances", MessageBoxButton.OK);
-        }
+            Transaction newTransaction = new Transaction(
+                date: DateTimeHelper.Parse(datePicker.SelectedDate),
+                payee: txtPayee.Text,
+                majorCategory: cmbMajorCategory.SelectedItem.ToString(),
+                minorCategory: cmbMinorCategory.SelectedItem.ToString(),
+                memo: txtMemo.Text,
+                outflow: DecimalHelper.Parse(txtOutflow.Text),
+                inflow: DecimalHelper.Parse(txtInflow.Text),
+                account: selectedAccount.Name);
 
-        private async void btnSaveAndNew_Click(object sender, RoutedEventArgs e)
-        {
-            if (await AddTransaction())
+            if (newTransaction != modifyTransaction)
             {
-                Reset();
-                cmbMinorCategory.Focus();
+                selectedAccount.ModifyTransaction(selectedAccount.AllTransactions.IndexOf(modifyTransaction), newTransaction);
+                if (await AppState.ModifyTransaction(newTransaction, modifyTransaction, selectedAccount))
+                    CloseWindow();
+                else
+                    MessageBox.Show("Unable to modify transaction.", "Finances", MessageBoxButton.OK);
             }
             else
-                MessageBox.Show("Unable to process transaction.", "Finances", MessageBoxButton.OK);
-        }
-
-        private void btnReset_Click(object sender, RoutedEventArgs e)
-        {
-            Reset();
+                MessageBox.Show("This transaction has not been modified.", "Finances", MessageBoxButton.OK);
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -97,15 +83,9 @@ namespace Finances
         private void TextChanged()
         {
             if (datePicker.SelectedDate != null && cmbMajorCategory.SelectedIndex >= 0 && cmbMinorCategory.SelectedIndex >= 0 && txtPayee.Text.Length > 0 && (txtInflow.Text.Length > 0 | txtOutflow.Text.Length > 0) && cmbAccount.SelectedIndex >= 0)
-            {
-                btnSaveAndDone.IsEnabled = true;
-                btnSaveAndNew.IsEnabled = true;
-            }
+                btnSave.IsEnabled = true;
             else
-            {
-                btnSaveAndDone.IsEnabled = false;
-                btnSaveAndNew.IsEnabled = false;
-            }
+                btnSave.IsEnabled = false;
         }
 
         private void txt_TextChanged(object sender, TextChangedEventArgs e)
@@ -141,7 +121,7 @@ namespace Finances
             if (cmbMajorCategory.SelectedIndex >= 0)
             {
                 cmbMinorCategory.IsEnabled = true;
-                selectedCategory = (Category)cmbMajorCategory.SelectedValue;
+                selectedCategory = (Category)cmbMajorCategory.SelectedItem;
                 cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
             }
             else
@@ -173,7 +153,7 @@ namespace Finances
             this.Close();
         }
 
-        public NewTransactionWindow()
+        public ModifyTransactionWindow()
         {
             InitializeComponent();
             cmbAccount.ItemsSource = AllAccounts;
@@ -181,7 +161,7 @@ namespace Finances
             cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
         }
 
-        private void windowNewTransaction_Closing(object sender, CancelEventArgs e)
+        private void windowModifyTransaction_Closing(object sender, CancelEventArgs e)
         {
             RefToViewAccountWindow.RefreshItemsSource();
             RefToViewAccountWindow.Show();

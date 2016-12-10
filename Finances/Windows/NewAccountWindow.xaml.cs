@@ -21,17 +21,24 @@ namespace Finances
             if (!AppState.AllAccounts.Any(account => account.Name == txtAccountName.Text))
             {
                 Account newAccount = new Account(txtAccountName.Text, new List<Transaction>());
-                Transaction newTransaction = new Transaction(DateTime.Now, "Income", "Income", "Starting Balance", "", 0.00M, DecimalHelper.Parse(txtBalance.Text));
+                Transaction newTransaction = new Transaction(
+                    date: DateTime.Now,
+                    payee: "Income",
+                    majorCategory: "Income",
+                    minorCategory: "Starting Balance",
+                    memo: "",
+                    outflow: 0.00M,
+                    inflow: DecimalHelper.Parse(txtBalance.Text),
+                    account: newAccount.Name);
                 newAccount.AddTransaction(new Transaction(newTransaction));
                 AppState.AllAccounts.Add(newAccount);
                 AppState.AllAccounts = AppState.AllAccounts.OrderBy(account => account.Name).ToList();
                 if (await AppState.AddAccount(newAccount))
                 {
                     if (await AppState.AddTransaction(newTransaction, newAccount))
-                    {
-                        RefToMainWindow.RefreshItemsSource();
                         CloseWindow();
-                    }
+                    else
+                        MessageBox.Show("Unable to process new account.", "Finances", MessageBoxButton.OK);
                 }
             }
             else
@@ -62,6 +69,10 @@ namespace Finances
 
         private void txtBalance_TextChanged(object sender, TextChangedEventArgs e)
         {
+            txtBalance.Text = new string((from c in txtBalance.Text
+                                          where char.IsDigit(c) || c.IsPeriod()
+                                          select c).ToArray());
+            txtBalance.CaretIndex = txtBalance.Text.Length;
             TextChanged();
         }
 
@@ -92,6 +103,7 @@ namespace Finances
 
         private void windowNewAccount_Closing(object sender, CancelEventArgs e)
         {
+            RefToMainWindow.RefreshItemsSource();
             RefToMainWindow.Show();
         }
 

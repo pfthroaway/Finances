@@ -7,7 +7,7 @@ namespace Finances
     internal class Transaction : INotifyPropertyChanged
     {
         private DateTime _date;
-        private string _payee, _majorCategory, _minorCategory, _memo;
+        private string _payee, _majorCategory, _minorCategory, _memo, _account;
         private decimal _outflow, _inflow;
 
         #region Modifying Properties
@@ -61,6 +61,13 @@ namespace Finances
             set { _inflow = value; OnPropertyChanged("Inflow"); OnPropertyChanged("InflowToString"); }
         }
 
+        /// <summary>Name of the account this transaction is associated with</summary>
+        public string Account
+        {
+            get { return _account; }
+            set { _account = value; OnPropertyChanged("Account"); }
+        }
+
         #endregion Modifying Properties
 
         #region Helper Properties
@@ -102,7 +109,7 @@ namespace Finances
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
-            return DateTime.Equals(left.Date, right.Date) && string.Equals(left.Payee, right.Payee, StringComparison.OrdinalIgnoreCase) && string.Equals(left.MajorCategory, right.MajorCategory, StringComparison.OrdinalIgnoreCase) && string.Equals(left.MinorCategory, right.MinorCategory, StringComparison.OrdinalIgnoreCase) && string.Equals(left.Memo, right.Memo, StringComparison.OrdinalIgnoreCase) && left.Outflow == right.Outflow && left.Inflow == right.Inflow;
+            return DateTime.Equals(left.Date, right.Date) && string.Equals(left.Payee, right.Payee, StringComparison.OrdinalIgnoreCase) && string.Equals(left.MajorCategory, right.MajorCategory, StringComparison.OrdinalIgnoreCase) && string.Equals(left.MinorCategory, right.MinorCategory, StringComparison.OrdinalIgnoreCase) && string.Equals(left.Memo, right.Memo, StringComparison.OrdinalIgnoreCase) && left.Outflow == right.Outflow && left.Inflow == right.Inflow && string.Equals(left.Account, right.Account, StringComparison.OrdinalIgnoreCase);
         }
 
         public sealed override bool Equals(object obj)
@@ -152,7 +159,7 @@ namespace Finances
         /// <param name="memo">Extra information regarding the transaction</param>
         /// <param name="outflow">How much money left the account during this transaction</param>
         /// <param name="inflow">How much money entered the account during this transaction</param>
-        public Transaction(DateTime date, string payee, string majorCategory, string minorCategory, string memo, decimal outflow, decimal inflow)
+        public Transaction(DateTime date, string payee, string majorCategory, string minorCategory, string memo, decimal outflow, decimal inflow, string account)
         {
             Date = date;
             Payee = payee;
@@ -161,6 +168,7 @@ namespace Finances
             Memo = memo;
             Outflow = outflow;
             Inflow = inflow;
+            Account = account;
         }
 
         /// <summary>Replaces this instance of Transaction with another instance</summary>
@@ -174,6 +182,7 @@ namespace Finances
             Memo = otherTransaction.Memo;
             Outflow = otherTransaction.Outflow;
             Inflow = otherTransaction.Inflow;
+            Account = otherTransaction.Account;
         }
 
         #endregion Constructors

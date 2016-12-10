@@ -78,6 +78,14 @@ namespace Finances
             OnPropertyChanged("BalanceToStringWithText");
         }
 
+        /// <summary>Modifies a transaction in this account.</summary>
+        /// <param name="index">Index of transaction to be modified</param>
+        /// <param name="transaction">Transaction to replace current in list</param>
+        internal void ModifyTransaction(int index, Transaction transaction)
+        {
+            _allTransactions[index] = transaction;
+        }
+
         /// <summary>Removes a transaction to this account.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void RemoveTransaction(Transaction transaction)
