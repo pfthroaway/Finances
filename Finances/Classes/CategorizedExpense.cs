@@ -68,8 +68,13 @@ namespace Finances
         /// <param name="income">Income value to be added</param>
         internal void AddTransactionValues(decimal expenses, decimal income)
         {
-            Expenses += Math.Abs(expenses);
+            _expenses += expenses;
             Income += income;
+        }
+
+        public override string ToString()
+        {
+            return MajorCategory + " - " + MinorCategory;
         }
 
         /// <summary>Initializes a default instance of CategorizedExpense.</summary>
