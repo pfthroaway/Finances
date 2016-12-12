@@ -17,6 +17,7 @@ namespace Finances
         internal static List<Account> AllAccounts = new List<Account>();
         internal static List<Category> AllCategories = new List<Category>();
         internal static List<Transaction> AllTransactions = new List<Transaction>();
+        internal static List<Month> AllMonths = new List<Month>();
 
         /// <summary>Loads all information from the database.</summary>
         /// <returns>Returns true if successful</returns>
@@ -60,6 +61,7 @@ namespace Finances
                             AllCategories.Add(newCategory);
                         }
                     }
+                    AllCategories = AllCategories.OrderBy(category => category.Name).ToList();
 
                     sql = "SELECT * FROM MinorCategories";
                     ds = new DataSet();
@@ -75,6 +77,9 @@ namespace Finances
                             selectedCategory.MinorCategories.Add(ds.Tables[0].Rows[i]["MinorCategory"].ToString());
                         }
                     }
+
+                    foreach (Category category in AllCategories)
+                        category.Sort();
 
                     sql = "SELECT * FROM Transactions";
                     ds = new DataSet();
@@ -100,9 +105,35 @@ namespace Finances
                             AllTransactions.Add(newTransaction);
                         }
                     }
+
                     AllAccounts = AllAccounts.OrderBy(account => account.Name).ToList();
-                    for (int i = 0; i < AllAccounts.Count; i++)
-                        AllAccounts[i].Sort();
+                    if (AllAccounts.Count > 0)
+                    {
+                        for (int i = 0; i < AllAccounts.Count; i++)
+                            AllAccounts[i].Sort();
+                    }
+
+                    AllTransactions = AllTransactions.OrderBy(transaction => transaction.Date).ToList();
+                    if (AllTransactions.Count > 0)
+                    {
+                        int months = ((DateTime.Now.Year - AllTransactions[0].Date.Year) * 12) + DateTime.Now.Month - AllTransactions[0].Date.Month;
+                        DateTime startMonth = new DateTime(AllTransactions[0].Date.Year, AllTransactions[0].Date.Month, 1);
+
+                        int start = 0;
+                        do
+                        {
+                            AllMonths.Add(new Month(startMonth.AddMonths(start), new List<Transaction>()));
+                            start += 1;
+                        }
+                        while (start <= months);
+
+                        for (int i = 0; i < AllTransactions.Count; i++)
+                        {
+                            AllMonths.Find(month => month.MonthStart <= AllTransactions[i].Date && AllTransactions[i].Date <= month.MonthEnd.Date).AddTransaction(AllTransactions[i]);
+                        }
+
+                        AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -141,6 +172,17 @@ namespace Finances
                     cmd.Parameters.AddWithValue("@balance", account.Balance);
                     cmd.Parameters.AddWithValue("@name", account.Name);
                     cmd.ExecuteNonQuery();
+
+                    if (AllMonths.Any(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date))
+                        AllMonths.Find(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date).AddTransaction(transaction);
+                    else
+                    {
+                        Month newMonth = new Month(new DateTime(transaction.Date.Year, transaction.Date.Month, 1), new List<Transaction>());
+                        newMonth.AddTransaction(transaction);
+                        AllMonths.Add(newMonth);
+                    }
+
+                    AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
                     success = true;
                 }
                 catch (Exception ex)

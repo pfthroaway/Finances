@@ -48,6 +48,14 @@ namespace Finances
         {
         }
 
+        private void btnMonthlyReport_Click(object sender, RoutedEventArgs e)
+        {
+            MonthlyReportWindow monthlyReportWindow = new MonthlyReportWindow();
+            monthlyReportWindow.RefToMainWindow = this;
+            monthlyReportWindow.Show();
+            this.Visibility = Visibility.Hidden;
+        }
+
         private void btnViewAccount_Click(object sender, RoutedEventArgs e)
         {
             Account selectedAccount = (Account)(lvAccounts.SelectedValue);

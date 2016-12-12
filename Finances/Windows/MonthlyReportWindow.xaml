@@ -1,0 +1,42 @@
+﻿<Window x:Name="windowMonthlyReport" x:Class="Finances.MonthlyReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Finances"
+        mc:Ignorable="d"
+        Title="Monthly Report" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowMonthlyReport_Closing">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListView x:Name="lvMonths" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" SelectionChanged="lvMonths_SelectionChanged" Margin="0,0,0,10">
+            <ListView.View>
+                <GridView ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=FormattedMonth}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="FormattedMonth" Click="lvMonthsColumnHeader_Click" Content="Month" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=IncomeToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Income" Click="lvMonthsColumnHeader_Click" Content="Income" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=ExpensesToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Expenses" Click="lvMonthsColumnHeader_Click" Content="Expenses" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="btnViewCategorizedReport" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Width="225" Height="30" Content="_View Categorized Report" Click="btnViewCategorizedReport_Click" IsEnabled="False" IsDefault="True" Margin="0,0,0,10" />
+        <Button x:Name="btnBack" Grid.Column="0" Grid.Row="2" Width="100" Height="30" Content="_Back" Click="btnBack_Click" IsCancel="True" />
+    </Grid>
+</Window>

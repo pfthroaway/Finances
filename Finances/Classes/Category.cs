@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Finances
 {
@@ -36,6 +37,11 @@ namespace Finances
         }
 
         #endregion Data-Binding
+
+        internal void Sort()
+        {
+            MinorCategories.Sort();
+        }
 
         public override string ToString()
         {
