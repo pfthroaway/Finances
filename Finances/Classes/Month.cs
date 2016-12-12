@@ -38,15 +38,24 @@ namespace Finances
             {
                 decimal income = 0.00M;
                 for (int i = 0; i < AllTransactions.Count; i++)
-                    income += AllTransactions[i].Inflow;
+                {
+                    if (AllTransactions[i].MajorCategory != "Transfer")
+                        income += AllTransactions[i].Inflow;
+                }
                 return income;
             }
         }
 
-        /// <summary>Balance of the account, formatted to currency</summary>
+        /// <summary>Income for this month, formatted to currency</summary>
         public string IncomeToString
         {
             get { return Income.ToString("C2"); }
+        }
+
+        /// <summary>Income for this month, formatted to currency, with preceding text</summary>
+        public string IncomeToStringWithText
+        {
+            get { return "Income: " + Income.ToString("C2"); }
         }
 
         /// <summary>Expenses for this month</summary>
@@ -56,15 +65,24 @@ namespace Finances
             {
                 decimal expenses = 0.00M;
                 for (int i = 0; i < AllTransactions.Count; i++)
-                    expenses += AllTransactions[i].Outflow;
+                {
+                    if (AllTransactions[i].MajorCategory != "Transfer")
+                        expenses += AllTransactions[i].Outflow;
+                }
                 return expenses * -1;
             }
         }
 
-        /// <summary>Balance of the account, formatted to currency</summary>
+        /// <summary>Expenses for this month, formatted to currency</summary>
         public string ExpensesToString
         {
             get { return Expenses.ToString("C2"); }
+        }
+
+        /// <summary>Expenses for this month, formatted to currency, with preceding text</summary>
+        public string ExpensesToStringWithText
+        {
+            get { return "Expenses: " + Expenses.ToString("C2"); }
         }
 
         /// <summary>Last day of the month</summary>

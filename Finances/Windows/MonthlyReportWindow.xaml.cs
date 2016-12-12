@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -33,6 +34,33 @@ namespace Finances
         private void btnViewCategorizedReport_Click(object sender, RoutedEventArgs e)
         {
             Month selectedMonth = (Month)lvMonths.SelectedValue;
+            List<CategorizedExpense> categorizedExpenses = new List<CategorizedExpense>();
+            foreach (Category category in AppState.AllCategories)
+            {
+                if (category.Name != "Transfer")
+                {
+                    categorizedExpenses.Add(new CategorizedExpense(category.Name, "", 0.00M, 0.00M));
+                    foreach (string minorCategory in category.MinorCategories)
+                        categorizedExpenses.Add(new CategorizedExpense(category.Name, minorCategory, 0.00M, 0.00M));
+                }
+            }
+
+            foreach (Transaction transaction in selectedMonth.AllTransactions)
+            {
+                if (transaction.MajorCategory != "Transfer")
+                {
+                    categorizedExpenses.Find(expense => expense.MajorCategory == transaction.MajorCategory && expense.MinorCategory == transaction.MinorCategory).AddTransactionValues(transaction.Outflow, transaction.Inflow);
+                    categorizedExpenses.Find(expense => expense.MajorCategory == transaction.MajorCategory && expense.MinorCategory == "").AddTransactionValues(transaction.Outflow, transaction.Inflow);
+                }
+            }
+
+            categorizedExpenses = categorizedExpenses.OrderBy(expense => expense.MajorCategory).ThenBy(expense => expense.MinorCategory).ToList();
+
+            CategorizedMonthlyReportWindow categorizedMonthlyReportWindow = new CategorizedMonthlyReportWindow();
+            categorizedMonthlyReportWindow.RefToMonthlyReportWindow = this;
+            categorizedMonthlyReportWindow.LoadMonth(selectedMonth, categorizedExpenses);
+            categorizedMonthlyReportWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)

@@ -79,8 +79,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\AppState.cs" />
+    <Compile Include="Classes\CategorizedExpense.cs" />
     <Compile Include="Classes\Category.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Page Include="Windows\CategorizedMonthlyReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\ModifyTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -121,6 +126,9 @@
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\SortAdorner.cs" />
     <Compile Include="Classes\Month.cs" />
+    <Compile Include="Windows\CategorizedMonthlyReportWindow.xaml.cs">
+      <DependentUpon>CategorizedMonthlyReportWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ModifyTransactionWindow.xaml.cs">
       <DependentUpon>ModifyTransactionWindow.xaml</DependentUpon>
     </Compile>
@@ -168,7 +176,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Finances.sqlite" />
+    <EmbeddedResource Include="Finances.sqlite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
