@@ -82,6 +82,9 @@
     <Compile Include="Classes\CategorizedExpense.cs" />
     <Compile Include="Classes\Category.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Compile Include="Windows\ViewAllTransactionsWindow.xaml.cs">
+      <DependentUpon>ViewAllTransactionsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Windows\CategorizedMonthlyReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +158,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Windows\NewTransactionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ViewAllTransactionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

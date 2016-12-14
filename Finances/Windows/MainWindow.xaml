@@ -15,6 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ListView x:Name="lvAccounts" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" SelectionChanged="lvAccounts_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,10">
             <ListView.View>
@@ -34,7 +35,8 @@
         </ListView>
         <Button x:Name="btnViewTransactions" Grid.Column="0" Grid.Row="1" Width="175" Height="30" Content="_View Account" Click="btnViewAccount_Click" IsEnabled="False" IsDefault="True" Margin="0,0,0,10" />
         <Button x:Name="btnNewAccount" Grid.Column="1" Grid.Row="1" Width="175" Height="30" Content="New _Account" Click="btnNewAccount_Click" Margin="0,0,0,10" />
-        <Button x:Name="btnMonthlyReport" Grid.Column="0" Grid.Row="2" Width="175" Height="30" Content="_Monthly Report" Click="btnMonthlyReport_Click" />
-        <Button x:Name="btnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Height="30" Content="_Manage Categories" Click="btnManageCategories_Click" />
+        <Button x:Name="btnMonthlyReport" Grid.Column="0" Grid.Row="2" Width="175" Height="30" Content="_Monthly Report" Click="btnMonthlyReport_Click" Margin="0,0,0,10" />
+        <Button x:Name="btnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Height="30" Content="_Manage Categories" Click="btnManageCategories_Click" Margin="0,0,0,10" />
+        <Button x:Name="btnViewAllTransactions" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="200" Height="30" Content="_View All Transactions" Click="btnViewAllTransactions_Click" />
     </Grid>
 </Window>

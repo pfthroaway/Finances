@@ -66,6 +66,14 @@ namespace Finances
             this.Visibility = Visibility.Hidden;
         }
 
+        private void btnViewAllTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            ViewAllTransactionsWindow viewAllTransactionsWindow = new ViewAllTransactionsWindow();
+            viewAllTransactionsWindow.RefToMainWindow = this;
+            viewAllTransactionsWindow.Show();
+            this.Visibility = Visibility.Hidden;
+
+        }
         #endregion Button-Click Methods
 
         #region Window-Manipulation Methods
@@ -111,5 +119,6 @@ namespace Finances
         }
 
         #endregion Window-Manipulation Methods
+
     }
 }
