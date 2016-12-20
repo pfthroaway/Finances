@@ -11,47 +11,41 @@ namespace Finances
         public string MajorCategory
         {
             get { return _majorCategory; }
-            set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
+            private set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
         }
 
         /// <summary>Secondary category</summary>
         public string MinorCategory
         {
             get { return _minorCategory; }
-            set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
+            private set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
         /// <summary>Income for this month</summary>
-        public decimal Income
+        private decimal Income
         {
             get { return _income; }
             set { _income = value; OnPropertyChanged("Income"); OnPropertyChanged("IncomeToString"); }
         }
 
         /// <summary>Income for this month.</summary>
-        public string IncomeToString
-        {
-            get { return Income.ToString("C2"); }
-        }
+        public string IncomeToString => Income.ToString("C2");
 
         /// <summary>Expenses for this month</summary>
-        public decimal Expenses
+        private decimal Expenses
         {
             get { return _expenses * -1; }
             set { _expenses = value; OnPropertyChanged("Expenses"); OnPropertyChanged("ExpensesToString"); }
         }
 
         /// <summary>Expenses for this month, formatted to currency</summary>
-        public string ExpensesToString
-        {
-            get { return Expenses.ToString("C2"); }
-        }
+        public string ExpensesToString => Expenses.ToString("C2");
 
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }

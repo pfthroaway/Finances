@@ -11,13 +11,13 @@ namespace Finances
     /// <summary>
     /// Interaction logic for NewTransferWindow.xaml
     /// </summary>
-    public partial class NewTransferWindow : Window
+    public partial class NewTransferWindow
     {
-        private List<Account> AllAccounts = AppState.AllAccounts;
+        private readonly List<Account> AllAccounts = AppState.AllAccounts;
         private Account transferFromAccount = new Account();
         private Account transferToAccount = new Account();
 
-        internal ViewAccountWindow RefToViewAccountWindow { get; set; }
+        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
 
         #region Text/Selection Changed
 
@@ -56,11 +56,6 @@ namespace Finances
                 transferToAccount = (Account)cmbTransferTo.SelectedValue;
             else
                 transferToAccount = new Account();
-            TextChanged();
-        }
-
-        private void txtMemo_TextChanged(object sender, TextChangedEventArgs e)
-        {
             TextChanged();
         }
 
@@ -171,7 +166,7 @@ namespace Finances
 
             List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
 
-            if (keys.Any(key => key == true) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
+            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
                 e.Handled = false;
             else
                 e.Handled = true;

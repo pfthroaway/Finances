@@ -1,24 +1,17 @@
-﻿<Window x:Name="windowViewAccount" x:Class="Finances.ViewAccountWindow"
+﻿<Window x:Name="windowSearchResults" x:Class="Finances.SearchResultsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="View Account" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowViewAccount_Closing">
+        Title="Search Results"  ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowSearchResults_Closing">
     <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="0" Grid.Row="0" Width="200" Margin="0,0,10,0">
-            <TextBlock x:Name="lblAccountName" Text="{Binding Path=Name}" TextWrapping="Wrap"  FontSize="20" Margin="0,0,0,10" />
-            <TextBlock x:Name="lblBalance" Text="{Binding Path=BalanceToStringWithText}" FontSize="20" Margin="0,0,0,10" />
-        </StackPanel>
-        <ListView x:Name="lvTransactions" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Height="610" SelectionChanged="lvTransactions_SelectionChanged" SelectionMode="Single">
+        <ListView x:Name="lvTransactions" Grid.Row="0" Height="610" Margin="0,0,0,10" SelectionMode="Single">
             <ListView.View>
                 <GridView ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateToString}">
@@ -56,18 +49,15 @@
                             <GridViewColumnHeader Tag="Inflow" Click="lvTransactionsColumnHeader_Click" Content="Inflow" />
                         </GridViewColumn.Header>
                     </GridViewColumn>
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=Account}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Account" Click="lvTransactionsColumnHeader_Click" Content="Account" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,10,0">
-            <Button x:Name="btnNewTransaction" Height="30" Width="175" Content="_New Transaction" Click="btnNewTransaction_Click" Margin="0,0,0,10" IsDefault="True" />
-            <Button x:Name="btnNewTransfer" Height="30" Width="175" Content="_New Transfer" Click="btnNewTransfer_Click" Margin="0,0,0,10" />
-            <Button x:Name="btnModifyTransaction" Height="30" Width="175" Content="_Modify Transaction" Click="btnModifyTransaction_Click"  Margin="0,0,0,10" IsEnabled="False" />
-            <Button x:Name="btnDeleteTransaction" Height="30" Width="175" Content="_Delete Transaction" Click="btnDeleteTransaction_Click"  Margin="0,0,0,10" IsEnabled="False" />
-            <Button x:Name="btnSearchTransactions" Height="30" Width="175" Content="_Search Transactions" Click="btnSearchTransactions_Click"  Margin="0,0,0,10" />
-            <Button x:Name="btnRenameAccount" Height="30" Width="175" Content="_Rename Account" Click="btnRenameAccount_Click"  Margin="0,0,0,10" />
-            <Button x:Name="btnDeleteAccount" Height="30" Width="175" Content="_Delete Account" Click="btnDeleteAccount_Click"  Margin="0,0,0,10" />
-            <Button x:Name="btnBack" Height="30" Width="175" Content="_Back" Click="btnBack_Click" />
-        </StackPanel>
+        <TextBlock Grid.Row="1" Text="{Binding Path=TransactionCount}" TextAlignment="Center" Margin="0,0,0,10" />
+        <Button x:Name="btnBack" Grid.Row="2" Height="30" Width="175" Content="_Back" Click="btnBack_Click" />
     </Grid>
 </Window>

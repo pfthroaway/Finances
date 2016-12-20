@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Finances"
         mc:Ignorable="d"
         Title="Categorized Monthly Report"  ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowCategorizedMonthlyReport_Closing">
     <Grid Margin="10">
@@ -20,7 +19,7 @@
         <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=FormattedMonth}" TextAlignment="Center" Margin="0,0,0,10" />
         <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=ExpensesToStringWithText}" TextAlignment="Center" Margin="0,0,0,10" />
         <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Path=IncomeToStringWithText}" TextAlignment="Center" Margin="0,0,0,10" />
-        <ListView x:Name="lvCategorized" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Height="450" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,10">
+        <ListView x:Name="lvCategorized" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Height="450" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=MajorCategory}">

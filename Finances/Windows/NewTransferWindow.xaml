@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Finances"
         mc:Ignorable="d"
         Title="New Transfer" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowNewTransfer_Closing">
     <Grid Margin="10">
@@ -24,8 +23,8 @@
         <DatePicker x:Name="datePicker" Grid.Column="0" Grid.Row="1" Width="200" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="datePicker_SelectedDateChanged" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbTransferFrom" Grid.Column="1" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="cmbTransferFrom_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbTransferTo" Grid.Column="2" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="cmbTransferTo_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
-        <TextBlock Grid.Column="3" Grid.Row="0" Width="200" Grid.ColumnSpan="2" Text="Amount Transferred:" TextAlignment="Center" Margin="0,0,0,5" />
-        <TextBox x:Name="txtTransferAmount" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Width="200" MaxLength="30" Padding="5" TextChanged="txtTransferAmount_TextChanged" TextAlignment="Center" PreviewKeyDown="txtTransferAmount_PreviewKeyDown" GotFocus="txtTransferAmount_GotFocus" Margin="0,0,0,10" />
+        <TextBlock Grid.Column="3" Grid.Row="0" Width="200" Text="Amount Transferred:" TextAlignment="Center" Margin="0,0,0,5" />
+        <TextBox x:Name="txtTransferAmount" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextChanged="txtTransferAmount_TextChanged" TextAlignment="Center" PreviewKeyDown="txtTransferAmount_PreviewKeyDown" GotFocus="txtTransferAmount_GotFocus" Margin="0,0,0,10" />
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnSaveAndDone" Width="125" Height="30" Content="_Save and Done" Click="btnSaveAndDone_Click" IsDefault="True" IsEnabled="False" Margin="0,0,20,0" />
             <Button x:Name="btnSaveAndNew" Width="125" Height="30" Content="Save and _New" Click="btnSaveAndNew_Click" IsEnabled="False" Margin="0,0,20,0" />

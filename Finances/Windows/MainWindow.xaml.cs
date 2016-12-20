@@ -9,11 +9,11 @@ namespace Finances
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : INotifyPropertyChanged
     {
         private List<Account> AllAccounts = new List<Account>();
-        private GridViewColumnHeader listViewSortCol = null;
-        private SortAdorner listViewSortAdorner = null;
+        private GridViewColumnHeader _listViewSortCol;
+        private SortAdorner _listViewSortAdorner;
 
         #region Data-Binding
 
@@ -30,18 +30,14 @@ namespace Finances
 
         private void btnNewAccount_Click(object sender, RoutedEventArgs e)
         {
-            NewAccountWindow newAccountWindow = new NewAccountWindow();
-            newAccountWindow.RefToMainWindow = this;
+            NewAccountWindow newAccountWindow = new NewAccountWindow { RefToMainWindow = this };
             newAccountWindow.Show();
             this.Visibility = Visibility.Hidden;
         }
 
         private void lvAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lvAccounts.SelectedIndex >= 0)
-                btnViewTransactions.IsEnabled = true;
-            else
-                btnViewTransactions.IsEnabled = false;
+            btnViewTransactions.IsEnabled = lvAccounts.SelectedIndex >= 0;
         }
 
         private void btnManageCategories_Click(object sender, RoutedEventArgs e)
@@ -50,8 +46,7 @@ namespace Finances
 
         private void btnMonthlyReport_Click(object sender, RoutedEventArgs e)
         {
-            MonthlyReportWindow monthlyReportWindow = new MonthlyReportWindow();
-            monthlyReportWindow.RefToMainWindow = this;
+            MonthlyReportWindow monthlyReportWindow = new MonthlyReportWindow { RefToMainWindow = this };
             monthlyReportWindow.Show();
             this.Visibility = Visibility.Hidden;
         }
@@ -59,8 +54,7 @@ namespace Finances
         private void btnViewAccount_Click(object sender, RoutedEventArgs e)
         {
             Account selectedAccount = (Account)(lvAccounts.SelectedValue);
-            ViewAccountWindow viewAccountWindow = new ViewAccountWindow();
-            viewAccountWindow.RefToMainWindow = this;
+            ViewAccountWindow viewAccountWindow = new ViewAccountWindow { RefToMainWindow = this };
             viewAccountWindow.LoadAccount(selectedAccount);
             viewAccountWindow.Show();
             this.Visibility = Visibility.Hidden;
@@ -68,12 +62,11 @@ namespace Finances
 
         private void btnViewAllTransactions_Click(object sender, RoutedEventArgs e)
         {
-            ViewAllTransactionsWindow viewAllTransactionsWindow = new ViewAllTransactionsWindow();
-            viewAllTransactionsWindow.RefToMainWindow = this;
+            ViewAllTransactionsWindow viewAllTransactionsWindow = new ViewAllTransactionsWindow { RefToMainWindow = this };
             viewAllTransactionsWindow.Show();
             this.Visibility = Visibility.Hidden;
-
         }
+
         #endregion Button-Click Methods
 
         #region Window-Manipulation Methods
@@ -101,24 +94,26 @@ namespace Finances
         private void lvAccountsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
+            if (column != null)
             {
-                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-                lvAccounts.Items.SortDescriptions.Clear();
+                string sortBy = column.Tag.ToString();
+                if (_listViewSortCol != null)
+                {
+                    AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
+                    lvAccounts.Items.SortDescriptions.Clear();
+                }
+
+                ListSortDirection newDir = ListSortDirection.Ascending;
+                if (Equals(_listViewSortCol, column) && _listViewSortAdorner.Direction == newDir)
+                    newDir = ListSortDirection.Descending;
+
+                _listViewSortCol = column;
+                _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
+                AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
+                lvAccounts.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
-
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
-
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvAccounts.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
         #endregion Window-Manipulation Methods
-
     }
 }

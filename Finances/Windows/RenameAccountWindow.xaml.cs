@@ -6,10 +6,10 @@ namespace Finances
     /// <summary>
     /// Interaction logic for RenameAccountWindow.xaml
     /// </summary>
-    public partial class RenameAccountWindow : Window
+    public partial class RenameAccountWindow
     {
         private Account selectedAccount;
-        internal ViewAccountWindow RefToViewAccountWindow { get; set; }
+        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
 
         internal void LoadAccountName(Account currentAccount)
         {

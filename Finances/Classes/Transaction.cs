@@ -16,49 +16,49 @@ namespace Finances
         public DateTime Date
         {
             get { return _date; }
-            set { _date = value; OnPropertyChanged("Date"); }
+            private set { _date = value; OnPropertyChanged("Date"); }
         }
 
         /// <summary>The entity the transaction revolves around</summary>
         public string Payee
         {
             get { return _payee; }
-            set { _payee = value; OnPropertyChanged("Payee"); }
+            private set { _payee = value; OnPropertyChanged("Payee"); }
         }
 
         /// <summary>Primary category of which the transaction regards</summary>
         public string MajorCategory
         {
             get { return _majorCategory; }
-            set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
+            private set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
         }
 
         /// <summary>Secondary category of which the transaction regards</summary>
         public string MinorCategory
         {
             get { return _minorCategory; }
-            set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
+            private set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
         /// <summary>Extra information regarding the transaction</summary>
         public string Memo
         {
             get { return _memo; }
-            set { _memo = value; OnPropertyChanged("Memo"); }
+            private set { _memo = value; OnPropertyChanged("Memo"); }
         }
 
         /// <summary>How much money left the account during this transaction</summary>
         public decimal Outflow
         {
             get { return _outflow; }
-            set { _outflow = value; OnPropertyChanged("Outflow"); OnPropertyChanged("OutflowToString"); }
+            private set { _outflow = value; OnPropertyChanged("Outflow"); OnPropertyChanged("OutflowToString"); }
         }
 
         /// <summary>How much money entered the account during this transaction</summary>
         public decimal Inflow
         {
             get { return _inflow; }
-            set { _inflow = value; OnPropertyChanged("Inflow"); OnPropertyChanged("InflowToString"); }
+            private set { _inflow = value; OnPropertyChanged("Inflow"); OnPropertyChanged("InflowToString"); }
         }
 
         /// <summary>Name of the account this transaction is associated with</summary>
@@ -73,22 +73,13 @@ namespace Finances
         #region Helper Properties
 
         /// <summary>Date the transaction occurred, formatted properly</summary>
-        public string DateToString
-        {
-            get { return Date.ToString("yyyy/MM/dd"); }
-        }
+        public string DateToString => Date.ToString("yyyy/MM/dd");
 
         /// <summary>How much money left the account during this transaction, formatted to currency</summary>
-        public string OutflowToString
-        {
-            get { return Outflow.ToString("C2"); }
-        }
+        public string OutflowToString => Outflow.ToString("C2");
 
         /// <summary>How much money entered the account during this transaction, formatted to currency</summary>
-        public string InflowToString
-        {
-            get { return Inflow.ToString("C2"); }
-        }
+        public string InflowToString => Inflow.ToString("C2");
 
         #endregion Helper Properties
 
@@ -96,7 +87,7 @@ namespace Finances
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
@@ -105,7 +96,7 @@ namespace Finances
 
         #region Override Operators
 
-        public static bool Equals(Transaction left, Transaction right)
+        private static bool Equals(Transaction left, Transaction right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
@@ -159,6 +150,7 @@ namespace Finances
         /// <param name="memo">Extra information regarding the transaction</param>
         /// <param name="outflow">How much money left the account during this transaction</param>
         /// <param name="inflow">How much money entered the account during this transaction</param>
+        /// <param name="account">Account name related to the transaction</param>
         public Transaction(DateTime date, string payee, string majorCategory, string minorCategory, string memo, decimal outflow, decimal inflow, string account)
         {
             Date = date;

@@ -8,13 +8,13 @@ using System.Windows.Documents;
 namespace Finances
 {
     /// <summary>Interaction logic for ViewAllTransactionsWindow.xaml</summary>
-    public partial class ViewAllTransactionsWindow : Window, INotifyPropertyChanged
+    public partial class ViewAllTransactionsWindow : INotifyPropertyChanged
     {
-        private List<Transaction> AllTransactions = AppState.AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
-        private GridViewColumnHeader listViewSortCol = null;
-        private SortAdorner listViewSortAdorner = null;
+        private readonly List<Transaction> AllTransactions = AppState.AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+        private GridViewColumnHeader _listViewSortCol;
+        private SortAdorner _listViewSortAdorner;
 
-        internal MainWindow RefToMainWindow { get; set; }
+        internal MainWindow RefToMainWindow { private get; set; }
 
         #region Data-Binding
 
@@ -46,7 +46,7 @@ namespace Finances
             lvTransactions.ItemsSource = AllTransactions;
         }
 
-        private void windowViewAllTransactions_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void windowViewAllTransactions_Closing(object sender, CancelEventArgs e)
         {
             RefToMainWindow.Show();
         }
@@ -54,21 +54,24 @@ namespace Finances
         private void lvTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
+            if (column != null)
             {
-                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-                lvTransactions.Items.SortDescriptions.Clear();
+                string sortBy = column.Tag.ToString();
+                if (_listViewSortCol != null)
+                {
+                    AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
+                    lvTransactions.Items.SortDescriptions.Clear();
+                }
+
+                ListSortDirection newDir = ListSortDirection.Ascending;
+                if (Equals(_listViewSortCol, column) && _listViewSortAdorner.Direction == newDir)
+                    newDir = ListSortDirection.Descending;
+
+                _listViewSortCol = column;
+                _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
+                AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
+                lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
-
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
-
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }
 
         #endregion Window-Manipulation Methods

@@ -25,34 +25,22 @@ namespace Finances
         {
             get
             {
-                decimal balance = 0.00M;
-                for (int i = 0; i < AllTransactions.Count; i++)
-                    balance += (-1 * AllTransactions[i].Outflow) + AllTransactions[i].Inflow;
-                return balance;
+                return AllTransactions.Sum(transaction => (-1 * transaction.Outflow) + transaction.Inflow);
             }
         }
 
         /// <summary>Collection of all the transactions in the account</summary>
-        public ReadOnlyCollection<Transaction> AllTransactions
-        {
-            get { return new ReadOnlyCollection<Transaction>(_allTransactions); }
-        }
+        public ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(_allTransactions);
 
         #endregion Modifying Properties
 
         #region Helper Properties
 
         /// <summary>Balance of the account, formatted to currency</summary>
-        public string BalanceToString
-        {
-            get { return Balance.ToString("C2"); }
-        }
+        public string BalanceToString => Balance.ToString("C2");
 
         /// <summary>Balance of the account, formatted to currency, with preceding text</summary>
-        public string BalanceToStringWithText
-        {
-            get { return "Balance: " + BalanceToString; }
-        }
+        public string BalanceToStringWithText => "Balance: " + BalanceToString;
 
         #endregion Helper Properties
 
@@ -60,7 +48,7 @@ namespace Finances
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
@@ -103,11 +91,11 @@ namespace Finances
 
         #region Override Operators
 
-        public static bool Equals(Account left, Account right)
+        private static bool Equals(Account left, Account right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
-            return string.Equals(left.Name, right.Name, StringComparison.OrdinalIgnoreCase) && left.Balance == right.Balance && ((left.AllTransactions.Count() == right.AllTransactions.Count()) && !left.AllTransactions.Except(right.AllTransactions).Any());
+            return string.Equals(left.Name, right.Name, StringComparison.OrdinalIgnoreCase) && left.Balance == right.Balance && (left.AllTransactions.Count == right.AllTransactions.Count && !left.AllTransactions.Except(right.AllTransactions).Any());
         }
 
         public sealed override bool Equals(object obj)
@@ -151,7 +139,6 @@ namespace Finances
 
         /// <summary>Initializes an instance of Account by assigning Properties.</summary>
         /// <param name="name">Name of the account</param>
-        /// <param name="balance">Balance of the account</param>
         /// <param name="transactions">Collection of all the transactions in the account</param>
         public Account(string name, IEnumerable<Transaction> transactions)
         {

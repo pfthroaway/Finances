@@ -9,14 +9,14 @@ using System.Windows.Input;
 namespace Finances
 {
     /// <summary>Interaction logic for NewTransactionWindow.xaml</summary>
-    public partial class NewTransactionWindow : Window, INotifyPropertyChanged
+    public partial class NewTransactionWindow : INotifyPropertyChanged
     {
-        private List<Account> AllAccounts = AppState.AllAccounts;
-        private List<Category> AllCategories = AppState.AllCategories;
+        private readonly List<Account> AllAccounts = AppState.AllAccounts;
+        private readonly List<Category> AllCategories = AppState.AllCategories;
         private Category selectedCategory = new Category();
         private Account selectedAccount = new Account();
 
-        internal ViewAccountWindow RefToViewAccountWindow { get; set; }
+        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
 
         #region Data-Binding
 
@@ -193,7 +193,7 @@ namespace Finances
 
             List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
 
-            if (keys.Any(key => key == true) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
+            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
                 e.Handled = false;
             else
                 e.Handled = true;

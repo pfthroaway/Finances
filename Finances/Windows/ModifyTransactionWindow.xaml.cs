@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,15 +11,15 @@ namespace Finances
     /// <summary>
     /// Interaction logic for ModifyTransactionWindow.xaml
     /// </summary>
-    public partial class ModifyTransactionWindow : Window, INotifyPropertyChanged
+    public partial class ModifyTransactionWindow : INotifyPropertyChanged
     {
-        private List<Account> AllAccounts = AppState.AllAccounts;
-        private List<Category> AllCategories = AppState.AllCategories;
-        private Category selectedCategory = new Category();
-        private Account selectedAccount = new Account();
+        private readonly List<Account> AllAccounts = AppState.AllAccounts;
+        private readonly List<Category> AllCategories = AppState.AllCategories;
+        private Category selectedCategory;
+        private Account selectedAccount;
 
         private Transaction modifyTransaction = new Transaction();
-        internal ViewAccountWindow RefToViewAccountWindow { get; set; }
+        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
 
         #region Data-Binding
 
@@ -38,8 +39,8 @@ namespace Finances
             cmbMajorCategory.SelectedItem = AllCategories.Find(category => category.Name == setTransaction.MajorCategory);
             cmbMinorCategory.SelectedItem = setTransaction.MinorCategory;
             txtPayee.Text = setTransaction.Payee;
-            txtOutflow.Text = setTransaction.Outflow.ToString();
-            txtInflow.Text = setTransaction.Inflow.ToString();
+            txtOutflow.Text = setTransaction.Outflow.ToString(CultureInfo.InvariantCulture);
+            txtInflow.Text = setTransaction.Inflow.ToString(CultureInfo.InvariantCulture);
             modifyTransaction = setTransaction;
             selectedAccount = setAccount;
         }
@@ -155,6 +156,8 @@ namespace Finances
 
         public ModifyTransactionWindow()
         {
+            selectedCategory = new Category();
+            selectedAccount = new Account();
             InitializeComponent();
             cmbAccount.ItemsSource = AllAccounts;
             cmbMajorCategory.ItemsSource = AllCategories;
@@ -173,7 +176,7 @@ namespace Finances
 
             List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
 
-            if (keys.Any(key => key == true) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
+            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
                 e.Handled = false;
             else
                 e.Handled = true;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace Finances
 {
@@ -15,14 +14,14 @@ namespace Finances
         public string Name
         {
             get { return _name; }
-            set { _name = value; OnPropertyChanged("Name"); }
+            private set { _name = value; OnPropertyChanged("Name"); }
         }
 
         /// <summary>List of minor categories related to the major category</summary>
         public List<string> MinorCategories
         {
             get { return _minorCategories; }
-            set { _minorCategories = value; OnPropertyChanged("SubCategories"); }
+            private set { _minorCategories = value; OnPropertyChanged("SubCategories"); }
         }
 
         #endregion Properties
@@ -31,7 +30,7 @@ namespace Finances
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }

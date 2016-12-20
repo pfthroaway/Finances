@@ -25,7 +25,7 @@ namespace Finances
         {
             bool success = false;
             SQLiteConnection con = new SQLiteConnection();
-            SQLiteDataAdapter da = new SQLiteDataAdapter();
+            SQLiteDataAdapter da;
             DataSet ds = new DataSet();
             con.ConnectionString = _DBPROVIDERANDSOURCE;
 
@@ -109,8 +109,8 @@ namespace Finances
                     AllAccounts = AllAccounts.OrderBy(account => account.Name).ToList();
                     if (AllAccounts.Count > 0)
                     {
-                        for (int i = 0; i < AllAccounts.Count; i++)
-                            AllAccounts[i].Sort();
+                        foreach (Account account in AllAccounts)
+                            account.Sort();
                     }
 
                     AllTransactions = AllTransactions.OrderBy(transaction => transaction.Date).ToList();
@@ -127,12 +127,13 @@ namespace Finances
                         }
                         while (start <= months);
 
-                        for (int i = 0; i < AllTransactions.Count; i++)
+                        foreach (Transaction transaction in AllTransactions)
                         {
-                            AllMonths.Find(month => month.MonthStart <= AllTransactions[i].Date && AllTransactions[i].Date <= month.MonthEnd.Date).AddTransaction(AllTransactions[i]);
+                            AllMonths.Find(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date).AddTransaction(transaction);
                         }
 
                         AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
+                        success = true;
                     }
                 }
                 catch (Exception ex)
@@ -149,12 +150,12 @@ namespace Finances
 
         /// <summary>Adds a transaction to an account and the database</summary>
         /// <param name="transaction">Transaction to be added</param>
+        /// <param name="account">Account the transaction will be added to</param>
         /// <returns>Returns true if successful</returns>
         internal static async Task<bool> AddTransaction(Transaction transaction, Account account)
         {
             bool success = false;
-            SQLiteConnection con = new SQLiteConnection();
-            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
             SQLiteCommand cmd = con.CreateCommand();
             cmd.CommandText = "INSERT INTO Transactions([Date],[Payee],[MajorCategory],[MinorCategory],[Memo],[Outflow],[Inflow],[Account])Values('" + transaction.DateToString.Replace("'", "''") + "','" + transaction.Payee.Replace("'", "''") + "','" + transaction.MajorCategory.Replace("'", "''") + "','" + transaction.MinorCategory.Replace("'", "''") + "','" + transaction.Memo.Replace("'", "''") + "','" + transaction.Outflow + "','" + transaction.Inflow + "','" + account.Name.Replace("'", "''") + "')";
 
@@ -166,9 +167,11 @@ namespace Finances
                     cmd.Connection = con;
                     cmd.ExecuteNonQuery();
 
-                    cmd = new SQLiteCommand();
-                    cmd.Connection = con;
-                    cmd.CommandText = "UPDATE Accounts SET [Balance] = @balance WHERE [Name] = @name";
+                    cmd = new SQLiteCommand
+                    {
+                        Connection = con,
+                        CommandText = "UPDATE Accounts SET [Balance] = @balance WHERE [Name] = @name"
+                    };
                     cmd.Parameters.AddWithValue("@balance", account.Balance);
                     cmd.Parameters.AddWithValue("@name", account.Name);
                     cmd.ExecuteNonQuery();
@@ -205,8 +208,7 @@ namespace Finances
             bool success = false;
 
             SQLiteCommand cmd = new SQLiteCommand();
-            SQLiteConnection con = new SQLiteConnection();
-            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
 
             cmd.CommandText = "UPDATE Transactions SET [Date] = @date AND [Payee] = @payee AND [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory AND [Memo] = @memo AND [Outflow] = @outflow AND [Inflow] = @inflow AND [Account] = @account WHERE [Date] = @oldDate AND [Payee] = @oldPayee AND [MajorCategory] = @oldMajorCategory AND [MinorCategory] = @oldMinorCategory AND [Memo] = @oldMemo AND [Outflow] = @oldOutflow AND [Inflow] = @oldInflow AND [Account] = @oldAccount";
             cmd.Parameters.AddWithValue("@date", newTransaction.DateToString);
@@ -236,7 +238,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Saving Hero Bank", MessageBoxButton.OK);
+                    MessageBox.Show(ex.Message, "Error Modifying Transaction", MessageBoxButton.OK);
                 }
                 finally { con.Close(); }
             });
@@ -246,12 +248,12 @@ namespace Finances
 
         /// <summary>Deletes a transaction from the database.</summary>
         /// <param name="transaction">Transaction to be deleted</param>
+        /// <param name="account">Account the transaction will be deleted from</param>
         /// <returns>Returns true if successful</returns>
         internal static async Task<bool> DeleteTransaction(Transaction transaction, Account account)
         {
             bool success = false;
-            SQLiteConnection con = new SQLiteConnection();
-            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
             SQLiteCommand cmd = con.CreateCommand();
             cmd.CommandText = "DELETE FROM Transactions WHERE [Date] = @date AND [Payee] = @payee AND [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory AND [Memo] = @memo AND [Outflow] = @outflow AND [Inflow] = @inflow AND [Account] = @account";
             cmd.Parameters.AddWithValue("@date", transaction.DateToString);
@@ -291,8 +293,7 @@ namespace Finances
         internal static async Task<bool> AddAccount(Account account)
         {
             bool success = false;
-            SQLiteConnection con = new SQLiteConnection();
-            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
             SQLiteCommand cmd = con.CreateCommand();
             cmd.CommandText = "INSERT INTO Accounts([Name],[Balance])Values('" + account.Name.Replace("'", "''") + "','" + account.Balance + "')";
             await Task.Factory.StartNew(() =>
@@ -319,8 +320,7 @@ namespace Finances
         internal static async Task<bool> DeleteAccount(Account account)
         {
             bool success = false;
-            SQLiteConnection con = new SQLiteConnection();
-            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
             SQLiteCommand cmd = con.CreateCommand();
             cmd.CommandText = "DELETE FROM Accounts WHERE [Name] = @name";
             cmd.Parameters.AddWithValue("@name", account.Name);
@@ -350,13 +350,13 @@ namespace Finances
 
         /// <summary>Renames an account in the database.</summary>
         /// <param name="account">Account to be renamed</param>
+        /// <param name="newAccountName">New account's name</param>
         /// <returns>Returns true if successful</returns>
         internal static async Task<bool> RenameAccount(Account account, string newAccountName)
         {
             bool success = false;
             string oldAccountName = account.Name;
-            SQLiteConnection con = new SQLiteConnection();
-            con.ConnectionString = _DBPROVIDERANDSOURCE;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
             SQLiteCommand cmd = con.CreateCommand();
             cmd.CommandText = "UPDATE Accounts SET [Name] = @newAccountName WHERE [Name] = @oldAccountName";
             cmd.Parameters.AddWithValue("@newAccountName", newAccountName.Replace("'", "''"));
@@ -375,16 +375,16 @@ namespace Finances
 
                     account.Name = newAccountName;
 
-                    for (int i = 0; i < AllTransactions.Count; i++)
+                    foreach (Transaction transaction in AllTransactions)
                     {
-                        if (AllTransactions[i].Account == oldAccountName)
-                            AllTransactions[i].Account = newAccountName;
+                        if (transaction.Account == oldAccountName)
+                            transaction.Account = newAccountName;
                     }
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                    MessageBox.Show(ex.Message, "Error Renaming Account", MessageBoxButton.OK);
                 }
                 finally { con.Close(); }
             });

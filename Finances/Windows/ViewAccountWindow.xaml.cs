@@ -8,14 +8,14 @@ namespace Finances
     /// <summary>
     /// Interaction logic for ViewAccountWindow.xaml
     /// </summary>
-    public partial class ViewAccountWindow : Window, INotifyPropertyChanged
+    public partial class ViewAccountWindow : INotifyPropertyChanged
     {
         private Account selectedAccount = new Account();
         private Transaction selectedTransaction = new Transaction();
-        private GridViewColumnHeader listViewSortCol = null;
-        private SortAdorner listViewSortAdorner = null;
+        private GridViewColumnHeader _listViewSortCol;
+        private SortAdorner _listViewSortAdorner;
 
-        internal MainWindow RefToMainWindow { get; set; }
+        internal MainWindow RefToMainWindow { private get; set; }
 
         #region Data-Binding
 
@@ -44,10 +44,84 @@ namespace Finances
             DataContext = selectedAccount;
         }
 
+        #region Button-Click Methods
+
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
+
+        private async void btnDeleteAccount_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this account? All transactions associated with it will be lost forever!", "Finances", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                if (await AppState.DeleteAccount(selectedAccount))
+                {
+                    RefToMainWindow.RefreshItemsSource();
+                    CloseWindow();
+                }
+            }
+        }
+
+        private async void btnDeleteTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this transaction? All data associated with it will be lost forever!", "Finances", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                selectedAccount.RemoveTransaction(selectedTransaction);
+                if (await AppState.DeleteTransaction(selectedTransaction, selectedAccount))
+                {
+                    lvTransactions.UnselectAll();
+                    RefreshItemsSource();
+                }
+            }
+        }
+
+        private void btnModifyTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            ModifyTransactionWindow modifyTransactionWindow = new ModifyTransactionWindow
+            {
+                RefToViewAccountWindow = this
+            };
+            modifyTransactionWindow.SetCurrentTransaction(selectedTransaction, selectedAccount);
+            modifyTransactionWindow.Show();
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void btnNewTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            NewTransactionWindow newTransactionWindow = new NewTransactionWindow { RefToViewAccountWindow = this };
+            newTransactionWindow.Show();
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void btnNewTransfer_Click(object sender, RoutedEventArgs e)
+        {
+            NewTransferWindow newTransferWindow = new NewTransferWindow { RefToViewAccountWindow = this };
+            newTransferWindow.Show();
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void btnRenameAccount_Click(object sender, RoutedEventArgs e)
+        {
+            RenameAccountWindow renameAccountWindow = new RenameAccountWindow { RefToViewAccountWindow = this };
+            renameAccountWindow.LoadAccountName(selectedAccount);
+            renameAccountWindow.Show();
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void btnSearchTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTransactionsWindow searchTransactionsWindow = new SearchTransactionsWindow
+            {
+                RefToViewAccountWindow = this
+            };
+            searchTransactionsWindow.Show();
+            this.Visibility = Visibility.Hidden;
+        }
+
+        #endregion Button-Click Methods
 
         #region Window-Manipulation Methods
 
@@ -73,85 +147,23 @@ namespace Finances
         private void lvTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
+            if (column != null)
             {
-                AdornerLayer.GetAdornerLayer(listViewSortCol).Remove(listViewSortAdorner);
-                lvTransactions.Items.SortDescriptions.Clear();
-            }
-
-            ListSortDirection newDir = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
-                newDir = ListSortDirection.Descending;
-
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
-            AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
-        }
-
-        private void btnNewTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            NewTransactionWindow newTransactionWindow = new NewTransactionWindow();
-            newTransactionWindow.RefToViewAccountWindow = this;
-            newTransactionWindow.Show();
-            this.Visibility = Visibility.Hidden;
-        }
-
-        private void btnModifyTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            ModifyTransactionWindow modifyTransactionWindow = new ModifyTransactionWindow();
-            modifyTransactionWindow.RefToViewAccountWindow = this;
-            modifyTransactionWindow.SetCurrentTransaction(selectedTransaction, selectedAccount);
-            modifyTransactionWindow.Show();
-            this.Visibility = Visibility.Hidden;
-        }
-
-        private void btnRenameAccount_Click(object sender, RoutedEventArgs e)
-        {
-            RenameAccountWindow renameAccountWindow = new RenameAccountWindow();
-            renameAccountWindow.RefToViewAccountWindow = this;
-            renameAccountWindow.LoadAccountName(selectedAccount);
-            renameAccountWindow.Show();
-            this.Visibility = Visibility.Hidden;
-        }
-
-        private async void btnDeleteAccount_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this account? All transactions associated with it will be lost forever!", "Finances", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
-            {
-                if (await AppState.DeleteAccount(selectedAccount))
+                string sortBy = column.Tag.ToString();
+                if (_listViewSortCol != null)
                 {
-                    RefToMainWindow.RefreshItemsSource();
-                    CloseWindow();
+                    AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
+                    lvTransactions.Items.SortDescriptions.Clear();
                 }
-            }
-        }
 
-        private void btnNewTransfer_Click(object sender, RoutedEventArgs e)
-        {
-            NewTransferWindow newTransferWindow = new NewTransferWindow();
-            newTransferWindow.RefToViewAccountWindow = this;
-            newTransferWindow.Show();
-            this.Visibility = Visibility.Hidden;
-        }
+                ListSortDirection newDir = ListSortDirection.Ascending;
+                if (Equals(_listViewSortCol, column) && _listViewSortAdorner.Direction == newDir)
+                    newDir = ListSortDirection.Descending;
 
-        private void btnSearchTransactions_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private async void btnDeleteTransaction_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this transaction? All data associated with it will be lost forever!", "Finances", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
-            {
-                selectedAccount.RemoveTransaction(selectedTransaction);
-                if (await AppState.DeleteTransaction(selectedTransaction, selectedAccount))
-                {
-                    lvTransactions.UnselectAll();
-                    RefreshItemsSource();
-                }
+                _listViewSortCol = column;
+                _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
+                AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
+                lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
         }
 

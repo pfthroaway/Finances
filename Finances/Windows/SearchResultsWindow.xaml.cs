@@ -1,27 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace Finances
 {
-    /// <summary>Interaction logic for DetailedMonthlyReportWindow.xaml</summary>
-    public partial class CategorizedMonthlyReportWindow
+    /// <summary>
+    /// Interaction logic for SearchResultsWindow.xaml
+    /// </summary>
+    public partial class SearchResultsWindow : INotifyPropertyChanged
     {
-        private Month currentMonth = new Month();
-        private List<CategorizedExpense> AllCategorizedExpenses = new List<CategorizedExpense>();
+        private List<Transaction> _allTransactions;
         private GridViewColumnHeader _listViewSortCol;
         private SortAdorner _listViewSortAdorner;
 
-        internal MonthlyReportWindow RefToMonthlyReportWindow { private get; set; }
+        internal SearchTransactionsWindow RefToSearchTransactionsWindowWindow { private get; set; }
 
-        internal void LoadMonth(Month selectedMonth, List<CategorizedExpense> expenses)
+        public string TransactionCount => "Transaction Count: " + _allTransactions.Count;
+
+        #region Data-Binding
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string property)
         {
-            AllCategorizedExpenses = expenses;
-            currentMonth = selectedMonth;
-            lvCategorized.ItemsSource = AllCategorizedExpenses;
-            DataContext = currentMonth;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+
+        #endregion Data-Binding
+
+        internal void LoadWindow(List<Transaction> matchingTransactions)
+        {
+            _allTransactions = matchingTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+            lvTransactions.ItemsSource = _allTransactions;
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -37,12 +50,17 @@ namespace Finances
             this.Close();
         }
 
-        public CategorizedMonthlyReportWindow()
+        public SearchResultsWindow()
         {
             InitializeComponent();
         }
 
-        private void lvCategorizedColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void windowSearchResults_Closing(object sender, CancelEventArgs e)
+        {
+            RefToSearchTransactionsWindowWindow.Show();
+        }
+
+        private void lvTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             if (column != null)
@@ -51,7 +69,7 @@ namespace Finances
                 if (_listViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
-                    lvCategorized.Items.SortDescriptions.Clear();
+                    lvTransactions.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -61,13 +79,8 @@ namespace Finances
                 _listViewSortCol = column;
                 _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
-                lvCategorized.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
-        }
-
-        private void windowCategorizedMonthlyReport_Closing(object sender, CancelEventArgs e)
-        {
-            RefToMonthlyReportWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

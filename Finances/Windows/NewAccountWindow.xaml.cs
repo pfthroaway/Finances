@@ -10,15 +10,15 @@ namespace Finances
     /// <summary>
     /// Interaction logic for NewAccountWindow.xaml
     /// </summary>
-    public partial class NewAccountWindow : Window
+    public partial class NewAccountWindow
     {
-        internal MainWindow RefToMainWindow { get; set; }
+        internal MainWindow RefToMainWindow { private get; set; }
 
         #region Button-Click Methods
 
         private async void btnSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (!AppState.AllAccounts.Any(account => account.Name == txtAccountName.Text))
+            if (AppState.AllAccounts.All(account => account.Name != txtAccountName.Text))
             {
                 Account newAccount = new Account(txtAccountName.Text, new List<Transaction>());
                 Transaction newTransaction = new Transaction(

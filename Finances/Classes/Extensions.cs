@@ -10,7 +10,7 @@ namespace Finances
         /// <returns>Parsed Decimal</returns>
         internal static decimal Parse(string text)
         {
-            decimal temp = 0;
+            decimal temp;
             decimal.TryParse(text, out temp);
             return temp;
         }
@@ -20,7 +20,7 @@ namespace Finances
         /// <returns>Parsed Decimal</returns>
         internal static decimal Parse(object obj)
         {
-            decimal temp = 0;
+            decimal temp;
             decimal.TryParse(obj.ToString(), out temp);
             return temp;
         }
@@ -34,7 +34,7 @@ namespace Finances
         /// <returns>Parsed DateTime</returns>
         internal static DateTime Parse(string text)
         {
-            DateTime temp = new DateTime();
+            DateTime temp;
             DateTime.TryParse(text, out temp);
             return temp;
         }
@@ -44,7 +44,7 @@ namespace Finances
         /// <returns>Parsed DateTime</returns>
         internal static DateTime Parse(object obj)
         {
-            DateTime temp = new DateTime();
+            DateTime temp;
             DateTime.TryParse(obj.ToString(), out temp);
             return temp;
         }

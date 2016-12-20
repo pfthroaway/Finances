@@ -9,7 +9,7 @@ namespace Finances
     /// <summary>Represents a month to help determine income and expenses of transactions.</summary>
     internal class Month : INotifyPropertyChanged
     {
-        private DateTime _monthStart = new DateTime();
+        private DateTime _monthStart;
         private List<Transaction> _allTransactions = new List<Transaction>();
 
         #region Modifying Properties
@@ -18,90 +18,66 @@ namespace Finances
         public DateTime MonthStart
         {
             get { return _monthStart; }
-            set { _monthStart = value; OnPropertyChanged("MonthStart"); }
+            private set { _monthStart = value; OnPropertyChanged("MonthStart"); }
         }
 
         /// <summary>Collection of all the transactions that occurred in the month</summary>
-        internal ReadOnlyCollection<Transaction> AllTransactions
-        {
-            get { return new ReadOnlyCollection<Transaction>(_allTransactions); }
-        }
+        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(_allTransactions);
 
         #endregion Modifying Properties
 
         #region Helper Properties
 
         /// <summary>Income for this month</summary>
-        public decimal Income
+        private decimal Income
         {
             get
             {
                 decimal income = 0.00M;
-                for (int i = 0; i < AllTransactions.Count; i++)
+                foreach (Transaction transaction in AllTransactions)
                 {
-                    if (AllTransactions[i].MajorCategory != "Transfer")
-                        income += AllTransactions[i].Inflow;
+                    if (transaction.MajorCategory != "Transfer")
+                        income += transaction.Inflow;
                 }
                 return income;
             }
         }
 
         /// <summary>Income for this month, formatted to currency</summary>
-        public string IncomeToString
-        {
-            get { return Income.ToString("C2"); }
-        }
+        public string IncomeToString => Income.ToString("C2");
 
         /// <summary>Income for this month, formatted to currency, with preceding text</summary>
-        public string IncomeToStringWithText
-        {
-            get { return "Income: " + Income.ToString("C2"); }
-        }
+        public string IncomeToStringWithText => "Income: " + Income.ToString("C2");
 
         /// <summary>Expenses for this month</summary>
-        public decimal Expenses
+        private decimal Expenses
         {
             get
             {
                 decimal expenses = 0.00M;
-                for (int i = 0; i < AllTransactions.Count; i++)
+                foreach (Transaction transaction in AllTransactions)
                 {
-                    if (AllTransactions[i].MajorCategory != "Transfer")
-                        expenses += AllTransactions[i].Outflow;
+                    if (transaction.MajorCategory != "Transfer")
+                        expenses += transaction.Outflow;
                 }
-                return expenses * -1;
+                return expenses;
             }
         }
 
         /// <summary>Expenses for this month, formatted to currency</summary>
-        public string ExpensesToString
-        {
-            get { return Expenses.ToString("C2"); }
-        }
+        public string ExpensesToString => Expenses.ToString("C2");
 
         /// <summary>Expenses for this month, formatted to currency, with preceding text</summary>
-        public string ExpensesToStringWithText
-        {
-            get { return "Expenses: " + Expenses.ToString("C2"); }
-        }
+        public string ExpensesToStringWithText => "Expenses: " + Expenses.ToString("C2");
 
         /// <summary>Last day of the month</summary>
-        public DateTime MonthEnd
-        {
-            get
-            {
-                return new DateTime(
-                    year: MonthStart.Year,
-                    month: MonthStart.Month,
-                    day: DateTime.DaysInMonth(MonthStart.Year, MonthStart.Month));
-            }
-        }
+        public DateTime MonthEnd => new DateTime(
+            year: MonthStart.Year,
+            month: MonthStart.Month,
+            day: DateTime.DaysInMonth(MonthStart.Year, MonthStart.Month));
 
         /// <summary>Formatted text representing the year and month</summary>
-        public string FormattedMonth
-        {
-            get { return MonthStart.ToString("yyyy/MM"); }
-        }
+        public string FormattedMonth => MonthStart.ToString("yyyy/MM");
 
         #endregion Helper Properties
 
@@ -109,7 +85,7 @@ namespace Finances
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
@@ -145,14 +121,14 @@ namespace Finances
 
         #endregion Transaction Management
 
-        internal void Sort()
+        private void Sort()
         {
             _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date).ToList();
         }
 
         #region Override Operators
 
-        public static bool Equals(Month left, Month right)
+        private static bool Equals(Month left, Month right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
@@ -200,8 +176,7 @@ namespace Finances
 
         /// <summary>Initializes an instance of Month by assigning Properties.</summary>
         /// <param name="monthStart">First day of the month</param>
-        /// <param name="income">Income for this month</param>
-        /// <param name="expenses">Expenses for this month</param>
+        /// <param name="transactions">Transactions during this month</param>
         public Month(DateTime monthStart, IEnumerable<Transaction> transactions)
         {
             MonthStart = monthStart;
