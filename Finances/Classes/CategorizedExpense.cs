@@ -22,7 +22,7 @@ namespace Finances
         }
 
         /// <summary>Income for this month</summary>
-        private decimal Income
+        public decimal Income
         {
             get { return _income; }
             set { _income = value; OnPropertyChanged("Income"); OnPropertyChanged("IncomeToString"); }
@@ -32,7 +32,7 @@ namespace Finances
         public string IncomeToString => Income.ToString("C2");
 
         /// <summary>Expenses for this month</summary>
-        private decimal Expenses
+        public decimal Expenses
         {
             get { return _expenses * -1; }
             set { _expenses = value; OnPropertyChanged("Expenses"); OnPropertyChanged("ExpensesToString"); }

@@ -30,14 +30,14 @@ namespace Finances
         public string MajorCategory
         {
             get { return _majorCategory; }
-            private set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
+            set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
         }
 
         /// <summary>Secondary category of which the transaction regards</summary>
         public string MinorCategory
         {
             get { return _minorCategory; }
-            private set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
+            set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
         /// <summary>Extra information regarding the transaction</summary>

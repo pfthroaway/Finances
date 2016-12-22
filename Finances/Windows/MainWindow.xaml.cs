@@ -42,6 +42,9 @@ namespace Finances
 
         private void btnManageCategories_Click(object sender, RoutedEventArgs e)
         {
+            ManageCategoriesWindow manageCategoriesWindow = new ManageCategoriesWindow { RefToMainWindow = this };
+            manageCategoriesWindow.Show();
+            this.Visibility = Visibility.Hidden;
         }
 
         private void btnMonthlyReport_Click(object sender, RoutedEventArgs e)

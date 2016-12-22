@@ -113,28 +113,9 @@ namespace Finances
                             account.Sort();
                     }
 
-                    AllTransactions = AllTransactions.OrderBy(transaction => transaction.Date).ToList();
-                    if (AllTransactions.Count > 0)
-                    {
-                        int months = ((DateTime.Now.Year - AllTransactions[0].Date.Year) * 12) + DateTime.Now.Month - AllTransactions[0].Date.Month;
-                        DateTime startMonth = new DateTime(AllTransactions[0].Date.Year, AllTransactions[0].Date.Month, 1);
-
-                        int start = 0;
-                        do
-                        {
-                            AllMonths.Add(new Month(startMonth.AddMonths(start), new List<Transaction>()));
-                            start += 1;
-                        }
-                        while (start <= months);
-
-                        foreach (Transaction transaction in AllTransactions)
-                        {
-                            AllMonths.Find(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date).AddTransaction(transaction);
-                        }
-
-                        AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
-                        success = true;
-                    }
+                    AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+                    LoadMonths();
+                    success = true;
                 }
                 catch (Exception ex)
                 {
@@ -144,6 +125,33 @@ namespace Finances
             });
 
             return success;
+        }
+
+        /// <summary>Loads all the Months from AllTransactions.</summary>
+        internal static void LoadMonths()
+        {
+            AllMonths.Clear();
+
+            if (AllTransactions.Count > 0)
+            {
+                int months = ((DateTime.Now.Year - AllTransactions[AllTransactions.Count - 1].Date.Year) * 12) + DateTime.Now.Month - AllTransactions[AllTransactions.Count - 1].Date.Month;
+                DateTime startMonth = new DateTime(AllTransactions[AllTransactions.Count - 1].Date.Year, AllTransactions[AllTransactions.Count - 1].Date.Month, 1);
+
+                int start = 0;
+                do
+                {
+                    AllMonths.Add(new Month(startMonth.AddMonths(start), new List<Transaction>()));
+                    start += 1;
+                }
+                while (start <= months);
+
+                foreach (Transaction transaction in AllTransactions)
+                {
+                    AllMonths.Find(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date).AddTransaction(transaction);
+                }
+
+                AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
+            }
         }
 
         #region Transaction Manipulation
@@ -203,37 +211,42 @@ namespace Finances
         /// <param name="oldTransaction">Current Transaction in the database</param>
         /// <param name="account">Account the transaction is associated with</param>
         /// <returns>Returns true if successful</returns>
-        internal static async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction, Account account)
+        internal static async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
         {
             bool success = false;
 
-            SQLiteCommand cmd = new SQLiteCommand();
             SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
-
-            cmd.CommandText = "UPDATE Transactions SET [Date] = @date AND [Payee] = @payee AND [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory AND [Memo] = @memo AND [Outflow] = @outflow AND [Inflow] = @inflow AND [Account] = @account WHERE [Date] = @oldDate AND [Payee] = @oldPayee AND [MajorCategory] = @oldMajorCategory AND [MinorCategory] = @oldMinorCategory AND [Memo] = @oldMemo AND [Outflow] = @oldOutflow AND [Inflow] = @oldInflow AND [Account] = @oldAccount";
-            cmd.Parameters.AddWithValue("@date", newTransaction.DateToString);
-            cmd.Parameters.AddWithValue("@payee", newTransaction.Payee);
-            cmd.Parameters.AddWithValue("@majorCategory", newTransaction.MajorCategory);
-            cmd.Parameters.AddWithValue("@minorCategory", newTransaction.MinorCategory);
-            cmd.Parameters.AddWithValue("@memo", newTransaction.Memo);
+            SQLiteCommand cmd = new SQLiteCommand
+            {
+                Connection = con,
+                CommandText = "UPDATE Transactions SET [Date] = @date, [Payee] = @payee, [MajorCategory] = @majorCategory, [MinorCategory] = @minorCategory, [Memo] = @memo, [Outflow] = @outflow, [Inflow] = @inflow, [Account] = @account WHERE [Date] = @oldDate AND [Payee] = @oldPayee AND [MajorCategory] = @oldMajorCategory AND [MinorCategory] = @oldMinorCategory AND [Memo] = @oldMemo AND [Outflow] = @oldOutflow AND [Inflow] = @oldInflow AND [Account] = @oldAccount"
+            };
+            cmd.Parameters.AddWithValue("@date", newTransaction.DateToString.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@payee", newTransaction.Payee.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@majorCategory", newTransaction.MajorCategory.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@minorCategory", newTransaction.MinorCategory.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@memo", newTransaction.Memo.Replace("'", "''"));
             cmd.Parameters.AddWithValue("@outflow", newTransaction.Outflow);
             cmd.Parameters.AddWithValue("@inflow", newTransaction.Inflow);
-            cmd.Parameters.AddWithValue("@account", account.Name);
-            cmd.Parameters.AddWithValue("@oldDate", newTransaction.DateToString);
-            cmd.Parameters.AddWithValue("@oldPayee", newTransaction.Payee);
-            cmd.Parameters.AddWithValue("@oldMajorCategory", newTransaction.MajorCategory);
-            cmd.Parameters.AddWithValue("@oldMinorCategory", newTransaction.MinorCategory);
-            cmd.Parameters.AddWithValue("@oldMemo", newTransaction.Memo);
-            cmd.Parameters.AddWithValue("@oldOutflow", newTransaction.Outflow);
-            cmd.Parameters.AddWithValue("@oldInflow", newTransaction.Inflow);
-            cmd.Parameters.AddWithValue("@oldAccount", account.Name);
+            cmd.Parameters.AddWithValue("@account", newTransaction.Account.Replace("'", "''"));
+
+            cmd.Parameters.AddWithValue("@oldDate", oldTransaction.DateToString.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@oldPayee", oldTransaction.Payee.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@oldMajorCategory", oldTransaction.MajorCategory.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@oldMinorCategory", oldTransaction.MinorCategory.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@oldMemo", oldTransaction.Memo.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@oldOutflow", oldTransaction.Outflow);
+            cmd.Parameters.AddWithValue("@oldInflow", oldTransaction.Inflow);
+            cmd.Parameters.AddWithValue("@oldAccount", oldTransaction.Account.Replace("'", "''"));
             await Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    cmd.Connection = con;
                     con.Open();
                     cmd.ExecuteNonQuery();
+                    AllTransactions[AllTransactions.IndexOf(oldTransaction)] = newTransaction;
+                    AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+                    LoadMonths();
                     success = true;
                 }
                 catch (Exception ex)
@@ -392,6 +405,188 @@ namespace Finances
         }
 
         #endregion Account Manipulation
+
+        #region Category Management
+
+        /// <summary>Inserts a new Category into the database.</summary>
+        /// <param name="selectedCategory">Selected Major Category</param>
+        /// <param name="newName">Name for new Category</param>
+        /// <param name="isMajor">Is the category being added a Major Category?</param>
+        /// <returns>Returns true if successful.</returns>
+        internal static async Task<bool> AddCategory(Category selectedCategory, string newName, bool isMajor)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText = isMajor
+                ? "INSERT INTO MajorCategories([Name])Values('" + newName.Replace("'", "''") + "')"
+                : "INSERT INTO MinorCategories([MajorCategory],[MinorCategory])Values('" +
+                  selectedCategory.Name.Replace("'", "''") + "','" + newName.Replace("'", "''") + "')";
+
+            await Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        cmd.ExecuteNonQuery();
+
+                        if (isMajor)
+                        {
+                            AllCategories.Add(new Category(
+                                name: newName,
+                                minorCategories: new List<string>()));
+                        }
+                        else
+                            selectedCategory.MinorCategories.Add(newName);
+
+                        AllCategories = AllCategories.OrderBy(category => category.Name).ToList();
+                        success = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error Creating New Category", MessageBoxButton.OK);
+                    }
+                    finally { con.Close(); }
+                });
+
+            return success;
+        }
+
+        /// <summary>Rename a category in the database.</summary>
+        /// <param name="selectedCategory">Category to rename</param>
+        /// <param name="newName">New name of the Category</param>
+        /// <param name="oldName">Old name of the Category</param>
+        /// <param name="isMajor">Is the category being renamed a Major Category?</param>
+        /// <returns></returns>
+        internal static async Task<bool> RenameCategory(Category selectedCategory, string newName, string oldName, bool isMajor)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
+            SQLiteCommand cmd = con.CreateCommand();
+
+            cmd.CommandText = isMajor ? "UPDATE MajorCategories SET [Name] = @newName WHERE [Name] = @oldName; UPDATE MinorCategories SET [MajorCategory] = @newName WHERE [MajorCategory] = @oldName" : "UPDATE MinorCategories SET[MinorCategory] = @newName WHERE[MinorCategory] = @oldName AND [MajorCategory] = @majorCategory";
+            cmd.Parameters.AddWithValue("@newName", newName.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@oldName", oldName.Replace("'", "''"));
+            cmd.Parameters.AddWithValue("@majorCategory", selectedCategory.Name.Replace("'", "''"));
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+
+                    if (isMajor)
+                    {
+                        selectedCategory = AllCategories.Find(category => category.Name == selectedCategory.Name);
+                        selectedCategory.Name = newName;
+                        AllTransactions.Select(transaction => transaction.MajorCategory == oldName ? newName : oldName).ToList();
+                    }
+                    else
+                    {
+                        selectedCategory = AllCategories.Find(category => category.Name == selectedCategory.Name);
+                        selectedCategory.MinorCategories.Select(category => category == oldName ? newName : category).ToList();
+                        AllTransactions.Select(transaction => transaction.MinorCategory == oldName ? newName : oldName).ToList();
+                    }
+
+                    AllCategories = AllCategories.OrderBy(category => category.Name).ToList();
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Renaming Category", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
+        /// <summary>Removes a Major Category from the database, as well as removes it from all Transactions which utilize it.</summary>
+        /// <param name="selectedCategory">Selected Major Category to delete</param>
+        /// <returns>Returns true if operation successful</returns>
+        internal static async Task<bool> RemoveMajorCategory(Category selectedCategory)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText =
+                "DELETE FROM MajorCategories WHERE [Name] = @name; DELETE FROM MinorCategories WHERE [MajorCategory] = @name; UPDATE Transactions SET [MajorCategory] = @newName AND [MinorCategory] = @newName WHERE [MinorCategory] = @name";
+            cmd.Parameters.AddWithValue("@name", selectedCategory.Name);
+            cmd.Parameters.AddWithValue("@newName", "");
+
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+
+                    foreach (Transaction transaction in AllTransactions)
+                    {
+                        if (transaction.MajorCategory == selectedCategory.Name)
+                        {
+                            transaction.MajorCategory = "";
+                            transaction.MinorCategory = "";
+                        }
+                    }
+
+                    AllCategories.Remove(AllCategories.Find(category => category.Name == selectedCategory.Name));
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
+        /// <summary>Removes a Major Category from the database, as well as removes it from all Transactions which utilize it.</summary>
+        /// <param name="selectedCategory">Selected Major Category</param>
+        /// <param name="minorCategory">Selected Minor Category to delete</param>
+        /// <returns>Returns true if operation successful</returns>
+        internal static async Task<bool> RemoveMinorCategory(Category selectedCategory, string minorCategory)
+        {
+            bool success = false;
+            SQLiteConnection con = new SQLiteConnection { ConnectionString = _DBPROVIDERANDSOURCE };
+            SQLiteCommand cmd = con.CreateCommand();
+            cmd.CommandText =
+                "DELETE FROM MinorCategories WHERE [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory; UPDATE Transactions SET [MinorCategory] = @newMinorName WHERE [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory";
+            cmd.Parameters.AddWithValue("@majorCategory", selectedCategory.Name);
+            cmd.Parameters.AddWithValue("@minorCategory", minorCategory);
+            cmd.Parameters.AddWithValue("@newMinorName", "");
+
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    con.Open();
+                    cmd.Connection = con;
+                    cmd.ExecuteNonQuery();
+
+                    foreach (Transaction transaction in AllTransactions)
+                    {
+                        if (transaction.MajorCategory == selectedCategory.Name && transaction.MinorCategory == minorCategory)
+                            transaction.MinorCategory = "";
+                    }
+
+                    selectedCategory = AllCategories.Find(category => category.Name == selectedCategory.Name);
+                    selectedCategory.MinorCategories.Remove(minorCategory);
+                    success = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                }
+                finally { con.Close(); }
+            });
+            return success;
+        }
+
+        #endregion Category Management
 
         /// <summary>Turns several Keyboard.Keys into a list of Keys which can be tested using List.Any.</summary>
         /// <param name="keys">Array of Keys</param>

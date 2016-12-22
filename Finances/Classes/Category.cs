@@ -14,7 +14,7 @@ namespace Finances
         public string Name
         {
             get { return _name; }
-            private set { _name = value; OnPropertyChanged("Name"); }
+            set { _name = value; OnPropertyChanged("Name"); }
         }
 
         /// <summary>List of minor categories related to the major category</summary>

@@ -72,6 +72,7 @@ namespace Finances
         internal void ModifyTransaction(int index, Transaction transaction)
         {
             _allTransactions[index] = transaction;
+            _allTransactions = _allTransactions.OrderByDescending(trans => trans.Date).ToList();
         }
 
         /// <summary>Removes a transaction to this account.</summary>

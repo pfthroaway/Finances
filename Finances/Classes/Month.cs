@@ -29,7 +29,7 @@ namespace Finances
         #region Helper Properties
 
         /// <summary>Income for this month</summary>
-        private decimal Income
+        public decimal Income
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Finances
         public string IncomeToStringWithText => "Income: " + Income.ToString("C2");
 
         /// <summary>Expenses for this month</summary>
-        private decimal Expenses
+        public decimal Expenses
         {
             get
             {

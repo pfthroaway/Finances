@@ -62,7 +62,7 @@ namespace Finances
             if (newTransaction != modifyTransaction)
             {
                 selectedAccount.ModifyTransaction(selectedAccount.AllTransactions.IndexOf(modifyTransaction), newTransaction);
-                if (await AppState.ModifyTransaction(newTransaction, modifyTransaction, selectedAccount))
+                if (await AppState.ModifyTransaction(newTransaction, modifyTransaction))
                     CloseWindow();
                 else
                     MessageBox.Show("Unable to modify transaction.", "Finances", MessageBoxButton.OK);
@@ -100,6 +100,8 @@ namespace Finances
                                          where char.IsDigit(c) || c.IsPeriod()
                                          select c).ToArray());
             txtInflow.CaretIndex = txtInflow.Text.Length;
+            if (txtInflow.Text.Substring(txtInflow.Text.IndexOf(".") + 1).Contains("."))
+                txtInflow.Text = txtInflow.Text.Substring(0, txtInflow.Text.IndexOf(".") + 1) + txtInflow.Text.Substring(txtInflow.Text.IndexOf(".") + 1).Replace(".", "");
             TextChanged();
         }
 
@@ -109,6 +111,8 @@ namespace Finances
                                           where char.IsDigit(c) || c.IsPeriod()
                                           select c).ToArray());
             txtOutflow.CaretIndex = txtOutflow.Text.Length;
+            if (txtOutflow.Text.Substring(txtOutflow.Text.IndexOf(".") + 1).Contains("."))
+                txtOutflow.Text = txtOutflow.Text.Substring(0, txtOutflow.Text.IndexOf(".") + 1) + txtOutflow.Text.Substring(txtOutflow.Text.IndexOf(".") + 1).Replace(".", "");
             TextChanged();
         }
 
@@ -164,12 +168,6 @@ namespace Finances
             cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
         }
 
-        private void windowModifyTransaction_Closing(object sender, CancelEventArgs e)
-        {
-            RefToViewAccountWindow.RefreshItemsSource();
-            RefToViewAccountWindow.Show();
-        }
-
         private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             Key k = e.Key;
@@ -200,6 +198,12 @@ namespace Finances
         private void txtInflow_GotFocus(object sender, RoutedEventArgs e)
         {
             txtInflow.SelectAll();
+        }
+
+        private void windowModifyTransaction_Closing(object sender, CancelEventArgs e)
+        {
+            RefToViewAccountWindow.RefreshItemsSource();
+            RefToViewAccountWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

@@ -11,10 +11,10 @@ namespace Finances
     /// <summary>Interaction logic for NewTransactionWindow.xaml</summary>
     public partial class NewTransactionWindow : INotifyPropertyChanged
     {
-        private readonly List<Account> AllAccounts = AppState.AllAccounts;
-        private readonly List<Category> AllCategories = AppState.AllCategories;
-        private Category selectedCategory = new Category();
-        private Account selectedAccount = new Account();
+        private readonly List<Account> _allAccounts = AppState.AllAccounts;
+        private readonly List<Category> _allCategories = AppState.AllCategories;
+        private Category _selectedCategory = new Category();
+        private Account _selectedAccount = new Account();
 
         internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
 
@@ -39,11 +39,11 @@ namespace Finances
                 memo: txtMemo.Text,
                 outflow: DecimalHelper.Parse(txtOutflow.Text),
                 inflow: DecimalHelper.Parse(txtInflow.Text),
-                account: selectedAccount.Name);
-            selectedAccount.AddTransaction(newTransaction);
+                account: _selectedAccount.Name);
+            _selectedAccount.AddTransaction(newTransaction);
             AppState.AllTransactions.Add(newTransaction);
 
-            return await AppState.AddTransaction(newTransaction, selectedAccount);
+            return await AppState.AddTransaction(newTransaction, _selectedAccount);
         }
 
         /// <summary>Resets all values to default status.</summary>
@@ -141,14 +141,14 @@ namespace Finances
             if (cmbMajorCategory.SelectedIndex >= 0)
             {
                 cmbMinorCategory.IsEnabled = true;
-                selectedCategory = (Category)cmbMajorCategory.SelectedValue;
-                cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
+                _selectedCategory = (Category)cmbMajorCategory.SelectedValue;
+                cmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
             }
             else
             {
                 cmbMinorCategory.IsEnabled = false;
-                selectedCategory = new Category();
-                cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
+                _selectedCategory = new Category();
+                cmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
             }
 
             TextChanged();
@@ -157,9 +157,9 @@ namespace Finances
         private void cmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbAccount.SelectedIndex >= 0)
-                selectedAccount = (Account)cmbAccount.SelectedValue;
+                _selectedAccount = (Account)cmbAccount.SelectedValue;
             else
-                selectedAccount = new Account();
+                _selectedAccount = new Account();
             TextChanged();
         }
 
@@ -176,9 +176,9 @@ namespace Finances
         public NewTransactionWindow()
         {
             InitializeComponent();
-            cmbAccount.ItemsSource = AllAccounts;
-            cmbMajorCategory.ItemsSource = AllCategories;
-            cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
+            cmbAccount.ItemsSource = _allAccounts;
+            cmbMajorCategory.ItemsSource = _allCategories;
+            cmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
         }
 
         private void windowNewTransaction_Closing(object sender, CancelEventArgs e)

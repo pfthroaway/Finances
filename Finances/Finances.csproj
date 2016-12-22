@@ -82,6 +82,12 @@
     <Compile Include="Classes\CategorizedExpense.cs" />
     <Compile Include="Classes\Category.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Compile Include="Windows\AddCategoryWindow.xaml.cs">
+      <DependentUpon>AddCategoryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\RenameCategoryWindow.xaml.cs">
+      <DependentUpon>RenameCategoryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SearchResultsWindow.xaml.cs">
       <DependentUpon>SearchResultsWindow.xaml</DependentUpon>
     </Compile>
@@ -91,7 +97,15 @@
     <Compile Include="Windows\ViewAllTransactionsWindow.xaml.cs">
       <DependentUpon>ViewAllTransactionsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\AddCategoryWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\CategorizedMonthlyReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RenameCategoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

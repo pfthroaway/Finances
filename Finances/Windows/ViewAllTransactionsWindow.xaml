@@ -10,9 +10,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="lvTransactions" Grid.Row="0" Height="610" Margin="0,0,0,10" SelectionMode="Single">
+        <ListView x:Name="lvTransactions" Grid.Row="0" Height="610" Margin="0,0,0,10" SelectionMode="Single"  ScrollViewer.VerticalScrollBarVisibility="Visible">
             <ListView.View>
-                <GridView ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <GridView>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateToString}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Date" Click="lvTransactionsColumnHeader_Click" Content="Date" />
