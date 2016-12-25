@@ -65,10 +65,10 @@ namespace Finances
                 if (await AppState.ModifyTransaction(newTransaction, modifyTransaction))
                     CloseWindow();
                 else
-                    MessageBox.Show("Unable to modify transaction.", "Finances", MessageBoxButton.OK);
+                    new Notification("Unable to modify transaction.", "Finances", NotificationButtons.OK, this).ShowDialog();
             }
             else
-                MessageBox.Show("This transaction has not been modified.", "Finances", MessageBoxButton.OK);
+                new Notification("This transaction has not been modified.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

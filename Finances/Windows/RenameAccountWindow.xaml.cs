@@ -29,10 +29,10 @@ namespace Finances
                     CloseWindow();
                 }
                 else
-                    MessageBox.Show("Unable to process account name change.", "Finances", MessageBoxButton.OK);
+                    new Notification("Unable to process account name change.", "Finances", NotificationButtons.OK, this).ShowDialog();
             }
             else
-                MessageBox.Show("The account name can't be changed to what it already is.", "Finances", MessageBoxButton.OK);
+                new Notification("The account name can't be changed to what it already is.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

@@ -106,8 +106,7 @@ namespace Finances
                 this.Visibility = Visibility.Hidden;
             }
             else
-                MessageBox.Show("No results matching your search criteria found.", "Finances", MessageBoxButton.OK);
-            Reset();
+                new Notification("No results found matching your search criteria.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)

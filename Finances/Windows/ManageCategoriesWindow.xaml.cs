@@ -87,7 +87,7 @@ namespace Finances
 
         private async void btnRemoveMajor_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("This will remove this category forever. Any existing transactions using this category will have their Major and Minor Category data removed. This will affect " + AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name) + " transactions. Are you sure you want to delete it and all related minor categories?", "Finances", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+            if (new Notification("This will remove this category forever. Any existing transactions using this category will have their Major and Minor Category data removed. This will affect " + AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name) + " transactions. Are you sure you want to delete it and all related minor categories?", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
                 if (await AppState.RemoveMajorCategory(_selectedMajorCategory))
                     RefreshItemsSource();
         }
@@ -104,7 +104,7 @@ namespace Finances
 
         private async void btnRemoveMinor_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("This will remove this category forever. Any existing transactions using this minor category will have their Minor Category data removed. This will affect " + AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name && transaction.MinorCategory == _selectedMinorCategory) + " transactions. Are you sure you want to delete it?", "Finances", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+            if (new Notification("This will remove this category forever. Any existing transactions using this minor category will have their Minor Category data removed. This will affect " + AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name && transaction.MinorCategory == _selectedMinorCategory) + " transactions. Are you sure you want to delete it?", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
                 if (await AppState.RemoveMinorCategory(_selectedMajorCategory, _selectedMinorCategory))
                     RefreshItemsSource();
         }

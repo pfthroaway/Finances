@@ -81,7 +81,11 @@
     <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\CategorizedExpense.cs" />
     <Compile Include="Classes\Category.cs" />
+    <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Transaction.cs" />
+    <Compile Include="Windows\Notification.xaml.cs">
+      <DependentUpon>Notification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\AddCategoryWindow.xaml.cs">
       <DependentUpon>AddCategoryWindow.xaml</DependentUpon>
     </Compile>
@@ -97,6 +101,10 @@
     <Compile Include="Windows\ViewAllTransactionsWindow.xaml.cs">
       <DependentUpon>ViewAllTransactionsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\Notification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\AddCategoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -230,6 +238,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Windows\Money.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Information.png" />
+    <Resource Include="Images\RedTriangle.png" />
+    <Resource Include="Images\YellowTriangle.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.103\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.103\build\net451\System.Data.SQLite.Core.targets')" />

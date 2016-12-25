@@ -65,7 +65,7 @@ namespace Finances
             if (await AddTransaction())
                 CloseWindow();
             else
-                MessageBox.Show("Unable to process transaction.", "Finances", MessageBoxButton.OK);
+                new Notification("Unable to process transaction.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private async void btnSaveAndNew_Click(object sender, RoutedEventArgs e)
@@ -76,7 +76,7 @@ namespace Finances
                 cmbMinorCategory.Focus();
             }
             else
-                MessageBox.Show("Unable to process transaction.", "Finances", MessageBoxButton.OK);
+                new Notification("Unable to process transaction.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)

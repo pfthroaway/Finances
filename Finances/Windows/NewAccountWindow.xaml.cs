@@ -38,11 +38,11 @@ namespace Finances
                     if (await AppState.AddTransaction(newTransaction, newAccount))
                         CloseWindow();
                     else
-                        MessageBox.Show("Unable to process new account.", "Finances", MessageBoxButton.OK);
+                        new Notification("Unable to process new account.", "Finances", NotificationButtons.OK, this).ShowDialog();
                 }
             }
             else
-                MessageBox.Show("That account name already exists.", "Finances", MessageBoxButton.OK);
+                new Notification("That account name already exists.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

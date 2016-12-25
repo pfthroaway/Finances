@@ -119,7 +119,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Filling DataSet", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Filling DataSet", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -198,7 +198,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Adding New Transaction", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Adding New Transaction", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -209,7 +209,6 @@ namespace Finances
         /// <summary>Modifies the selected Transaction in the database.</summary>
         /// <param name="newTransaction">Transaction to replace the current one in the database</param>
         /// <param name="oldTransaction">Current Transaction in the database</param>
-        /// <param name="account">Account the transaction is associated with</param>
         /// <returns>Returns true if successful</returns>
         internal static async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
         {
@@ -251,7 +250,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Modifying Transaction", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Modifying Transaction", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -289,7 +288,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Deleting Transaction", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Deleting Transaction", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -320,7 +319,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Creating New Account", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Creating New Account", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -354,7 +353,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Deleting Account", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -397,7 +396,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Renaming Account", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Renaming Account", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -445,7 +444,7 @@ namespace Finances
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Error Creating New Category", MessageBoxButton.OK);
+                        new Notification(ex.Message, "Error Creating New Category", NotificationButtons.OK).ShowDialog();
                     }
                     finally { con.Close(); }
                 });
@@ -495,7 +494,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Renaming Category", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Renaming Category", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -537,7 +536,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Deleting Account", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });
@@ -579,7 +578,7 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error Deleting Account", MessageBoxButton.OK);
+                    new Notification(ex.Message, "Error Deleting Account", NotificationButtons.OK).ShowDialog();
                 }
                 finally { con.Close(); }
             });

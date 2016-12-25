@@ -53,8 +53,7 @@ namespace Finances
 
         private async void btnDeleteAccount_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this account? All transactions associated with it will be lost forever!", "Finances", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            if (new Notification("Are you sure you want to delete this account? All transactions associated with it will be lost forever!", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
             {
                 if (await AppState.DeleteAccount(selectedAccount))
                 {
@@ -66,8 +65,7 @@ namespace Finances
 
         private async void btnDeleteTransaction_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this transaction? All data associated with it will be lost forever!", "Finances", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            if (new Notification("Are you sure you want to delete this transaction? All data associated with it will be lost forever!", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
             {
                 selectedAccount.RemoveTransaction(selectedTransaction);
                 if (await AppState.DeleteTransaction(selectedTransaction, selectedAccount))

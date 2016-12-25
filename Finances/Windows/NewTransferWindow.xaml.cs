@@ -115,9 +115,9 @@ namespace Finances
             if (cmbTransferFrom.SelectedValue != cmbTransferTo.SelectedValue && await AddTransfer())
                 CloseWindow();
             else if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
-                MessageBox.Show("The source account and the destination account cannot be the same.", "Finances", MessageBoxButton.OK);
+                new Notification("The source account and the destination account cannot be the same.", "Finances", NotificationButtons.OK, this).ShowDialog();
             else
-                MessageBox.Show("Unable to process transfer.", "Finances", MessageBoxButton.OK);
+                new Notification("Unable to process transfer.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private async void btnSaveAndNew_Click(object sender, RoutedEventArgs e)
@@ -128,9 +128,10 @@ namespace Finances
                 cmbTransferFrom.Focus();
             }
             else if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
-                MessageBox.Show("The source account and the destination account cannot be the same.", "Finances", MessageBoxButton.OK);
+                new Notification("The source account and the destination account cannot be the same.", "Finances",
+                    NotificationButtons.OK, this).ShowDialog();
             else
-                MessageBox.Show("Unable to process transfer.", "Finances", MessageBoxButton.OK);
+                new Notification("Unable to process transfer.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
