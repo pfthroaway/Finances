@@ -133,21 +133,9 @@ namespace Finances
             TextChanged();
         }
 
-        private void txtInflow_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txtInflow.Text = new string((from c in txtInflow.Text
-                                         where char.IsDigit(c) || c.IsPeriod()
-                                         select c).ToArray());
-            txtInflow.CaretIndex = txtInflow.Text.Length;
-            TextChanged();
-        }
-
-        private void txtOutflow_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            txtOutflow.Text = new string((from c in txtOutflow.Text
-                                          where char.IsDigit(c) || c.IsPeriod()
-                                          select c).ToArray());
-            txtOutflow.CaretIndex = txtOutflow.Text.Length;
+            Functions.TextBoxTextChanged(sender, KeyType.Decimals);
             TextChanged();
         }
 
@@ -209,34 +197,12 @@ namespace Finances
 
         private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Key k = e.Key;
-
-            List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
-
-            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
-                e.Handled = false;
-            else
-                e.Handled = true;
+            Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
-        private void txtMemo_GotFocus(object sender, RoutedEventArgs e)
+        private void txt_GotFocus(object sender, RoutedEventArgs e)
         {
-            txtMemo.SelectAll();
-        }
-
-        private void txtPayee_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtPayee.SelectAll();
-        }
-
-        private void txtOutflow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtOutflow.SelectAll();
-        }
-
-        private void txtInflow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtInflow.SelectAll();
+            Functions.TextBoxGotFocus(sender);
         }
 
         #endregion Window-Manipulation Methods

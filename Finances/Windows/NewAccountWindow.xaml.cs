@@ -57,10 +57,7 @@ namespace Finances
 
         private void TextChanged()
         {
-            if (txtAccountName.Text.Length > 0 && txtBalance.Text.Length > 0)
-                btnSubmit.IsEnabled = true;
-            else
-                btnSubmit.IsEnabled = false;
+            btnSubmit.IsEnabled = txtAccountName.Text.Length > 0 && txtBalance.Text.Length > 0;
         }
 
         private void txtAccountName_TextChanged(object sender, TextChangedEventArgs e)
@@ -70,10 +67,7 @@ namespace Finances
 
         private void txtBalance_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txtBalance.Text = new string((from c in txtBalance.Text
-                                          where char.IsDigit(c) || c.IsPeriod()
-                                          select c).ToArray());
-            txtBalance.CaretIndex = txtBalance.Text.Length;
+            Functions.TextBoxTextChanged(sender, KeyType.NegativeDecimals);
             TextChanged();
         }
 
@@ -92,14 +86,9 @@ namespace Finances
             InitializeComponent();
         }
 
-        private void txtAccountName_GotFocus(object sender, RoutedEventArgs e)
+        private void txt_GotFocus(object sender, RoutedEventArgs e)
         {
-            txtAccountName.SelectAll();
-        }
-
-        private void txtBalance_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtBalance.SelectAll();
+            Functions.TextBoxGotFocus(sender);
         }
 
         private void windowNewAccount_Closing(object sender, CancelEventArgs e)

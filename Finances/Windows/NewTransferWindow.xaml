@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="New Transfer" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowNewTransfer_Closing">
+        Title="New Transfer" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico" Closing="windowNewTransfer_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -27,6 +27,7 @@
         <TextBox x:Name="txtTransferAmount" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextChanged="txtTransferAmount_TextChanged" TextAlignment="Center" PreviewKeyDown="txtTransferAmount_PreviewKeyDown" GotFocus="txtTransferAmount_GotFocus" Margin="0,0,0,10" />
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnSaveAndDone" Width="125" Height="30" Content="_Save and Done" Click="btnSaveAndDone_Click" IsDefault="True" IsEnabled="False" Margin="0,0,20,0" />
+            <Button x:Name="btnSaveAndDuplicate" Width="160" Height="30" Content="_Save and Duplicate" Click="btnSaveAndDuplicate_Click" IsEnabled="False" Margin="0,0,20,0" />
             <Button x:Name="btnSaveAndNew" Width="125" Height="30" Content="Save and _New" Click="btnSaveAndNew_Click" IsEnabled="False" Margin="0,0,20,0" />
             <Button x:Name="btnReset" Width="125" Height="30" Content="_Reset" Click="btnReset_Click" Margin="0,0,20,0" />
             <Button x:Name="btnCancel" Width="125" Height="30" Content="_Cancel" Click="btnCancel_Click" IsCancel="True" />

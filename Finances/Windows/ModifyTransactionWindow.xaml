@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Modify Transaction" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Money.ico" Closing="windowModifyTransaction_Closing">
+        Title="Modify Transaction" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico" Closing="windowModifyTransaction_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -26,14 +26,14 @@
         <DatePicker x:Name="datePicker" Grid.Column="0" Grid.Row="1" Width="200" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="datePicker_SelectedDateChanged" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbMajorCategory" Grid.Column="1" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="cmbCategory_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbMinorCategory" Grid.Column="2" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="cmbCategory_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
-        <TextBox x:Name="txtMemo" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" GotFocus="txtMemo_GotFocus" Margin="0,0,0,10" />
+        <TextBox x:Name="txtMemo" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" GotFocus="txt_GotFocus" Margin="0,0,0,10" />
         <TextBlock Grid.Column="0" Grid.Row="2" Text="Payee:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="1" Grid.Row="2" Text="Outflow:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="2" Grid.Row="2" Text="Inflow:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="3" Grid.Row="2" Text="Account:" TextAlignment="Center" Margin="0,0,0,5" />
-        <TextBox x:Name="txtPayee" Grid.Column="0" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="txt_TextChanged" TextAlignment="Center" GotFocus="txtPayee_GotFocus" Margin="0,0,10,10" />
-        <TextBox x:Name="txtOutflow" Grid.Column="1" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" PreviewKeyDown="txtInflowOutflow_PreviewKeyDown" GotFocus="txtOutflow_GotFocus" TextChanged="txtOutflow_TextChanged" Margin="0,0,10,10" />
-        <TextBox x:Name="txtInflow" Grid.Column="2" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="txtInflow_TextChanged" TextAlignment="Center" PreviewKeyDown="txtInflowOutflow_PreviewKeyDown" GotFocus="txtInflow_GotFocus" Margin="0,0,10,10" />
+        <TextBox x:Name="txtPayee" Grid.Column="0" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="txt_TextChanged" TextAlignment="Center" GotFocus="txt_GotFocus" Margin="0,0,10,10" />
+        <TextBox x:Name="txtOutflow" Grid.Column="1" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" PreviewKeyDown="txtInflowOutflow_PreviewKeyDown" GotFocus="txt_GotFocus" TextChanged="txtInOutflow_TextChanged" Margin="0,0,10,10" />
+        <TextBox x:Name="txtInflow" Grid.Column="2" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="txtInOutflow_TextChanged" TextAlignment="Center" PreviewKeyDown="txtInflowOutflow_PreviewKeyDown" GotFocus="txt_GotFocus" Margin="0,0,10,10" />
         <ComboBox x:Name="cmbAccount" Grid.Column="3" Grid.Row="3" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="cmbAccount_SelectionChanged"  Margin="0,0,0,10" />
         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="btnSave" Width="125" Height="30" Content="_Save" Click="btnSave_Click" IsDefault="True" IsEnabled="False" Margin="0,0,20,0" />

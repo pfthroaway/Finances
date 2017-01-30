@@ -1,7 +1,6 @@
 ﻿using Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,57 +18,6 @@ namespace Finances
         private Account transferToAccount = new Account();
 
         internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
-
-        #region Text/Selection Changed
-
-        /// <summary>Checks whether or not the Submit button should be enabled.</summary>
-        private void TextChanged()
-        {
-            if (datePicker.SelectedDate != null && cmbTransferFrom.SelectedIndex >= 0 && cmbTransferFrom.SelectedIndex >= 0 && txtTransferAmount.Text.Length > 0)
-            {
-                btnSaveAndDone.IsEnabled = true;
-                btnSaveAndNew.IsEnabled = true;
-            }
-            else
-            {
-                btnSaveAndDone.IsEnabled = false;
-                btnSaveAndNew.IsEnabled = false;
-            }
-        }
-
-        private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TextChanged();
-        }
-
-        private void cmbTransferFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cmbTransferFrom.SelectedIndex >= 0)
-                transferFromAccount = (Account)cmbTransferFrom.SelectedValue;
-            else
-                transferFromAccount = new Account();
-            TextChanged();
-        }
-
-        private void cmbTransferTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cmbTransferTo.SelectedIndex >= 0)
-                transferToAccount = (Account)cmbTransferTo.SelectedValue;
-            else
-                transferToAccount = new Account();
-            TextChanged();
-        }
-
-        private void txtTransferAmount_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            txtTransferAmount.Text = new string((from c in txtTransferAmount.Text
-                                                 where char.IsDigit(c) || c.IsPeriod()
-                                                 select c).ToArray());
-            txtTransferAmount.CaretIndex = txtTransferAmount.Text.Length;
-            TextChanged();
-        }
-
-        #endregion Text/Selection Changed
 
         private async Task<bool> AddTransfer()
         {
@@ -109,6 +57,15 @@ namespace Finances
             txtTransferAmount.Text = "";
         }
 
+        /// <summary>Toggles Buttons on the Window.</summary>
+        /// <param name="enabled">Should Button be enabled?</param>
+        private void ToggleButtons(bool enabled)
+        {
+            btnSaveAndDone.IsEnabled = enabled;
+            btnSaveAndDuplicate.IsEnabled = enabled;
+            btnSaveAndNew.IsEnabled = enabled;
+        }
+
         #region Button-Click Methods
 
         private async void btnSaveAndDone_Click(object sender, RoutedEventArgs e)
@@ -119,6 +76,19 @@ namespace Finances
                 new Notification("The source account and the destination account cannot be the same.", "Finances", NotificationButtons.OK, this).ShowDialog();
             else
                 new Notification("Unable to process transfer.", "Finances", NotificationButtons.OK, this).ShowDialog();
+        }
+
+        private async void btnSaveAndDuplicate_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue || !await AddTransfer())
+            {
+                if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
+                    new Notification("The source account and the destination account cannot be the same.", "Finances",
+                        NotificationButtons.OK, this).ShowDialog();
+                else
+                    new Notification("Unable to process transfer.", "Finances", NotificationButtons.OK, this).ShowDialog
+                        ();
+            }
         }
 
         private async void btnSaveAndNew_Click(object sender, RoutedEventArgs e)
@@ -147,6 +117,48 @@ namespace Finances
 
         #endregion Button-Click Methods
 
+        #region Text/Selection Changed
+
+        /// <summary>Checks whether or not the Submit button should be enabled.</summary>
+        private void TextChanged()
+        {
+            if (datePicker.SelectedDate != null && cmbTransferFrom.SelectedIndex >= 0 && cmbTransferFrom.SelectedIndex >= 0 && txtTransferAmount.Text.Length > 0)
+                ToggleButtons(true);
+            else
+                ToggleButtons(false);
+        }
+
+        private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TextChanged();
+        }
+
+        private void cmbTransferFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbTransferFrom.SelectedIndex >= 0)
+                transferFromAccount = (Account)cmbTransferFrom.SelectedValue;
+            else
+                transferFromAccount = new Account();
+            TextChanged();
+        }
+
+        private void cmbTransferTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbTransferTo.SelectedIndex >= 0)
+                transferToAccount = (Account)cmbTransferTo.SelectedValue;
+            else
+                transferToAccount = new Account();
+            TextChanged();
+        }
+
+        private void txtTransferAmount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Functions.TextBoxTextChanged(sender, KeyType.Decimals);
+            TextChanged();
+        }
+
+        #endregion Text/Selection Changed
+
         #region Window-Manipulation Methods
 
         /// <summary>Closes the Window.</summary>
@@ -164,19 +176,12 @@ namespace Finances
 
         private void txtTransferAmount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Key k = e.Key;
-
-            List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
-
-            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
-                e.Handled = false;
-            else
-                e.Handled = true;
+            Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
         private void txtTransferAmount_GotFocus(object sender, RoutedEventArgs e)
         {
-            txtTransferAmount.SelectAll();
+            Functions.TextBoxGotFocus(sender);
         }
 
         private void windowNewTransfer_Closing(object sender, CancelEventArgs e)

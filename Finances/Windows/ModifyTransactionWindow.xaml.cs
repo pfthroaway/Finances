@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,8 +15,8 @@ namespace Finances
     {
         private readonly List<Account> AllAccounts = AppState.AllAccounts;
         private readonly List<Category> AllCategories = AppState.AllCategories;
-        private Category selectedCategory;
-        private Account selectedAccount;
+        private Category selectedCategory = new Category();
+        private Account selectedAccount = new Account();
 
         private Transaction modifyTransaction = new Transaction();
         internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
@@ -62,7 +61,19 @@ namespace Finances
 
             if (newTransaction != modifyTransaction)
             {
-                selectedAccount.ModifyTransaction(selectedAccount.AllTransactions.IndexOf(modifyTransaction), newTransaction);
+                if (newTransaction.Account != modifyTransaction.Account)
+                {
+                    int index = AllAccounts.FindIndex(account => account.Name == modifyTransaction.Account);
+                    AllAccounts[index].ModifyTransaction(AllAccounts[index].AllTransactions.IndexOf(modifyTransaction),
+                        newTransaction);
+                    index = AllAccounts.FindIndex(account => account.Name == newTransaction.Account);
+                    AllAccounts[index].AddTransaction(newTransaction);
+                }
+                else
+                {
+                    int index = AllAccounts.FindIndex(account => account.Name == selectedAccount.Name);
+                    AllAccounts[index].ModifyTransaction(AllAccounts[index].AllTransactions.IndexOf(modifyTransaction), newTransaction);
+                }
                 if (await AppState.ModifyTransaction(newTransaction, modifyTransaction))
                     CloseWindow();
                 else
@@ -95,25 +106,9 @@ namespace Finances
             TextChanged();
         }
 
-        private void txtInflow_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txtInflow.Text = new string((from c in txtInflow.Text
-                                         where char.IsDigit(c) || c.IsPeriod()
-                                         select c).ToArray());
-            txtInflow.CaretIndex = txtInflow.Text.Length;
-            if (txtInflow.Text.Substring(txtInflow.Text.IndexOf(".") + 1).Contains("."))
-                txtInflow.Text = txtInflow.Text.Substring(0, txtInflow.Text.IndexOf(".") + 1) + txtInflow.Text.Substring(txtInflow.Text.IndexOf(".") + 1).Replace(".", "");
-            TextChanged();
-        }
-
-        private void txtOutflow_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            txtOutflow.Text = new string((from c in txtOutflow.Text
-                                          where char.IsDigit(c) || c.IsPeriod()
-                                          select c).ToArray());
-            txtOutflow.CaretIndex = txtOutflow.Text.Length;
-            if (txtOutflow.Text.Substring(txtOutflow.Text.IndexOf(".") + 1).Contains("."))
-                txtOutflow.Text = txtOutflow.Text.Substring(0, txtOutflow.Text.IndexOf(".") + 1) + txtOutflow.Text.Substring(txtOutflow.Text.IndexOf(".") + 1).Replace(".", "");
+            Functions.TextBoxTextChanged(sender, KeyType.Decimals);
             TextChanged();
         }
 
@@ -124,28 +119,18 @@ namespace Finances
 
         private void cmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbMajorCategory.SelectedIndex >= 0)
-            {
-                cmbMinorCategory.IsEnabled = true;
-                selectedCategory = (Category)cmbMajorCategory.SelectedItem;
-                cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
-            }
-            else
-            {
-                cmbMinorCategory.IsEnabled = false;
-                selectedCategory = new Category();
-                cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
-            }
+            cmbMinorCategory.IsEnabled = cmbMajorCategory.SelectedIndex >= 0;
+            selectedCategory = cmbMajorCategory.SelectedIndex >= 0
+                ? (Category)cmbMajorCategory.SelectedItem
+                : new Category();
 
+            cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
             TextChanged();
         }
 
         private void cmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbAccount.SelectedIndex >= 0)
-                selectedAccount = (Account)cmbAccount.SelectedValue;
-            else
-                selectedAccount = new Account();
+            selectedAccount = cmbAccount.SelectedIndex >= 0 ? (Account)cmbAccount.SelectedValue : new Account();
             TextChanged();
         }
 
@@ -161,8 +146,6 @@ namespace Finances
 
         public ModifyTransactionWindow()
         {
-            selectedCategory = new Category();
-            selectedAccount = new Account();
             InitializeComponent();
             cmbAccount.ItemsSource = AllAccounts;
             cmbMajorCategory.ItemsSource = AllCategories;
@@ -171,34 +154,12 @@ namespace Finances
 
         private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Key k = e.Key;
-
-            List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
-
-            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
-                e.Handled = false;
-            else
-                e.Handled = true;
+            Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
-        private void txtMemo_GotFocus(object sender, RoutedEventArgs e)
+        private void txt_GotFocus(object sender, RoutedEventArgs e)
         {
-            txtMemo.SelectAll();
-        }
-
-        private void txtPayee_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtPayee.SelectAll();
-        }
-
-        private void txtOutflow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtOutflow.SelectAll();
-        }
-
-        private void txtInflow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtInflow.SelectAll();
+            Functions.TextBoxGotFocus(sender);
         }
 
         private void windowModifyTransaction_Closing(object sender, CancelEventArgs e)

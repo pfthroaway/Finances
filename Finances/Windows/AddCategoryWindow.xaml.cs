@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Extensions;
 
 namespace Finances
 {
@@ -59,7 +60,7 @@ namespace Finances
 
         private void txtName_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            txtName.SelectAll();
+            Functions.TextBoxGotFocus(sender);
         }
 
         private void txtName_TextChanged(object sender, TextChangedEventArgs e)

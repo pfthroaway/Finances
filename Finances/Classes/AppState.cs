@@ -5,8 +5,6 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 
 namespace Finances
 {
@@ -587,16 +585,5 @@ namespace Finances
         }
 
         #endregion Category Management
-
-        /// <summary>Turns several Keyboard.Keys into a list of Keys which can be tested using List.Any.</summary>
-        /// <param name="keys">Array of Keys</param>
-        /// <returns>List of Keyboard.IsKeyDown states</returns>
-        internal static List<bool> GetListOfKeys(params Key[] keys)
-        {
-            List<bool> allKeys = new List<bool>();
-            foreach (Key key in keys)
-                allKeys.Add(Keyboard.IsKeyDown(key));
-            return allKeys;
-        }
     }
 }

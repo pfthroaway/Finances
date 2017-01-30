@@ -1,7 +1,6 @@
 ﻿using Extensions;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,6 +58,15 @@ namespace Finances
             cmbAccount.SelectedIndex = -1;
         }
 
+        /// <summary>Toggles Buttons on the Window.</summary>
+        /// <param name="enabled">Should Button be enabled?</param>
+        private void ToggleButtons(bool enabled)
+        {
+            btnSaveAndDone.IsEnabled = enabled;
+            btnSaveAndDuplicate.IsEnabled = enabled;
+            btnSaveAndNew.IsEnabled = enabled;
+        }
+
         #region Button-Click Methods
 
         private async void btnSaveAndDone_Click(object sender, RoutedEventArgs e)
@@ -66,6 +74,12 @@ namespace Finances
             if (await AddTransaction())
                 CloseWindow();
             else
+                new Notification("Unable to process transaction.", "Finances", NotificationButtons.OK, this).ShowDialog();
+        }
+
+        private async void btnSaveAndDuplicate_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await AddTransaction())
                 new Notification("Unable to process transaction.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
@@ -98,15 +112,9 @@ namespace Finances
         private void TextChanged()
         {
             if (datePicker.SelectedDate != null && cmbMajorCategory.SelectedIndex >= 0 && cmbMinorCategory.SelectedIndex >= 0 && txtPayee.Text.Length > 0 && (txtInflow.Text.Length > 0 | txtOutflow.Text.Length > 0) && cmbAccount.SelectedIndex >= 0)
-            {
-                btnSaveAndDone.IsEnabled = true;
-                btnSaveAndNew.IsEnabled = true;
-            }
+                ToggleButtons(true);
             else
-            {
-                btnSaveAndDone.IsEnabled = false;
-                btnSaveAndNew.IsEnabled = false;
-            }
+                ToggleButtons(false);
         }
 
         private void txt_TextChanged(object sender, TextChangedEventArgs e)
@@ -114,21 +122,9 @@ namespace Finances
             TextChanged();
         }
 
-        private void txtInflow_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txtInflow.Text = new string((from c in txtInflow.Text
-                                         where char.IsDigit(c) || c.IsPeriod()
-                                         select c).ToArray());
-            txtInflow.CaretIndex = txtInflow.Text.Length;
-            TextChanged();
-        }
-
-        private void txtOutflow_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            txtOutflow.Text = new string((from c in txtOutflow.Text
-                                          where char.IsDigit(c) || c.IsPeriod()
-                                          select c).ToArray());
-            txtOutflow.CaretIndex = txtOutflow.Text.Length;
+            Functions.TextBoxTextChanged(sender, KeyType.Decimals);
             TextChanged();
         }
 
@@ -190,34 +186,12 @@ namespace Finances
 
         private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Key k = e.Key;
-
-            List<bool> keys = AppState.GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift, Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl, Key.RightCtrl, Key.Escape);
-
-            if (keys.Any(key => key) || (Key.D0 <= k && k <= Key.D9) || (Key.NumPad0 <= k && k <= Key.NumPad9) || k == Key.Decimal || k == Key.OemPeriod)
-                e.Handled = false;
-            else
-                e.Handled = true;
+            Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
-        private void txtMemo_GotFocus(object sender, RoutedEventArgs e)
+        private void txt_GotFocus(object sender, RoutedEventArgs e)
         {
-            txtMemo.SelectAll();
-        }
-
-        private void txtPayee_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtPayee.SelectAll();
-        }
-
-        private void txtOutflow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtOutflow.SelectAll();
-        }
-
-        private void txtInflow_GotFocus(object sender, RoutedEventArgs e)
-        {
-            txtInflow.SelectAll();
+            Functions.TextBoxGotFocus(sender);
         }
 
         #endregion Window-Manipulation Methods

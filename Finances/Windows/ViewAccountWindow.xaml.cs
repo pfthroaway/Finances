@@ -135,14 +135,6 @@ namespace Finances
             InitializeComponent();
         }
 
-        private void windowViewAccount_Closing(object sender, CancelEventArgs e)
-        {
-            RefToMainWindow.Show();
-            RefToMainWindow.RefreshItemsSource();
-        }
-
-        #endregion Window-Manipulation Methods
-
         private void lvTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
@@ -181,5 +173,13 @@ namespace Finances
                 btnModifyTransaction.IsEnabled = false;
             }
         }
+        private void windowViewAccount_Closing(object sender, CancelEventArgs e)
+        {
+            RefToMainWindow.Show();
+            RefToMainWindow.RefreshItemsSource();
+        }
+
+        #endregion Window-Manipulation Methods
+
     }
 }

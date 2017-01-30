@@ -71,8 +71,12 @@ namespace Finances
         /// <param name="transaction">Transaction to replace current in list</param>
         internal void ModifyTransaction(int index, Transaction transaction)
         {
-            _allTransactions[index] = transaction;
-            _allTransactions = _allTransactions.OrderByDescending(trans => trans.Date).ToList();
+            if (transaction.Account == Name)
+                _allTransactions[index] = transaction;
+            else
+                RemoveTransaction(index);
+            Sort();
+            OnPropertyChanged("BalanceToStringWithText");
         }
 
         /// <summary>Removes a transaction to this account.</summary>
@@ -80,6 +84,14 @@ namespace Finances
         internal void RemoveTransaction(Transaction transaction)
         {
             _allTransactions.Remove(transaction);
+            OnPropertyChanged("BalanceToStringWithText");
+        }
+
+        /// <summary>Removes a transaction from this account at a specific index.</summary>
+        /// <param name="index">Location in the List to remove the transaction</param>
+        internal void RemoveTransaction(int index)
+        {
+            _allTransactions.RemoveAt(index);
             OnPropertyChanged("BalanceToStringWithText");
         }
 
