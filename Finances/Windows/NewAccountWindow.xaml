@@ -17,11 +17,11 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Text="Account Name:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="1" Grid.Row="0" Text="Balance:" TextAlignment="Center" Margin="0,0,0,5" />
-        <TextBox x:Name="txtAccountName" Grid.Column="0" Grid.Row="1" Width="200" TextAlignment="Center" TextChanged="txtAccountName_TextChanged" Margin="0,0,10,10" Padding="5" GotFocus="txt_GotFocus" />
-        <TextBox x:Name="txtBalance" Grid.Column="1" Grid.Row="1" TextChanged="txtBalance_TextChanged" Margin="0,0,0,10" Padding="5" TextAlignment="Center" Width="100" GotFocus="txt_GotFocus" />
+        <TextBox x:Name="txtAccountName" Grid.Column="0" Grid.Row="1" Width="200" TextAlignment="Center" TextChanged="txtAccountName_TextChanged" GotFocus="txt_GotFocus" Margin="0,0,10,10" Padding="5" />
+        <TextBox x:Name="txtBalance" Grid.Column="1" Grid.Row="1" Width="100" TextAlignment="Center" TextChanged="txtBalance_TextChanged" GotFocus="txt_GotFocus" Margin="0,0,0,10" Padding="5" />
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="btnSubmit" Width="125" Content="Submit" Margin="0,0,20,0" IsDefault="True" IsEnabled="False" Click="btnSubmit_Click" />
-            <Button x:Name="btnCancel" Width="125" Content="Cancel" Click="btnCancel_Click" />
+            <Button x:Name="btnSubmit" Height="30" Width="125" Content="Submit" IsDefault="True" IsEnabled="False" Click="btnSubmit_Click" Margin="0,0,20,0" />
+            <Button x:Name="btnCancel" Height="30" Width="125" Content="Cancel" IsCancel="True" Click="btnCancel_Click" />
         </StackPanel>
     </Grid>
 </Window>

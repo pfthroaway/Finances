@@ -130,7 +130,7 @@ namespace Finances
 
         public sealed override string ToString()
         {
-            return Date + " - " + Payee;
+            return string.Join(" - ", DateToString, Account, Payee);
         }
 
         #endregion Override Operators

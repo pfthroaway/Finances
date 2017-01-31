@@ -53,7 +53,6 @@
       <HintPath>.\Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.103.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.103\lib\net451\System.Data.SQLite.dll</HintPath>
@@ -68,11 +67,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -88,6 +84,8 @@
     <Compile Include="Classes\AppState.cs" />
     <Compile Include="Classes\CategorizedExpense.cs" />
     <Compile Include="Classes\Category.cs" />
+    <Compile Include="Classes\DatabaseInteraction.cs" />
+    <Compile Include="Classes\SQLiteDatabaseInteraction.cs" />
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Windows\AddCategoryWindow.xaml.cs">
       <DependentUpon>AddCategoryWindow.xaml</DependentUpon>

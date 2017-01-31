@@ -32,8 +32,6 @@ namespace Finances
                     inflow: DecimalHelper.Parse(txtBalance.Text),
                     account: newAccount.Name);
                 newAccount.AddTransaction(new Transaction(newTransaction));
-                AppState.AllAccounts.Add(newAccount);
-                AppState.AllAccounts = AppState.AllAccounts.OrderBy(account => account.Name).ToList();
                 if (await AppState.AddAccount(newAccount))
                 {
                     if (await AppState.AddTransaction(newTransaction, newAccount))
@@ -84,6 +82,7 @@ namespace Finances
         public NewAccountWindow()
         {
             InitializeComponent();
+            txtAccountName.Focus();
         }
 
         private void txt_GotFocus(object sender, RoutedEventArgs e)
