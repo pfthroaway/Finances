@@ -6,34 +6,29 @@ using System.Linq;
 
 namespace Finances
 {
-    /// <summary>Represents a month to help determine income and expenses of transactions.</summary>
-    internal class Month : INotifyPropertyChanged
+    /// <summary>Represents a year to help determine income and expenses of transactions.</summary>
+    internal class Year : INotifyPropertyChanged
     {
-        private DateTime _monthStart;
+        private DateTime _yearStart;
         private List<Transaction> _allTransactions = new List<Transaction>();
 
         #region Modifying Properties
 
-        /// <summary>First day of the month</summary>
-        public DateTime MonthStart
+        /// <summary>First day of the year</summary>
+        public DateTime YearStart
         {
-            get => _monthStart;
-            private set
-            {
-                _monthStart = value;
-                OnPropertyChanged("MonthStart");
-            }
+            get => _yearStart;
+            private set { _yearStart = value; OnPropertyChanged("YearStart"); }
         }
 
-        /// <summary>Collection of all the transactions that occurred in the month</summary>
-        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(
-            _allTransactions);
+        /// <summary>Collection of all the transactions that occurred in the year</summary>
+        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(_allTransactions);
 
         #endregion Modifying Properties
 
         #region Helper Properties
 
-        /// <summary>Income for this month</summary>
+        /// <summary>Income for this year</summary>
         public decimal Income
         {
             get
@@ -48,13 +43,13 @@ namespace Finances
             }
         }
 
-        /// <summary>Income for this month, formatted to currency</summary>
+        /// <summary>Income for this year, formatted to currency</summary>
         public string IncomeToString => Income.ToString("C2");
 
-        /// <summary>Income for this month, formatted to currency, with preceding text</summary>
+        /// <summary>Income for this year, formatted to currency, with preceding text</summary>
         public string IncomeToStringWithText => $"Income: {Income:C2}";
 
-        /// <summary>Expenses for this month</summary>
+        /// <summary>Expenses for this year</summary>
         public decimal Expenses
         {
             get
@@ -69,20 +64,17 @@ namespace Finances
             }
         }
 
-        /// <summary>Expenses for this month, formatted to currency</summary>
+        /// <summary>Expenses for this year, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
 
-        /// <summary>Expenses for this month, formatted to currency, with preceding text</summary>
+        /// <summary>Expenses for this year, formatted to currency, with preceding text</summary>
         public string ExpensesToStringWithText => $"Expenses: {Expenses:C2}";
 
-        /// <summary>Last day of the month</summary>
-        public DateTime MonthEnd => new DateTime(
-            year: MonthStart.Year,
-            month: MonthStart.Month,
-            day: DateTime.DaysInMonth(MonthStart.Year, MonthStart.Month));
+        /// <summary>Last day of the year</summary>
+        public DateTime YearEnd => new DateTime(YearStart.Year, 12, 31);
 
-        /// <summary>Formatted text representing the year and month</summary>
-        public string FormattedMonth => MonthStart.ToString("yyyy/MM");
+        /// <summary>Formatted text representing the year and year</summary>
+        public string FormattedYear => YearStart.ToString("yyyy/MM");
 
         #endregion Helper Properties
 
@@ -99,7 +91,7 @@ namespace Finances
 
         #region Transaction Management
 
-        /// <summary>Adds a transaction to this month.</summary>
+        /// <summary>Adds a transaction to this year.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void AddTransaction(Transaction transaction)
         {
@@ -133,29 +125,29 @@ namespace Finances
 
         #region Override Operators
 
-        private static bool Equals(Month left, Month right)
+        private static bool Equals(Year left, Year right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
-            return left.MonthStart == right.MonthStart && left.Income == right.Income && left.Expenses == right.Expenses;
+            return left.YearStart == right.YearStart && left.Income == right.Income && left.Expenses == right.Expenses;
         }
 
         public sealed override bool Equals(object obj)
         {
-            return Equals(this, obj as Month);
+            return Equals(this, obj as Year);
         }
 
-        public bool Equals(Month otherMonth)
+        public bool Equals(Year otherYear)
         {
-            return Equals(this, otherMonth);
+            return Equals(this, otherYear);
         }
 
-        public static bool operator ==(Month left, Month right)
+        public static bool operator ==(Year left, Year right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Month left, Month right)
+        public static bool operator !=(Year left, Year right)
         {
             return !Equals(left, right);
         }
@@ -167,35 +159,35 @@ namespace Finances
 
         public sealed override string ToString()
         {
-            return FormattedMonth;
+            return FormattedYear;
         }
 
         #endregion Override Operators
 
         #region Constructors
 
-        /// <summary>Initializes a default instance of Month.</summary>
-        public Month()
+        /// <summary>Initializes a default instance of Year.</summary>
+        public Year()
         {
         }
 
-        /// <summary>Initializes an instance of Month by assigning Properties.</summary>
-        /// <param name="monthStart">First day of the month</param>
-        /// <param name="transactions">Transactions during this month</param>
-        public Month(DateTime monthStart, IEnumerable<Transaction> transactions)
+        /// <summary>Initializes an instance of Year by assigning Properties.</summary>
+        /// <param name="yearStart">First day of the year</param>
+        /// <param name="transactions">Transactions during this year</param>
+        public Year(DateTime yearStart, IEnumerable<Transaction> transactions)
         {
-            MonthStart = monthStart;
+            YearStart = yearStart;
             List<Transaction> newTransactions = new List<Transaction>();
             newTransactions.AddRange(transactions);
             _allTransactions = newTransactions;
         }
 
         /// <summary>Replaces this instance of Account with another instance</summary>
-        /// <param name="otherMonth">Month to replace this instance</param>
-        public Month(Month otherMonth)
+        /// <param name="otherYear">Year to replace this instance</param>
+        public Year(Year otherYear)
         {
-            MonthStart = otherMonth.MonthStart;
-            _allTransactions = new List<Transaction>(otherMonth.AllTransactions);
+            YearStart = otherYear.YearStart;
+            _allTransactions = new List<Transaction>(otherYear.AllTransactions);
         }
 
         #endregion Constructors

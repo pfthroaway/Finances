@@ -10,22 +10,22 @@ namespace Finances
     /// <summary>Interaction logic for DetailedMonthlyReportWindow.xaml</summary>
     public partial class CategorizedMonthlyReportWindow
     {
-        private Month currentMonth = new Month();
-        private List<CategorizedExpense> AllCategorizedExpenses = new List<CategorizedExpense>();
+        private Month _currentMonth = new Month();
+        private List<CategorizedExpense> _allCategorizedExpenses = new List<CategorizedExpense>();
         private GridViewColumnHeader _listViewSortCol;
         private SortAdorner _listViewSortAdorner;
 
-        internal MonthlyReportWindow RefToMonthlyReportWindow { private get; set; }
+        internal MonthlyReportWindow PreviousWindow { private get; set; }
 
         internal void LoadMonth(Month selectedMonth, List<CategorizedExpense> expenses)
         {
-            AllCategorizedExpenses = expenses;
-            currentMonth = selectedMonth;
-            lvCategorized.ItemsSource = AllCategorizedExpenses;
-            DataContext = currentMonth;
+            _allCategorizedExpenses = expenses;
+            _currentMonth = selectedMonth;
+            LVCategorized.ItemsSource = _allCategorizedExpenses;
+            DataContext = _currentMonth;
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -35,7 +35,7 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public CategorizedMonthlyReportWindow()
@@ -43,7 +43,7 @@ namespace Finances
             InitializeComponent();
         }
 
-        private void lvCategorizedColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void LVCategorizedColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             if (column != null)
@@ -52,7 +52,7 @@ namespace Finances
                 if (_listViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
-                    lvCategorized.Items.SortDescriptions.Clear();
+                    LVCategorized.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -62,13 +62,13 @@ namespace Finances
                 _listViewSortCol = column;
                 _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
-                lvCategorized.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                LVCategorized.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
         }
 
-        private void windowCategorizedMonthlyReport_Closing(object sender, CancelEventArgs e)
+        private void WindowCategorizedMonthlyReport_Closing(object sender, CancelEventArgs e)
         {
-            RefToMonthlyReportWindow.Show();
+            PreviousWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

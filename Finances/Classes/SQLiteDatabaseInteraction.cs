@@ -3,24 +3,38 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Finances
 {
-    internal class SQLiteDatabaseInteraction
+    /// <summary>Represents database interaction covered by SQLite.</summary>
+    public class SQLiteDatabaseInteraction : IDatabaseInteraction
     {
-        private readonly SQLiteConnection con = new SQLiteConnection { ConnectionString = "Data Source = Finances.sqlite;Version=3" };
+        // ReSharper disable once InconsistentNaming
+        private const string _DATABASENAME = "Finances.sqlite";
+
+        private readonly SQLiteConnection _con = new SQLiteConnection { ConnectionString = $"Data Source = {_DATABASENAME};Version=3" };
+
+        /// <summary>Verifies that the requested database exists and that its file size is greater than zero. If not, it extracts the embedded database file to the local output folder.</summary>
+        /// <returns>Returns true once the database has been validated</returns>
+        public bool VerifyDatabaseIntegrity()
+        {
+            if (!File.Exists(_DATABASENAME) || new FileInfo(_DATABASENAME).Length == 0)
+                Functions.ExtractEmbeddedResource("Sulimn", Directory.GetCurrentDirectory(), "", _DATABASENAME);
+            return true;
+        }
 
         #region Load
 
         /// <summary>Loads all Accounts.</summary>
         /// <returns>Returns all Accounts</returns>
-        internal async Task<List<Account>> LoadAccounts()
+        public async Task<List<Account>> LoadAccounts()
         {
-            List<Account> AllAccounts = new List<Account>();
+            List<Account> allAccounts = new List<Account>();
             DataSet ds = new DataSet();
-            SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM Accounts", con);
+            SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM Accounts", _con);
             await Task.Factory.StartNew(() =>
             {
                 try
@@ -31,22 +45,24 @@ namespace Finances
                     {
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
-                            Account newAccount = new Account(ds.Tables[0].Rows[i]["Name"].ToString(),
+                            Enum.TryParse(ds.Tables[0].Rows[i]["Type"].ToString(), out AccountTypes currentType);
+                            Account newAccount = new Account(ds.Tables[0].Rows[i]["Name"].ToString(), currentType,
                                 new List<Transaction>());
 
-                            AllAccounts.Add(newAccount);
+                            allAccounts.Add(newAccount);
                         }
                     }
 
                     ds = new DataSet();
-                    da = new SQLiteDataAdapter("SELECT * FROM Transactions", con);
+                    da = new SQLiteDataAdapter("SELECT * FROM Transactions", _con);
                     da.Fill(ds, "Transactions");
 
                     if (ds.Tables[0].Rows.Count > 0)
                     {
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
-                            Account selectedAccount = AllAccounts.Find(account => account.Name == ds.Tables[0].Rows[i]["Account"].ToString());
+                            DataRow dr = ds.Tables[0].Rows[i];
+                            Account selectedAccount = allAccounts.Find(account => account.Name == dr["Account"].ToString());
 
                             Transaction newTransaction = new Transaction(
                                 date: DateTimeHelper.Parse(ds.Tables[0].Rows[i]["Date"]),
@@ -61,33 +77,65 @@ namespace Finances
                         }
                     }
 
-                    AllAccounts = AllAccounts.OrderBy(account => account.Name).ToList();
-                    if (AllAccounts.Count > 0)
+                    allAccounts = allAccounts.OrderBy(account => account.Name).ToList();
+                    if (allAccounts.Count > 0)
                     {
-                        foreach (Account account in AllAccounts)
+                        foreach (Account account in allAccounts)
                             account.Sort();
                     }
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Loading Accounts", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Loading Accounts", NotificationButtons.OK);
                 }
                 finally
                 {
-                    con.Close();
+                    _con.Close();
                 }
             });
 
-            return AllAccounts;
+            return allAccounts;
+        }
+
+        /// <summary>Loads all Account types.</summary>
+        /// <returns>Returns all Account types</returns>
+        public async Task<List<string>> LoadAccountTypes()
+        {
+            List<string> allAccountTypes = new List<string>();
+            DataSet ds = new DataSet();
+            SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM AccountTypes", _con);
+            await Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    da.Fill(ds, "AccountTypes");
+
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                            allAccountTypes.Add(ds.Tables[0].Rows[i]["Name"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AppState.DisplayNotification(ex.Message, "Error Loading Account Types", NotificationButtons.OK);
+                }
+                finally
+                {
+                    _con.Close();
+                }
+            });
+
+            return allAccountTypes;
         }
 
         /// <summary>Loads all Categories.</summary>
         /// <returns>Returns all Categories</returns>
-        internal async Task<List<Category>> LoadCategories()
+        public async Task<List<Category>> LoadCategories()
         {
-            List<Category> AllCategories = new List<Category>();
+            List<Category> allCategories = new List<Category>();
             DataSet ds = new DataSet();
-            SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM MajorCategories", con);
+            SQLiteDataAdapter da = new SQLiteDataAdapter("SELECT * FROM MajorCategories", _con);
             await Task.Factory.StartNew(() =>
             {
                 try
@@ -100,39 +148,40 @@ namespace Finances
                         {
                             Category newCategory = new Category(ds.Tables[0].Rows[i]["Name"].ToString(), new List<string>());
 
-                            AllCategories.Add(newCategory);
+                            allCategories.Add(newCategory);
                         }
                     }
-                    AllCategories = AllCategories.OrderBy(category => category.Name).ToList();
+                    allCategories = allCategories.OrderBy(category => category.Name).ToList();
 
                     ds = new DataSet();
-                    da = new SQLiteDataAdapter("SELECT * FROM MinorCategories", con);
+                    da = new SQLiteDataAdapter("SELECT * FROM MinorCategories", _con);
                     da.Fill(ds, "MinorCategories");
 
                     if (ds.Tables[0].Rows.Count > 0)
                     {
                         for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
                         {
-                            Category selectedCategory = AllCategories.Find(category => category.Name == ds.Tables[0].Rows[i]["MajorCategory"].ToString());
+                            DataRow dr = ds.Tables[0].Rows[i];
+                            Category selectedCategory = allCategories.Find(category => category.Name == dr["MajorCategory"].ToString());
 
                             selectedCategory.MinorCategories.Add(ds.Tables[0].Rows[i]["MinorCategory"].ToString());
                         }
                     }
 
-                    foreach (Category category in AllCategories)
+                    foreach (Category category in allCategories)
                         category.Sort();
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Loading Categories", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Loading Categories", NotificationButtons.OK);
                 }
                 finally
                 {
-                    con.Close();
+                    _con.Close();
                 }
             });
 
-            return AllCategories;
+            return allCategories;
         }
 
         #endregion Load
@@ -143,23 +192,23 @@ namespace Finances
         /// <param name="transaction">Transaction to be added</param>
         /// <param name="account">Account the transaction will be added to</param>
         /// <returns>Returns true if successful</returns>
-        internal async Task<bool> AddTransaction(Transaction transaction, Account account)
+        public async Task<bool> AddTransaction(Transaction transaction, Account account)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
-            cmd.CommandText = "INSERT INTO Transactions([Date],[Payee],[MajorCategory],[MinorCategory],[Memo],[Outflow],[Inflow],[Account])Values('" + transaction.DateToString.Replace("'", "''") + "','" + transaction.Payee.Replace("'", "''") + "','" + transaction.MajorCategory.Replace("'", "''") + "','" + transaction.MinorCategory.Replace("'", "''") + "','" + transaction.Memo.Replace("'", "''") + "','" + transaction.Outflow + "','" + transaction.Inflow + "','" + account.Name.Replace("'", "''") + "')";
+            SQLiteCommand cmd = _con.CreateCommand();
+            cmd.CommandText = $"INSERT INTO Transactions([Date],[Payee],[MajorCategory],[MinorCategory],[Memo],[Outflow],[Inflow],[Account])Values('{transaction.DateToString.Replace("'", "''")}','{transaction.Payee.Replace("'", "''")}','{transaction.MajorCategory.Replace("'", "''")}','{transaction.MinorCategory.Replace("'", "''")}','{transaction.Memo.Replace("'", "''")}','{transaction.Outflow}','{transaction.Inflow}','{account.Name.Replace("'", "''")}')";
 
             await Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
 
                     cmd = new SQLiteCommand
                     {
-                        Connection = con,
+                        Connection = _con,
                         CommandText = "UPDATE Accounts SET [Balance] = @balance WHERE [Name] = @name"
                     };
                     cmd.Parameters.AddWithValue("@balance", account.Balance);
@@ -170,9 +219,9 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Adding New Transaction", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Adding New Transaction", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -182,12 +231,12 @@ namespace Finances
         /// <param name="newTransaction">Transaction to replace the current one in the database</param>
         /// <param name="oldTransaction">Current Transaction in the database</param>
         /// <returns>Returns true if successful</returns>
-        internal async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
+        public async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
         {
             bool success = false;
             SQLiteCommand cmd = new SQLiteCommand
             {
-                Connection = con,
+                Connection = _con,
                 CommandText = "UPDATE Transactions SET [Date] = @date, [Payee] = @payee, [MajorCategory] = @majorCategory, [MinorCategory] = @minorCategory, [Memo] = @memo, [Outflow] = @outflow, [Inflow] = @inflow, [Account] = @account WHERE [Date] = @oldDate AND [Payee] = @oldPayee AND [MajorCategory] = @oldMajorCategory AND [MinorCategory] = @oldMinorCategory AND [Memo] = @oldMemo AND [Outflow] = @oldOutflow AND [Inflow] = @oldInflow AND [Account] = @oldAccount"
             };
             cmd.Parameters.AddWithValue("@date", newTransaction.DateToString.Replace("'", "''"));
@@ -211,15 +260,15 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
+                    _con.Open();
                     cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Modifying Transaction", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Modifying Transaction", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -229,10 +278,10 @@ namespace Finances
         /// <param name="transaction">Transaction to be deleted</param>
         /// <param name="account">Account the transaction will be deleted from</param>
         /// <returns>Returns true if successful</returns>
-        internal async Task<bool> DeleteTransaction(Transaction transaction, Account account)
+        public async Task<bool> DeleteTransaction(Transaction transaction, Account account)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
             cmd.CommandText = "DELETE FROM Transactions WHERE [Date] = @date AND [Payee] = @payee AND [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory AND [Memo] = @memo AND [Outflow] = @outflow AND [Inflow] = @inflow AND [Account] = @account";
             cmd.Parameters.AddWithValue("@date", transaction.DateToString);
             cmd.Parameters.AddWithValue("@payee", transaction.Payee);
@@ -247,16 +296,16 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Deleting Transaction", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Deleting Transaction", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -269,25 +318,25 @@ namespace Finances
         /// <summary>Adds an account to the database.</summary>
         /// <param name="account">Account to be added</param>
         /// <returns>Returns true if successful</returns>
-        internal async Task<bool> AddAccount(Account account)
+        public async Task<bool> AddAccount(Account account)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
-            cmd.CommandText = "INSERT INTO Accounts([Name],[Balance])Values('" + account.Name.Replace("'", "''") + "','" + account.Balance + "')";
+            SQLiteCommand cmd = _con.CreateCommand();
+            cmd.CommandText = $"INSERT INTO Accounts([Name],[Type],[Balance])Values('{account.Name.Replace("'", "''")}','{account.AccountType}','{account.Balance}')";
             await Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Creating New Account", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Creating New Account", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -296,10 +345,10 @@ namespace Finances
         /// <summary>Deletes an account from the database.</summary>
         /// <param name="account">Account to be deleted</param>
         /// <returns>Returns true if successful</returns>
-        internal async Task<bool> DeleteAccount(Account account)
+        public async Task<bool> DeleteAccount(Account account)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
             cmd.CommandText = "DELETE FROM Accounts WHERE [Name] = @name";
             cmd.Parameters.AddWithValue("@name", account.Name);
 
@@ -307,8 +356,8 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DELETE FROM Transactions WHERE [Account] = @name";
@@ -317,9 +366,9 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Deleting Account", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Deleting Account", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -329,11 +378,11 @@ namespace Finances
         /// <param name="account">Account to be renamed</param>
         /// <param name="newAccountName">New account's name</param>
         /// <returns>Returns true if successful</returns>
-        internal async Task<bool> RenameAccount(Account account, string newAccountName)
+        public async Task<bool> RenameAccount(Account account, string newAccountName)
         {
             bool success = false;
             string oldAccountName = account.Name;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
             cmd.CommandText = "UPDATE Accounts SET [Name] = @newAccountName WHERE [Name] = @oldAccountName";
             cmd.Parameters.AddWithValue("@newAccountName", newAccountName.Replace("'", "''"));
             cmd.Parameters.AddWithValue("@oldAccountName", oldAccountName.Replace("'", "''"));
@@ -342,8 +391,8 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "UPDATE Transactions SET [Account] = @newAccountName WHERE [Account] = @oldAccountName";
@@ -353,9 +402,9 @@ namespace Finances
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Renaming Account", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Renaming Account", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -370,29 +419,28 @@ namespace Finances
         /// <param name="newName">Name for new Category</param>
         /// <param name="isMajor">Is the category being added a Major Category?</param>
         /// <returns>Returns true if successful.</returns>
-        internal async Task<bool> AddCategory(Category selectedCategory, string newName, bool isMajor)
+        public async Task<bool> AddCategory(Category selectedCategory, string newName, bool isMajor)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
             cmd.CommandText = isMajor
-                ? "INSERT INTO MajorCategories([Name])Values('" + newName.Replace("'", "''") + "')"
-                : "INSERT INTO MinorCategories([MajorCategory],[MinorCategory])Values('" +
-                  selectedCategory.Name.Replace("'", "''") + "','" + newName.Replace("'", "''") + "')";
+                ? $"INSERT INTO MajorCategories([Name])Values('{newName.Replace("'", "''")}')"
+                : $"INSERT INTO MinorCategories([MajorCategory],[MinorCategory])Values('{selectedCategory.Name.Replace("'", "''")}','{newName.Replace("'", "''")}')";
 
             await Task.Factory.StartNew(() =>
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Creating New Category", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Creating New Category", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -404,10 +452,10 @@ namespace Finances
         /// <param name="oldName">Old name of the Category</param>
         /// <param name="isMajor">Is the category being renamed a Major Category?</param>
         /// <returns></returns>
-        internal async Task<bool> RenameCategory(Category selectedCategory, string newName, string oldName, bool isMajor)
+        public async Task<bool> RenameCategory(Category selectedCategory, string newName, string oldName, bool isMajor)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
 
             cmd.CommandText = isMajor ? "UPDATE MajorCategories SET [Name] = @newName WHERE [Name] = @oldName; UPDATE MinorCategories SET [MajorCategory] = @newName WHERE [MajorCategory] = @oldName" : "UPDATE MinorCategories SET[MinorCategory] = @newName WHERE[MinorCategory] = @oldName AND [MajorCategory] = @majorCategory";
             cmd.Parameters.AddWithValue("@newName", newName.Replace("'", "''"));
@@ -417,16 +465,16 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Renaming Category", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Renaming Category", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -435,10 +483,10 @@ namespace Finances
         /// <summary>Removes a Major Category from the database, as well as removes it from all Transactions which utilize it.</summary>
         /// <param name="selectedCategory">Selected Major Category to delete</param>
         /// <returns>Returns true if operation successful</returns>
-        internal async Task<bool> RemoveMajorCategory(Category selectedCategory)
+        public async Task<bool> RemoveMajorCategory(Category selectedCategory)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
             cmd.CommandText =
                 "DELETE FROM MajorCategories WHERE [Name] = @name; DELETE FROM MinorCategories WHERE [MajorCategory] = @name; UPDATE Transactions SET [MajorCategory] = @newName AND [MinorCategory] = @newName WHERE [MinorCategory] = @name";
             cmd.Parameters.AddWithValue("@name", selectedCategory.Name);
@@ -448,17 +496,17 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
 
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Deleting Account", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Deleting Account", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;
@@ -468,10 +516,10 @@ namespace Finances
         /// <param name="selectedCategory">Selected Major Category</param>
         /// <param name="minorCategory">Selected Minor Category to delete</param>
         /// <returns>Returns true if operation successful</returns>
-        internal async Task<bool> RemoveMinorCategory(Category selectedCategory, string minorCategory)
+        public async Task<bool> RemoveMinorCategory(Category selectedCategory, string minorCategory)
         {
             bool success = false;
-            SQLiteCommand cmd = con.CreateCommand();
+            SQLiteCommand cmd = _con.CreateCommand();
             cmd.CommandText =
                 "DELETE FROM MinorCategories WHERE [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory; UPDATE Transactions SET [MinorCategory] = @newMinorName WHERE [MajorCategory] = @majorCategory AND [MinorCategory] = @minorCategory";
             cmd.Parameters.AddWithValue("@majorCategory", selectedCategory.Name);
@@ -482,16 +530,16 @@ namespace Finances
             {
                 try
                 {
-                    con.Open();
-                    cmd.Connection = con;
+                    _con.Open();
+                    cmd.Connection = _con;
                     cmd.ExecuteNonQuery();
                     success = true;
                 }
                 catch (Exception ex)
                 {
-                    new Notification(ex.Message, "Error Deleting Account", NotificationButtons.OK).ShowDialog();
+                    AppState.DisplayNotification(ex.Message, "Error Deleting Account", NotificationButtons.OK);
                 }
-                finally { con.Close(); }
+                finally { _con.Close(); }
             });
 
             return success;

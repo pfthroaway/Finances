@@ -6,9 +6,11 @@ using System.Linq;
 
 namespace Finances
 {
-    internal class Account : INotifyPropertyChanged
+    /// <summary>Represents an account where money is credited/debited.</summary>
+    public class Account : INotifyPropertyChanged
     {
         private string _name;
+        private AccountTypes _accountType;
         private List<Transaction> _allTransactions = new List<Transaction>();
 
         #region Modifying Properties
@@ -16,8 +18,46 @@ namespace Finances
         /// <summary>Name of the account</summary>
         public string Name
         {
-            get { return _name; }
+            get => _name;
             set { _name = value; OnPropertyChanged("Name"); }
+        }
+
+        /// <summary>Type of the account</summary>
+        public AccountTypes AccountType
+        {
+            get => _accountType;
+            set { _accountType = value; OnPropertyChanged("AccountType"); }
+        }
+
+        /// <summary>Type of the account, formatted</summary>
+        public string Type
+        {
+            get
+            {
+                switch (AccountType)
+                {
+                    case AccountTypes.Cash:
+                        return "Cash";
+
+                    case AccountTypes.Checking:
+                        return "Checking";
+
+                    case AccountTypes.CreditCard:
+                        return "Credit Card";
+
+                    case AccountTypes.Merchant:
+                        return "Merchant";
+
+                    case AccountTypes.Prepaid:
+                        return "Prepaid";
+
+                    case AccountTypes.Savings:
+                        return "Savings";
+
+                    default:
+                        return "Invalid Account Type";
+                }
+            }
         }
 
         /// <summary>Balance of the account</summary>
@@ -40,7 +80,7 @@ namespace Finances
         public string BalanceToString => Balance.ToString("C2");
 
         /// <summary>Balance of the account, formatted to currency, with preceding text</summary>
-        public string BalanceToStringWithText => "Balance: " + BalanceToString;
+        public string BalanceToStringWithText => $"Balance: {BalanceToString}";
 
         #endregion Helper Properties
 
@@ -108,7 +148,7 @@ namespace Finances
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
-            return string.Equals(left.Name, right.Name, StringComparison.OrdinalIgnoreCase) && left.Balance == right.Balance && (left.AllTransactions.Count == right.AllTransactions.Count && !left.AllTransactions.Except(right.AllTransactions).Any());
+            return string.Equals(left.Name, right.Name, StringComparison.OrdinalIgnoreCase) && left.AccountType == right.AccountType && left.Balance == right.Balance && (left.AllTransactions.Count == right.AllTransactions.Count && !left.AllTransactions.Except(right.AllTransactions).Any());
         }
 
         public sealed override bool Equals(object obj)
@@ -152,10 +192,12 @@ namespace Finances
 
         /// <summary>Initializes an instance of Account by assigning Properties.</summary>
         /// <param name="name">Name of the account</param>
+        /// <param name="accountType">Type of Account</param>
         /// <param name="transactions">Collection of all the transactions in the account</param>
-        public Account(string name, IEnumerable<Transaction> transactions)
+        public Account(string name, AccountTypes accountType, IEnumerable<Transaction> transactions)
         {
             Name = name;
+            AccountType = accountType;
             List<Transaction> newTransactions = new List<Transaction>();
             newTransactions.AddRange(transactions);
             _allTransactions = newTransactions;

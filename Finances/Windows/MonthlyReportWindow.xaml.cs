@@ -8,16 +8,14 @@ using System.Windows.Documents;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for MonthlyReportWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for MonthlyReportWindow.xaml</summary>
     public partial class MonthlyReportWindow : INotifyPropertyChanged
     {
-        private readonly List<Month> AllMonths = AppState.AllMonths;
+        private readonly List<Month> _allMonths = AppState.AllMonths;
         private GridViewColumnHeader _listViewSortCol;
         private SortAdorner _listViewSortAdorner;
 
-        internal MainWindow RefToMainWindow { private get; set; }
+        internal MainWindow PreviousWindow { private get; set; }
 
         #region Data-Binding
 
@@ -32,9 +30,9 @@ namespace Finances
 
         #region Button-Click methods
 
-        private void btnViewCategorizedReport_Click(object sender, RoutedEventArgs e)
+        private void BtnViewCategorizedReport_Click(object sender, RoutedEventArgs e)
         {
-            Month selectedMonth = (Month)lvMonths.SelectedValue;
+            Month selectedMonth = (Month)LVMonths.SelectedValue;
             List<CategorizedExpense> categorizedExpenses = new List<CategorizedExpense>();
             foreach (Category category in AppState.AllCategories)
             {
@@ -59,21 +57,21 @@ namespace Finances
 
             CategorizedMonthlyReportWindow categorizedMonthlyReportWindow = new CategorizedMonthlyReportWindow
             {
-                RefToMonthlyReportWindow = this
+                PreviousWindow = this
             };
             categorizedMonthlyReportWindow.LoadMonth(selectedMonth, categorizedExpenses);
             categorizedMonthlyReportWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
 
-        private void lvMonths_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LVMonths_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnViewCategorizedReport.IsEnabled = lvMonths.SelectedIndex >= 0;
+            BtnViewCategorizedReport.IsEnabled = LVMonths.SelectedIndex >= 0;
         }
 
         #endregion Button-Click methods
@@ -83,16 +81,16 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public MonthlyReportWindow()
         {
             InitializeComponent();
-            lvMonths.ItemsSource = AllMonths;
+            LVMonths.ItemsSource = _allMonths;
         }
 
-        private void lvMonthsColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void LVMonthsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             if (column != null)
@@ -101,7 +99,7 @@ namespace Finances
                 if (_listViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
-                    lvMonths.Items.SortDescriptions.Clear();
+                    LVMonths.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -111,13 +109,13 @@ namespace Finances
                 _listViewSortCol = column;
                 _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
-                lvMonths.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                LVMonths.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
         }
 
-        private void windowMonthlyReport_Closing(object sender, CancelEventArgs e)
+        private void WindowMonthlyReport_Closing(object sender, CancelEventArgs e)
         {
-            RefToMainWindow.Show();
+            PreviousWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

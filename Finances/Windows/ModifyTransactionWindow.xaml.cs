@@ -8,18 +8,15 @@ using System.Windows.Input;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for ModifyTransactionWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for ModifyTransactionWindow.xaml</summary>
     public partial class ModifyTransactionWindow : INotifyPropertyChanged
     {
-        private readonly List<Account> AllAccounts = AppState.AllAccounts;
-        private readonly List<Category> AllCategories = AppState.AllCategories;
-        private Category selectedCategory = new Category();
-        private Account selectedAccount = new Account();
-
-        private Transaction modifyTransaction = new Transaction();
-        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
+        private readonly List<Account> _allAccounts = AppState.AllAccounts;
+        private readonly List<Category> _allCategories = AppState.AllCategories;
+        private Category _selectedCategory = new Category();
+        private Account _selectedAccount = new Account();
+        private Transaction _modifyTransaction = new Transaction();
+        internal ViewAccountWindow PreviousWindow { private get; set; }
 
         #region Data-Binding
 
@@ -34,47 +31,47 @@ namespace Finances
 
         internal void SetCurrentTransaction(Transaction setTransaction, Account setAccount)
         {
-            datePicker.SelectedDate = setTransaction.Date;
-            cmbAccount.SelectedValue = setAccount;
-            cmbMajorCategory.SelectedItem = AllCategories.Find(category => category.Name == setTransaction.MajorCategory);
-            cmbMinorCategory.SelectedItem = setTransaction.MinorCategory;
-            txtPayee.Text = setTransaction.Payee;
-            txtOutflow.Text = setTransaction.Outflow.ToString(CultureInfo.InvariantCulture);
-            txtInflow.Text = setTransaction.Inflow.ToString(CultureInfo.InvariantCulture);
-            modifyTransaction = setTransaction;
-            selectedAccount = setAccount;
+            TransactionDate.SelectedDate = setTransaction.Date;
+            CmbAccount.SelectedValue = setAccount;
+            CmbMajorCategory.SelectedItem = _allCategories.Find(category => category.Name == setTransaction.MajorCategory);
+            CmbMinorCategory.SelectedItem = setTransaction.MinorCategory;
+            TxtPayee.Text = setTransaction.Payee;
+            TxtOutflow.Text = setTransaction.Outflow.ToString(CultureInfo.InvariantCulture);
+            TxtInflow.Text = setTransaction.Inflow.ToString(CultureInfo.InvariantCulture);
+            _modifyTransaction = setTransaction;
+            _selectedAccount = setAccount;
         }
 
         #region Button-Click Methods
 
-        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             Transaction newTransaction = new Transaction(
-                date: DateTimeHelper.Parse(datePicker.SelectedDate),
-                payee: txtPayee.Text,
-                majorCategory: cmbMajorCategory.SelectedItem.ToString(),
-                minorCategory: cmbMinorCategory.SelectedItem.ToString(),
-                memo: txtMemo.Text,
-                outflow: DecimalHelper.Parse(txtOutflow.Text),
-                inflow: DecimalHelper.Parse(txtInflow.Text),
-                account: selectedAccount.Name);
+                date: DateTimeHelper.Parse(TransactionDate.SelectedDate),
+                payee: TxtPayee.Text,
+                majorCategory: CmbMajorCategory.SelectedItem.ToString(),
+                minorCategory: CmbMinorCategory.SelectedItem.ToString(),
+                memo: TxtMemo.Text,
+                outflow: DecimalHelper.Parse(TxtOutflow.Text),
+                inflow: DecimalHelper.Parse(TxtInflow.Text),
+                account: _selectedAccount.Name);
 
-            if (newTransaction != modifyTransaction)
+            if (newTransaction != _modifyTransaction)
             {
-                if (newTransaction.Account != modifyTransaction.Account)
+                if (newTransaction.Account != _modifyTransaction.Account)
                 {
-                    int index = AllAccounts.FindIndex(account => account.Name == modifyTransaction.Account);
-                    AllAccounts[index].ModifyTransaction(AllAccounts[index].AllTransactions.IndexOf(modifyTransaction),
+                    int index = _allAccounts.FindIndex(account => account.Name == _modifyTransaction.Account);
+                    _allAccounts[index].ModifyTransaction(_allAccounts[index].AllTransactions.IndexOf(_modifyTransaction),
                         newTransaction);
-                    index = AllAccounts.FindIndex(account => account.Name == newTransaction.Account);
-                    AllAccounts[index].AddTransaction(newTransaction);
+                    index = _allAccounts.FindIndex(account => account.Name == newTransaction.Account);
+                    _allAccounts[index].AddTransaction(newTransaction);
                 }
                 else
                 {
-                    int index = AllAccounts.FindIndex(account => account.Name == selectedAccount.Name);
-                    AllAccounts[index].ModifyTransaction(AllAccounts[index].AllTransactions.IndexOf(modifyTransaction), newTransaction);
+                    int index = _allAccounts.FindIndex(account => account.Name == _selectedAccount.Name);
+                    _allAccounts[index].ModifyTransaction(_allAccounts[index].AllTransactions.IndexOf(_modifyTransaction), newTransaction);
                 }
-                if (await AppState.ModifyTransaction(newTransaction, modifyTransaction))
+                if (await AppState.ModifyTransaction(newTransaction, _modifyTransaction))
                     CloseWindow();
                 else
                     new Notification("Unable to modify transaction.", "Finances", NotificationButtons.OK, this).ShowDialog();
@@ -83,7 +80,7 @@ namespace Finances
                 new Notification("This transaction has not been modified.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -95,42 +92,42 @@ namespace Finances
         /// <summary>Checks whether or not the Submit button should be enabled.</summary>
         private void TextChanged()
         {
-            if (datePicker.SelectedDate != null && cmbMajorCategory.SelectedIndex >= 0 && cmbMinorCategory.SelectedIndex >= 0 && txtPayee.Text.Length > 0 && (txtInflow.Text.Length > 0 | txtOutflow.Text.Length > 0) && cmbAccount.SelectedIndex >= 0)
-                btnSave.IsEnabled = true;
+            if (TransactionDate.SelectedDate != null && CmbMajorCategory.SelectedIndex >= 0 && CmbMinorCategory.SelectedIndex >= 0 && TxtPayee.Text.Length > 0 && (TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0) && CmbAccount.SelectedIndex >= 0)
+                BtnSave.IsEnabled = true;
             else
-                btnSave.IsEnabled = false;
+                BtnSave.IsEnabled = false;
         }
 
-        private void txt_TextChanged(object sender, TextChangedEventArgs e)
+        private void Txt_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextChanged();
         }
 
-        private void txtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
             Functions.TextBoxTextChanged(sender, KeyType.Decimals);
             TextChanged();
         }
 
-        private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             TextChanged();
         }
 
-        private void cmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            cmbMinorCategory.IsEnabled = cmbMajorCategory.SelectedIndex >= 0;
-            selectedCategory = cmbMajorCategory.SelectedIndex >= 0
-                ? (Category)cmbMajorCategory.SelectedItem
+            CmbMinorCategory.IsEnabled = CmbMajorCategory.SelectedIndex >= 0;
+            _selectedCategory = CmbMajorCategory.SelectedIndex >= 0
+                ? (Category)CmbMajorCategory.SelectedItem
                 : new Category();
 
-            cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
+            CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
             TextChanged();
         }
 
-        private void cmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedAccount = cmbAccount.SelectedIndex >= 0 ? (Account)cmbAccount.SelectedValue : new Account();
+            _selectedAccount = CmbAccount.SelectedIndex >= 0 ? (Account)CmbAccount.SelectedValue : new Account();
             TextChanged();
         }
 
@@ -141,31 +138,31 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public ModifyTransactionWindow()
         {
             InitializeComponent();
-            cmbAccount.ItemsSource = AllAccounts;
-            cmbMajorCategory.ItemsSource = AllCategories;
-            cmbMinorCategory.ItemsSource = selectedCategory.MinorCategories;
+            CmbAccount.ItemsSource = _allAccounts;
+            CmbMajorCategory.ItemsSource = _allCategories;
+            CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
         }
 
-        private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
-        private void txt_GotFocus(object sender, RoutedEventArgs e)
+        private void Txt_GotFocus(object sender, RoutedEventArgs e)
         {
             Functions.TextBoxGotFocus(sender);
         }
 
-        private void windowModifyTransaction_Closing(object sender, CancelEventArgs e)
+        private void WindowModifyTransaction_Closing(object sender, CancelEventArgs e)
         {
-            RefToViewAccountWindow.RefreshItemsSource();
-            RefToViewAccountWindow.Show();
+            PreviousWindow.RefreshItemsSource();
+            PreviousWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

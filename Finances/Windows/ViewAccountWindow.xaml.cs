@@ -6,17 +6,15 @@ using System.Windows.Documents;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for ViewAccountWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for ViewAccountWindow.xaml</summary>
     public partial class ViewAccountWindow : INotifyPropertyChanged
     {
-        private Account selectedAccount = new Account();
-        private Transaction selectedTransaction = new Transaction();
+        private Account _selectedAccount = new Account();
+        private Transaction _selectedTransaction = new Transaction();
         private GridViewColumnHeader _listViewSortCol;
         private SortAdorner _listViewSortAdorner;
 
-        internal MainWindow RefToMainWindow { private get; set; }
+        internal MainWindow PreviousWindow { private get; set; }
 
         #region Data-Binding
 
@@ -31,93 +29,93 @@ namespace Finances
 
         internal void LoadAccount(Account account)
         {
-            selectedAccount = account;
-            lvTransactions.ItemsSource = selectedAccount.AllTransactions;
-            DataContext = selectedAccount;
+            _selectedAccount = account;
+            LVTransactions.ItemsSource = _selectedAccount.AllTransactions;
+            DataContext = _selectedAccount;
         }
 
         /// <summary>Refreshes the ListView's ItemsSource.</summary>
         internal void RefreshItemsSource()
         {
-            selectedAccount = AppState.AllAccounts.Find(account => account.Name == selectedAccount.Name);
-            lvTransactions.ItemsSource = selectedAccount.AllTransactions;
-            lvTransactions.Items.Refresh();
-            DataContext = selectedAccount;
+            _selectedAccount = AppState.AllAccounts.Find(account => account.Name == _selectedAccount.Name);
+            LVTransactions.ItemsSource = _selectedAccount.AllTransactions;
+            LVTransactions.Items.Refresh();
+            DataContext = _selectedAccount;
         }
 
         #region Button-Click Methods
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
 
-        private async void btnDeleteAccount_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             if (new Notification("Are you sure you want to delete this account? All transactions associated with it will be lost forever!", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
             {
-                if (await AppState.DeleteAccount(selectedAccount))
+                if (await AppState.DeleteAccount(_selectedAccount))
                 {
-                    RefToMainWindow.RefreshItemsSource();
+                    PreviousWindow.RefreshItemsSource();
                     CloseWindow();
                 }
             }
         }
 
-        private async void btnDeleteTransaction_Click(object sender, RoutedEventArgs e)
+        private async void BtnDeleteTransaction_Click(object sender, RoutedEventArgs e)
         {
             if (new Notification("Are you sure you want to delete this transaction? All data associated with it will be lost forever!", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
             {
-                selectedAccount.RemoveTransaction(selectedTransaction);
-                if (await AppState.DeleteTransaction(selectedTransaction, selectedAccount))
+                _selectedAccount.RemoveTransaction(_selectedTransaction);
+                if (await AppState.DeleteTransaction(_selectedTransaction, _selectedAccount))
                 {
-                    lvTransactions.UnselectAll();
+                    LVTransactions.UnselectAll();
                     RefreshItemsSource();
                 }
             }
         }
 
-        private void btnModifyTransaction_Click(object sender, RoutedEventArgs e)
+        private void BtnModifyTransaction_Click(object sender, RoutedEventArgs e)
         {
             ModifyTransactionWindow modifyTransactionWindow = new ModifyTransactionWindow
             {
-                RefToViewAccountWindow = this
+                PreviousWindow = this
             };
-            modifyTransactionWindow.SetCurrentTransaction(selectedTransaction, selectedAccount);
+            modifyTransactionWindow.SetCurrentTransaction(_selectedTransaction, _selectedAccount);
             modifyTransactionWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnNewTransaction_Click(object sender, RoutedEventArgs e)
+        private void BtnNewTransaction_Click(object sender, RoutedEventArgs e)
         {
-            NewTransactionWindow newTransactionWindow = new NewTransactionWindow { RefToViewAccountWindow = this };
+            NewTransactionWindow newTransactionWindow = new NewTransactionWindow { PreviousWindow = this };
             newTransactionWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnNewTransfer_Click(object sender, RoutedEventArgs e)
+        private void BtnNewTransfer_Click(object sender, RoutedEventArgs e)
         {
-            NewTransferWindow newTransferWindow = new NewTransferWindow { RefToViewAccountWindow = this };
+            NewTransferWindow newTransferWindow = new NewTransferWindow { PreviousWindow = this };
             newTransferWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnRenameAccount_Click(object sender, RoutedEventArgs e)
+        private void BtnRenameAccount_Click(object sender, RoutedEventArgs e)
         {
-            RenameAccountWindow renameAccountWindow = new RenameAccountWindow { RefToViewAccountWindow = this };
-            renameAccountWindow.LoadAccountName(selectedAccount);
+            RenameAccountWindow renameAccountWindow = new RenameAccountWindow { PreviousWindow = this };
+            renameAccountWindow.LoadAccountName(_selectedAccount);
             renameAccountWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnSearchTransactions_Click(object sender, RoutedEventArgs e)
+        private void BtnSearchTransactions_Click(object sender, RoutedEventArgs e)
         {
             SearchTransactionsWindow searchTransactionsWindow = new SearchTransactionsWindow
             {
-                RefToViewAccountWindow = this
+                PreviousWindow = this
             };
             searchTransactionsWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         #endregion Button-Click Methods
@@ -127,7 +125,7 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public ViewAccountWindow()
@@ -135,7 +133,7 @@ namespace Finances
             InitializeComponent();
         }
 
-        private void lvTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             if (column != null)
@@ -144,7 +142,7 @@ namespace Finances
                 if (_listViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
-                    lvTransactions.Items.SortDescriptions.Clear();
+                    LVTransactions.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -154,32 +152,32 @@ namespace Finances
                 _listViewSortCol = column;
                 _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
-                lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                LVTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
         }
 
-        private void lvTransactions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LVTransactions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lvTransactions.SelectedIndex >= 0)
+            if (LVTransactions.SelectedIndex >= 0)
             {
-                selectedTransaction = (Transaction)lvTransactions.SelectedValue;
-                btnDeleteTransaction.IsEnabled = true;
-                btnModifyTransaction.IsEnabled = true;
+                _selectedTransaction = (Transaction)LVTransactions.SelectedValue;
+                BtnDeleteTransaction.IsEnabled = true;
+                BtnModifyTransaction.IsEnabled = true;
             }
             else
             {
-                selectedTransaction = new Transaction();
-                btnDeleteTransaction.IsEnabled = false;
-                btnModifyTransaction.IsEnabled = false;
+                _selectedTransaction = new Transaction();
+                BtnDeleteTransaction.IsEnabled = false;
+                BtnModifyTransaction.IsEnabled = false;
             }
         }
-        private void windowViewAccount_Closing(object sender, CancelEventArgs e)
+
+        private void WindowViewAccount_Closing(object sender, CancelEventArgs e)
         {
-            RefToMainWindow.Show();
-            RefToMainWindow.RefreshItemsSource();
+            PreviousWindow.Show();
+            PreviousWindow.RefreshItemsSource();
         }
 
         #endregion Window-Manipulation Methods
-
     }
 }

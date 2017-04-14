@@ -7,12 +7,10 @@ using System.Windows.Documents;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for MainWindow.xaml</summary>
     public partial class MainWindow : INotifyPropertyChanged
     {
-        private List<Account> AllAccounts = new List<Account>();
+        private List<Account> _allAccounts = new List<Account>();
         private GridViewColumnHeader _listViewSortCol;
         private SortAdorner _listViewSortAdorner;
 
@@ -29,46 +27,46 @@ namespace Finances
 
         #region Button-Click Methods
 
-        private void btnNewAccount_Click(object sender, RoutedEventArgs e)
+        private void BtnNewAccount_Click(object sender, RoutedEventArgs e)
         {
-            NewAccountWindow newAccountWindow = new NewAccountWindow { RefToMainWindow = this };
+            NewAccountWindow newAccountWindow = new NewAccountWindow { PreviousWindow = this };
             newAccountWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void lvAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LVAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnViewTransactions.IsEnabled = lvAccounts.SelectedIndex >= 0;
+            BtnViewTransactions.IsEnabled = LVAccounts.SelectedIndex >= 0;
         }
 
-        private void btnManageCategories_Click(object sender, RoutedEventArgs e)
+        private void BtnManageCategories_Click(object sender, RoutedEventArgs e)
         {
             ManageCategoriesWindow manageCategoriesWindow = new ManageCategoriesWindow { RefToMainWindow = this };
             manageCategoriesWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnMonthlyReport_Click(object sender, RoutedEventArgs e)
+        private void BtnMonthlyReport_Click(object sender, RoutedEventArgs e)
         {
-            MonthlyReportWindow monthlyReportWindow = new MonthlyReportWindow { RefToMainWindow = this };
+            MonthlyReportWindow monthlyReportWindow = new MonthlyReportWindow { PreviousWindow = this };
             monthlyReportWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnViewAccount_Click(object sender, RoutedEventArgs e)
+        private void BtnViewAccount_Click(object sender, RoutedEventArgs e)
         {
-            Account selectedAccount = (Account)(lvAccounts.SelectedValue);
-            ViewAccountWindow viewAccountWindow = new ViewAccountWindow { RefToMainWindow = this };
+            Account selectedAccount = (Account)(LVAccounts.SelectedValue);
+            ViewAccountWindow viewAccountWindow = new ViewAccountWindow { PreviousWindow = this };
             viewAccountWindow.LoadAccount(selectedAccount);
             viewAccountWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
-        private void btnViewAllTransactions_Click(object sender, RoutedEventArgs e)
+        private void BtnViewAllTransactions_Click(object sender, RoutedEventArgs e)
         {
-            ViewAllTransactionsWindow viewAllTransactionsWindow = new ViewAllTransactionsWindow { RefToMainWindow = this };
+            ViewAllTransactionsWindow viewAllTransactionsWindow = new ViewAllTransactionsWindow { PreviousWindow = this };
             viewAllTransactionsWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         #endregion Button-Click Methods
@@ -83,19 +81,19 @@ namespace Finances
         /// <summary>Refreshes the ListView's ItemsSource.</summary>
         internal void RefreshItemsSource()
         {
-            AllAccounts = AppState.AllAccounts;
-            lvAccounts.ItemsSource = AllAccounts;
-            lvAccounts.Items.Refresh();
+            _allAccounts = AppState.AllAccounts;
+            LVAccounts.ItemsSource = _allAccounts;
+            LVAccounts.Items.Refresh();
         }
 
-        private async void windowMain_Loaded(object sender, RoutedEventArgs e)
+        private async void WindowMain_Loaded(object sender, RoutedEventArgs e)
         {
             await AppState.LoadAll();
-            AllAccounts = AppState.AllAccounts;
-            lvAccounts.ItemsSource = AllAccounts;
+            _allAccounts = AppState.AllAccounts;
+            LVAccounts.ItemsSource = _allAccounts;
         }
 
-        private void lvAccountsColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void LVAccountsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             if (column != null)
@@ -104,7 +102,7 @@ namespace Finances
                 if (_listViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
-                    lvAccounts.Items.SortDescriptions.Clear();
+                    LVAccounts.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -114,7 +112,7 @@ namespace Finances
                 _listViewSortCol = column;
                 _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
-                lvAccounts.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                LVAccounts.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
         }
 

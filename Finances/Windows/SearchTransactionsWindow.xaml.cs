@@ -9,9 +9,7 @@ using System.Windows.Input;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for SearchTransactionsWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for SearchTransactionsWindow.xaml</summary>
     public partial class SearchTransactionsWindow
     {
         private readonly List<Account> _allAccounts = AppState.AllAccounts;
@@ -20,7 +18,7 @@ namespace Finances
         private Account _selectedAccount = new Account();
         private List<Transaction> _matchingTransactions = new List<Transaction>(AppState.AllTransactions);
 
-        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
+        internal ViewAccountWindow PreviousWindow { private get; set; }
 
         #region Data-Binding
 
@@ -37,13 +35,13 @@ namespace Finances
         /// <returns>Return true if any items match</returns>
         private bool SearchTransaction()
         {
-            DateTime selectedDate = datePicker.SelectedDate != null ? DateTimeHelper.Parse(datePicker.SelectedDate) : DateTime.MinValue;
-            string payee = txtPayee.Text.ToLower();
-            string majorCategory = cmbMajorCategory.SelectedIndex != -1 ? cmbMajorCategory.SelectedValue.ToString().ToLower() : "";
-            string minorCategory = cmbMinorCategory.SelectedIndex != -1 ? cmbMinorCategory.SelectedValue.ToString().ToLower() : "";
-            string memo = txtMemo.Text.ToLower();
-            decimal outflow = DecimalHelper.Parse(txtOutflow.Text.ToLower());
-            decimal inflow = DecimalHelper.Parse(txtInflow.Text.ToLower());
+            DateTime selectedDate = TransactionDate.SelectedDate != null ? DateTimeHelper.Parse(TransactionDate.SelectedDate) : DateTime.MinValue;
+            string payee = TxtPayee.Text.ToLower();
+            string majorCategory = CmbMajorCategory.SelectedIndex != -1 ? CmbMajorCategory.SelectedValue.ToString().ToLower() : "";
+            string minorCategory = CmbMinorCategory.SelectedIndex != -1 ? CmbMinorCategory.SelectedValue.ToString().ToLower() : "";
+            string memo = TxtMemo.Text.ToLower();
+            decimal outflow = DecimalHelper.Parse(TxtOutflow.Text.ToLower());
+            decimal inflow = DecimalHelper.Parse(TxtInflow.Text.ToLower());
             string account = _selectedAccount.Name?.ToLower() ?? "";
 
             if (selectedDate != DateTime.MinValue)
@@ -76,41 +74,41 @@ namespace Finances
         /// <summary>Resets all values to default status.</summary>
         private void Reset()
         {
-            cmbMajorCategory.SelectedIndex = -1;
-            cmbMinorCategory.SelectedIndex = -1;
-            txtMemo.Text = "";
-            txtPayee.Text = "";
-            txtInflow.Text = "";
-            txtOutflow.Text = "";
-            cmbAccount.SelectedIndex = -1;
+            CmbMajorCategory.SelectedIndex = -1;
+            CmbMinorCategory.SelectedIndex = -1;
+            TxtMemo.Text = "";
+            TxtPayee.Text = "";
+            TxtInflow.Text = "";
+            TxtOutflow.Text = "";
+            CmbAccount.SelectedIndex = -1;
             _matchingTransactions = new List<Transaction>(AppState.AllTransactions);
         }
 
         #region Button-Click Methods
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
 
-        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             if (SearchTransaction())
             {
-                cmbMinorCategory.Focus();
+                CmbMinorCategory.Focus();
                 SearchResultsWindow searchResultsWindow = new SearchResultsWindow
                 {
-                    RefToSearchTransactionsWindowWindow = this
+                    PreviousWindow = this
                 };
                 searchResultsWindow.LoadWindow(_matchingTransactions);
                 searchResultsWindow.Show();
-                this.Visibility = Visibility.Hidden;
+                Visibility = Visibility.Hidden;
             }
             else
                 new Notification("No results found matching your search criteria.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
-        private void btnReset_Click(object sender, RoutedEventArgs e)
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
             Reset();
         }
@@ -122,50 +120,50 @@ namespace Finances
         /// <summary>Checks whether or not the Submit button should be enabled.</summary>
         private void TextChanged()
         {
-            btnSearch.IsEnabled = (datePicker.SelectedDate != null | cmbMajorCategory.SelectedIndex >= 0 |
-                                   cmbMinorCategory.SelectedIndex >= 0 | txtPayee.Text.Length > 0 |
-                                   txtInflow.Text.Length > 0 | txtOutflow.Text.Length > 0 |
-                                   cmbAccount.SelectedIndex >= 0);
+            BtnSearch.IsEnabled = (TransactionDate.SelectedDate != null | CmbMajorCategory.SelectedIndex >= 0 |
+                                   CmbMinorCategory.SelectedIndex >= 0 | TxtPayee.Text.Length > 0 |
+                                   TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0 |
+                                   CmbAccount.SelectedIndex >= 0);
         }
 
-        private void txt_TextChanged(object sender, TextChangedEventArgs e)
+        private void Txt_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextChanged();
         }
 
-        private void txtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
             Functions.TextBoxTextChanged(sender, KeyType.Decimals);
             TextChanged();
         }
 
-        private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             TextChanged();
         }
 
-        private void cmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbMajorCategory.SelectedIndex >= 0)
+            if (CmbMajorCategory.SelectedIndex >= 0)
             {
-                cmbMinorCategory.IsEnabled = true;
-                _selectedCategory = (Category)cmbMajorCategory.SelectedValue;
-                cmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
+                CmbMinorCategory.IsEnabled = true;
+                _selectedCategory = (Category)CmbMajorCategory.SelectedValue;
+                CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
             }
             else
             {
-                cmbMinorCategory.IsEnabled = false;
+                CmbMinorCategory.IsEnabled = false;
                 _selectedCategory = new Category();
-                cmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
+                CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
             }
 
             TextChanged();
         }
 
-        private void cmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbAccount_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbAccount.SelectedIndex >= 0)
-                _selectedAccount = (Account)cmbAccount.SelectedValue;
+            if (CmbAccount.SelectedIndex >= 0)
+                _selectedAccount = (Account)CmbAccount.SelectedValue;
             else
                 _selectedAccount = new Account();
             TextChanged();
@@ -178,29 +176,29 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public SearchTransactionsWindow()
         {
             InitializeComponent();
-            cmbAccount.ItemsSource = _allAccounts;
-            cmbMajorCategory.ItemsSource = _allCategories;
-            cmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
+            CmbAccount.ItemsSource = _allAccounts;
+            CmbMajorCategory.ItemsSource = _allCategories;
+            CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
         }
 
-        private void windowSearchTransactions_Closing(object sender, CancelEventArgs e)
+        private void WindowSearchTransactions_Closing(object sender, CancelEventArgs e)
         {
-            RefToViewAccountWindow.RefreshItemsSource();
-            RefToViewAccountWindow.Show();
+            PreviousWindow.RefreshItemsSource();
+            PreviousWindow.Show();
         }
 
-        private void txtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
-        private void txt_GotFocus(object sender, RoutedEventArgs e)
+        private void Txt_GotFocus(object sender, RoutedEventArgs e)
         {
             Functions.TextBoxGotFocus(sender);
         }

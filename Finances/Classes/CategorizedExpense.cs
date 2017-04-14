@@ -2,6 +2,7 @@
 
 namespace Finances
 {
+    /// <summary>Represents a collection of expenses sorted by category.</summary>
     internal class CategorizedExpense : INotifyPropertyChanged
     {
         private string _majorCategory, _minorCategory;
@@ -10,21 +11,21 @@ namespace Finances
         /// <summary>Primary category</summary>
         public string MajorCategory
         {
-            get { return _majorCategory; }
+            get => _majorCategory;
             private set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
         }
 
         /// <summary>Secondary category</summary>
         public string MinorCategory
         {
-            get { return _minorCategory; }
+            get => _minorCategory;
             private set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
         /// <summary>Income for this month</summary>
         public decimal Income
         {
-            get { return _income; }
+            get => _income;
             set { _income = value; OnPropertyChanged("Income"); OnPropertyChanged("IncomeToString"); }
         }
 
@@ -34,7 +35,7 @@ namespace Finances
         /// <summary>Expenses for this month</summary>
         public decimal Expenses
         {
-            get { return _expenses * -1; }
+            get => _expenses * -1;
             set { _expenses = value; OnPropertyChanged("Expenses"); OnPropertyChanged("ExpensesToString"); }
         }
 
@@ -63,7 +64,7 @@ namespace Finances
 
         public override string ToString()
         {
-            return MajorCategory + " - " + MinorCategory;
+            return $"{MajorCategory} - {MinorCategory}";
         }
 
         /// <summary>Initializes a default instance of CategorizedExpense.</summary>

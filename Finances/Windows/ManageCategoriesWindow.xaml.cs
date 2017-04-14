@@ -16,13 +16,13 @@ namespace Finances
 
         internal MainWindow RefToMainWindow { get; set; }
 
-        /// <summary>Refreshes the Items Source of the lvMajor ListBox.</summary>
+        /// <summary>Refreshes the Items Source of the LVMajor ListBox.</summary>
         internal void RefreshItemsSource()
         {
             _allCategories = AppState.AllCategories;
-            lvMajor.UnselectAll();
-            lvMajor.ItemsSource = _allCategories;
-            lvMajor.Items.Refresh();
+            LVMajor.UnselectAll();
+            LVMajor.ItemsSource = _allCategories;
+            LVMajor.Items.Refresh();
         }
 
         #region Control-Toggle Methods
@@ -31,18 +31,18 @@ namespace Finances
         /// <param name="toggle">Toggle control true or false</param>
         private void ToggleMajorEnabled(bool toggle)
         {
-            btnRenameMajor.IsEnabled = toggle;
-            btnRemoveMajor.IsEnabled = toggle;
+            BtnRenameMajor.IsEnabled = toggle;
+            BtnRemoveMajor.IsEnabled = toggle;
         }
 
         /// <summary>Toggles the IsEnabled state of all the Window controls relating to minor categories.</summary>
         /// <param name="toggle">Toggle control true or false</param>
         private void ToggleMinorEnabled(bool toggle)
         {
-            btnAddMinor.IsEnabled = toggle;
-            btnRenameMinor.IsEnabled = toggle;
-            btnRemoveMinor.IsEnabled = toggle;
-            lvMinor.IsEnabled = toggle;
+            BtnAddMinor.IsEnabled = toggle;
+            BtnRenameMinor.IsEnabled = toggle;
+            BtnRemoveMinor.IsEnabled = toggle;
+            LVMinor.IsEnabled = toggle;
         }
 
         #endregion Control-Toggle Methods
@@ -56,7 +56,7 @@ namespace Finances
             AddCategoryWindow addCategoryWindow = new AddCategoryWindow { RefToManageCategoriesWindow = this };
             addCategoryWindow.LoadWindow(_selectedMajorCategory, isMajor);
             addCategoryWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         /// <summary>Displays the AddCategoryWindow</summary>
@@ -69,48 +69,48 @@ namespace Finances
             };
             categoryRenameWindow.LoadWindow(_selectedMajorCategory, _selectedMinorCategory, isMajor);
             categoryRenameWindow.Show();
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
 
         #endregion Window-Displaying Methods
 
         #region Button-Click Methods
 
-        private void btnAddMajor_Click(object sender, RoutedEventArgs e)
+        private void BtnAddMajor_Click(object sender, RoutedEventArgs e)
         {
             ShowAddCategoryWindow(true);
         }
 
-        private void btnRenameMajor_Click(object sender, RoutedEventArgs e)
+        private void BtnRenameMajor_Click(object sender, RoutedEventArgs e)
         {
             ShowRenameCategoryWindow(true);
         }
 
-        private async void btnRemoveMajor_Click(object sender, RoutedEventArgs e)
+        private async void BtnRemoveMajor_Click(object sender, RoutedEventArgs e)
         {
-            if (new Notification("This will remove this category forever. Any existing transactions using this category will have their Major and Minor Category data removed. This will affect " + AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name) + " transactions. Are you sure you want to delete it and all related minor categories?", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
+            if (new Notification($"This will remove this category forever. Any existing transactions using this category will have their Major and Minor Category data removed. This will affect {AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name)} transactions. Are you sure you want to delete it and all related minor categories?", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
                 if (await AppState.RemoveMajorCategory(_selectedMajorCategory))
                     RefreshItemsSource();
         }
 
-        private void btnAddMinor_Click(object sender, RoutedEventArgs e)
+        private void BtnAddMinor_Click(object sender, RoutedEventArgs e)
         {
             ShowAddCategoryWindow(false);
         }
 
-        private void btnRenameMinor_Click(object sender, RoutedEventArgs e)
+        private void BtnRenameMinor_Click(object sender, RoutedEventArgs e)
         {
             ShowRenameCategoryWindow(false);
         }
 
-        private async void btnRemoveMinor_Click(object sender, RoutedEventArgs e)
+        private async void BtnRemoveMinor_Click(object sender, RoutedEventArgs e)
         {
-            if (new Notification("This will remove this category forever. Any existing transactions using this minor category will have their Minor Category data removed. This will affect " + AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name && transaction.MinorCategory == _selectedMinorCategory) + " transactions. Are you sure you want to delete it?", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
+            if (new Notification($"This will remove this category forever. Any existing transactions using this minor category will have their Minor Category data removed. This will affect {AppState.AllTransactions.Count(transaction => transaction.MajorCategory == _selectedMajorCategory.Name && transaction.MinorCategory == _selectedMinorCategory)} transactions. Are you sure you want to delete it?", "Finances", NotificationButtons.YesNo, this).ShowDialog() == true)
                 if (await AppState.RemoveMinorCategory(_selectedMajorCategory, _selectedMinorCategory))
                     RefreshItemsSource();
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -122,44 +122,44 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public ManageCategoriesWindow()
         {
             InitializeComponent();
-            lvMajor.ItemsSource = _allCategories;
+            LVMajor.ItemsSource = _allCategories;
         }
 
-        private void lvMajor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LVMajor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lvMajor.SelectedIndex >= 0)
+            if (LVMajor.SelectedIndex >= 0)
             {
-                _selectedMajorCategory = (Category)lvMajor.SelectedValue;
-                lvMinor.ItemsSource = _selectedMajorCategory.MinorCategories;
+                _selectedMajorCategory = (Category)LVMajor.SelectedValue;
+                LVMinor.ItemsSource = _selectedMajorCategory.MinorCategories;
                 ToggleMajorEnabled(true);
-                btnAddMinor.IsEnabled = true;
-                lvMinor.IsEnabled = true;
+                BtnAddMinor.IsEnabled = true;
+                LVMinor.IsEnabled = true;
             }
             else
             {
                 _selectedMajorCategory = new Category();
-                lvMinor.ItemsSource = new List<string>();
+                LVMinor.ItemsSource = new List<string>();
                 ToggleMajorEnabled(false);
                 ToggleMinorEnabled(false);
             }
 
-            lvMinor.UnselectAll();
-            lvMinor.Items.Refresh();
+            LVMinor.UnselectAll();
+            LVMinor.Items.Refresh();
         }
 
-        private void lvMinor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void LVMinor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _selectedMinorCategory = lvMinor.SelectedIndex >= 0 ? lvMinor.SelectedItem.ToString() : "";
-            ToggleMinorEnabled(lvMinor.SelectedIndex >= 0);
+            _selectedMinorCategory = LVMinor.SelectedIndex >= 0 ? LVMinor.SelectedItem.ToString() : "";
+            ToggleMinorEnabled(LVMinor.SelectedIndex >= 0);
         }
 
-        private void windowManageCategories_Closing(object sender, CancelEventArgs e)
+        private void WindowManageCategories_Closing(object sender, CancelEventArgs e)
         {
             RefToMainWindow.Show();
         }

@@ -24,27 +24,27 @@ namespace Finances
             _minorCategory = minorCategory;
             _isMajor = isMajor;
 
-            txtName.Text = _isMajor ? _selectedCategory.Name : _minorCategory;
-            txtName.Focus();
+            TxtName.Text = _isMajor ? _selectedCategory.Name : _minorCategory;
+            TxtName.Focus();
         }
 
         #region Button-Click Methods
 
-        private async void btnSubmit_Click(object sender, RoutedEventArgs e)
+        private async void BtnSubmit_Click(object sender, RoutedEventArgs e)
         {
             if (_isMajor)
             {
-                if (await AppState.RenameCategory(_selectedCategory, txtName.Text, _selectedCategory.Name, _isMajor))
+                if (await AppState.RenameCategory(_selectedCategory, TxtName.Text, _selectedCategory.Name, _isMajor))
                     CloseWindow();
             }
             else
             {
-                if (await AppState.RenameCategory(_selectedCategory, txtName.Text, _minorCategory, _isMajor))
+                if (await AppState.RenameCategory(_selectedCategory, TxtName.Text, _minorCategory, _isMajor))
                     CloseWindow();
             }
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -55,7 +55,7 @@ namespace Finances
 
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public RenameCategoryWindow()
@@ -63,17 +63,17 @@ namespace Finances
             InitializeComponent();
         }
 
-        private void txtName_GotFocus(object sender, RoutedEventArgs e)
+        private void TxtName_GotFocus(object sender, RoutedEventArgs e)
         {
             Functions.TextBoxGotFocus(sender);
         }
 
-        private void txtName_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            btnSubmit.IsEnabled = txtName.Text.Length > 0;
+            BtnSubmit.IsEnabled = TxtName.Text.Length > 0;
         }
 
-        private void windowRenameCategory_Closing(object sender, CancelEventArgs e)
+        private void WindowRenameCategory_Closing(object sender, CancelEventArgs e)
         {
             RefToManageCategoriesWindow.Show();
             RefToManageCategoriesWindow.RefreshItemsSource();

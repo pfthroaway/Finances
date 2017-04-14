@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace Finances
 {
     /// <summary>Represents a monetary transaction in an account.</summary>
-    internal class Transaction : INotifyPropertyChanged
+    public class Transaction : INotifyPropertyChanged
     {
         private DateTime _date;
         private string _payee, _majorCategory, _minorCategory, _memo, _account;
@@ -15,56 +15,56 @@ namespace Finances
         /// <summary>Date the transaction occurred</summary>
         public DateTime Date
         {
-            get { return _date; }
+            get => _date;
             private set { _date = value; OnPropertyChanged("Date"); }
         }
 
         /// <summary>The entity the transaction revolves around</summary>
         public string Payee
         {
-            get { return _payee; }
+            get => _payee;
             private set { _payee = value; OnPropertyChanged("Payee"); }
         }
 
         /// <summary>Primary category of which the transaction regards</summary>
         public string MajorCategory
         {
-            get { return _majorCategory; }
+            get => _majorCategory;
             set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
         }
 
         /// <summary>Secondary category of which the transaction regards</summary>
         public string MinorCategory
         {
-            get { return _minorCategory; }
+            get => _minorCategory;
             set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
         /// <summary>Extra information regarding the transaction</summary>
         public string Memo
         {
-            get { return _memo; }
+            get => _memo;
             private set { _memo = value; OnPropertyChanged("Memo"); }
         }
 
         /// <summary>How much money left the account during this transaction</summary>
         public decimal Outflow
         {
-            get { return _outflow; }
+            get => _outflow;
             private set { _outflow = value; OnPropertyChanged("Outflow"); OnPropertyChanged("OutflowToString"); }
         }
 
         /// <summary>How much money entered the account during this transaction</summary>
         public decimal Inflow
         {
-            get { return _inflow; }
+            get => _inflow;
             private set { _inflow = value; OnPropertyChanged("Inflow"); OnPropertyChanged("InflowToString"); }
         }
 
         /// <summary>Name of the account this transaction is associated with</summary>
         public string Account
         {
-            get { return _account; }
+            get => _account;
             set { _account = value; OnPropertyChanged("Account"); }
         }
 

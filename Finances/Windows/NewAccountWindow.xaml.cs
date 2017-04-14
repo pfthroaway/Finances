@@ -8,20 +8,21 @@ using System.Windows.Controls;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for NewAccountWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for NewAccountWindow.xaml</summary>
     public partial class NewAccountWindow
     {
-        internal MainWindow RefToMainWindow { private get; set; }
+        internal MainWindow PreviousWindow { private get; set; }
+
+        private readonly List<string> _allAccountTypes = AppState.AllAccountTypes;
 
         #region Button-Click Methods
 
-        private async void btnSubmit_Click(object sender, RoutedEventArgs e)
+        private async void BtnSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (AppState.AllAccounts.All(account => account.Name != txtAccountName.Text))
+            if (AppState.AllAccounts.All(account => account.Name != TxtAccountName.Text))
             {
-                Account newAccount = new Account(txtAccountName.Text, new List<Transaction>());
+                Enum.TryParse(CmbAccountTypes.SelectedValue.ToString().Replace(" ", ""), out AccountTypes currentType);
+                Account newAccount = new Account(TxtAccountName.Text, currentType, new List<Transaction>());
                 Transaction newTransaction = new Transaction(
                     date: DateTime.Now,
                     payee: "Income",
@@ -29,7 +30,7 @@ namespace Finances
                     minorCategory: "Starting Balance",
                     memo: "",
                     outflow: 0.00M,
-                    inflow: DecimalHelper.Parse(txtBalance.Text),
+                    inflow: DecimalHelper.Parse(TxtBalance.Text),
                     account: newAccount.Name);
                 newAccount.AddTransaction(new Transaction(newTransaction));
                 if (await AppState.AddAccount(newAccount))
@@ -44,7 +45,7 @@ namespace Finances
                 new Notification("That account name already exists.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -55,15 +56,15 @@ namespace Finances
 
         private void TextChanged()
         {
-            btnSubmit.IsEnabled = txtAccountName.Text.Length > 0 && txtBalance.Text.Length > 0;
+            BtnSubmit.IsEnabled = TxtAccountName.Text.Length > 0 && CmbAccountTypes.SelectedIndex >= 0 && TxtBalance.Text.Length > 0;
         }
 
-        private void txtAccountName_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtAccountName_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextChanged();
         }
 
-        private void txtBalance_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtBalance_TextChanged(object sender, TextChangedEventArgs e)
         {
             Functions.TextBoxTextChanged(sender, KeyType.NegativeDecimals);
             TextChanged();
@@ -76,24 +77,30 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public NewAccountWindow()
         {
             InitializeComponent();
-            txtAccountName.Focus();
+            TxtAccountName.Focus();
+            CmbAccountTypes.ItemsSource = _allAccountTypes;
         }
 
-        private void txt_GotFocus(object sender, RoutedEventArgs e)
+        private void CmbAccountTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TextChanged();
+        }
+
+        private void Txt_GotFocus(object sender, RoutedEventArgs e)
         {
             Functions.TextBoxGotFocus(sender);
         }
 
-        private void windowNewAccount_Closing(object sender, CancelEventArgs e)
+        private void WindowNewAccount_Closing(object sender, CancelEventArgs e)
         {
-            RefToMainWindow.RefreshItemsSource();
-            RefToMainWindow.Show();
+            PreviousWindow.RefreshItemsSource();
+            PreviousWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

@@ -4,29 +4,27 @@ using System.Windows;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for RenameAccountWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for RenameAccountWindow.xaml</summary>
     public partial class RenameAccountWindow
     {
-        private Account selectedAccount;
-        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
+        private Account _selectedAccount;
+        internal ViewAccountWindow PreviousWindow { private get; set; }
 
         internal void LoadAccountName(Account currentAccount)
         {
-            selectedAccount = currentAccount;
-            txtAccountName.Text = selectedAccount.Name;
+            _selectedAccount = currentAccount;
+            TxtAccountName.Text = _selectedAccount.Name;
         }
 
         #region Button-Click Methods
 
-        private async void btnSubmit_Click(object sender, RoutedEventArgs e)
+        private async void BtnSubmit_Click(object sender, RoutedEventArgs e)
         {
-            if (txtAccountName.Text != selectedAccount.Name)
+            if (TxtAccountName.Text != _selectedAccount.Name)
             {
-                if (await AppState.RenameAccount(selectedAccount, txtAccountName.Text))
+                if (await AppState.RenameAccount(_selectedAccount, TxtAccountName.Text))
                 {
-                    RefToViewAccountWindow.RefreshItemsSource();
+                    PreviousWindow.RefreshItemsSource();
                     CloseWindow();
                 }
                 else
@@ -36,7 +34,7 @@ namespace Finances
                 new Notification("The account name can't be changed to what it already is.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -48,7 +46,7 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public RenameAccountWindow()
@@ -56,9 +54,9 @@ namespace Finances
             InitializeComponent();
         }
 
-        private void windowRenameAccount_Closing(object sender, CancelEventArgs e)
+        private void WindowRenameAccount_Closing(object sender, CancelEventArgs e)
         {
-            RefToViewAccountWindow.Show();
+            PreviousWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

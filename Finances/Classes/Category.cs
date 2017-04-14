@@ -3,7 +3,8 @@ using System.ComponentModel;
 
 namespace Finances
 {
-    internal class Category : INotifyPropertyChanged
+    /// <summary>Represents a category of transactions.</summary>
+    public class Category : INotifyPropertyChanged
     {
         private string _name;
         private List<string> _minorCategories = new List<string>();
@@ -13,14 +14,14 @@ namespace Finances
         /// <summary>Name of major category</summary>
         public string Name
         {
-            get { return _name; }
+            get => _name;
             set { _name = value; OnPropertyChanged("Name"); }
         }
 
         /// <summary>List of minor categories related to the major category</summary>
         public List<string> MinorCategories
         {
-            get { return _minorCategories; }
+            get => _minorCategories;
             private set { _minorCategories = value; OnPropertyChanged("SubCategories"); }
         }
 

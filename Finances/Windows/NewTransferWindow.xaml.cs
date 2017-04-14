@@ -8,42 +8,40 @@ using System.Windows.Input;
 
 namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for NewTransferWindow.xaml
-    /// </summary>
+    /// <summary>Interaction logic for NewTransferWindow.xaml</summary>
     public partial class NewTransferWindow
     {
-        private readonly List<Account> AllAccounts = AppState.AllAccounts;
-        private Account transferFromAccount = new Account();
-        private Account transferToAccount = new Account();
+        private readonly List<Account> _allAccounts = AppState.AllAccounts;
+        private Account _transferFromAccount = new Account();
+        private Account _transferToAccount = new Account();
 
-        internal ViewAccountWindow RefToViewAccountWindow { private get; set; }
+        internal ViewAccountWindow PreviousWindow { private get; set; }
 
         private async Task<bool> AddTransfer()
         {
             Transaction transferFrom = new Transaction(
-                date: DateTimeHelper.Parse(datePicker.SelectedDate),
+                date: DateTimeHelper.Parse(TransferDate.SelectedDate),
                 payee: "Transfer",
                 majorCategory: "Transfer",
                 minorCategory: "Transfer",
-                memo: transferToAccount.Name,
-                outflow: DecimalHelper.Parse(txtTransferAmount.Text),
+                memo: _transferToAccount.Name,
+                outflow: DecimalHelper.Parse(TxtTransferAmount.Text),
                 inflow: 0.00M,
-                account: transferFromAccount.Name);
-            transferFromAccount.AddTransaction(transferFrom);
+                account: _transferFromAccount.Name);
+            _transferFromAccount.AddTransaction(transferFrom);
             Transaction transferTo = new Transaction(
-                date: DateTimeHelper.Parse(datePicker.SelectedDate),
+                date: DateTimeHelper.Parse(TransferDate.SelectedDate),
                 payee: "Transfer",
                 majorCategory: "Transfer",
                 minorCategory: "Transfer",
-                memo: transferFromAccount.Name,
+                memo: _transferFromAccount.Name,
                 outflow: 0.00M,
-                inflow: DecimalHelper.Parse(txtTransferAmount.Text),
-                account: transferToAccount.Name);
-            transferToAccount.AddTransaction(transferTo);
-            if (await AppState.AddTransaction(transferFrom, transferFromAccount))
+                inflow: DecimalHelper.Parse(TxtTransferAmount.Text),
+                account: _transferToAccount.Name);
+            _transferToAccount.AddTransaction(transferTo);
+            if (await AppState.AddTransaction(transferFrom, _transferFromAccount))
             {
-                if (await AppState.AddTransaction(transferTo, transferToAccount))
+                if (await AppState.AddTransaction(transferTo, _transferToAccount))
                     return true;
             }
             return false;
@@ -52,37 +50,37 @@ namespace Finances
         /// <summary>Resets all values to default status.</summary>
         private void Reset()
         {
-            cmbTransferFrom.SelectedIndex = -1;
-            cmbTransferTo.SelectedIndex = -1;
-            txtTransferAmount.Text = "";
+            CmbTransferFrom.SelectedIndex = -1;
+            CmbTransferTo.SelectedIndex = -1;
+            TxtTransferAmount.Text = "";
         }
 
         /// <summary>Toggles Buttons on the Window.</summary>
         /// <param name="enabled">Should Button be enabled?</param>
         private void ToggleButtons(bool enabled)
         {
-            btnSaveAndDone.IsEnabled = enabled;
-            btnSaveAndDuplicate.IsEnabled = enabled;
-            btnSaveAndNew.IsEnabled = enabled;
+            BtnSaveAndDone.IsEnabled = enabled;
+            BtnSaveAndDuplicate.IsEnabled = enabled;
+            BtnSaveAndNew.IsEnabled = enabled;
         }
 
         #region Button-Click Methods
 
-        private async void btnSaveAndDone_Click(object sender, RoutedEventArgs e)
+        private async void BtnSaveAndDone_Click(object sender, RoutedEventArgs e)
         {
-            if (cmbTransferFrom.SelectedValue != cmbTransferTo.SelectedValue && await AddTransfer())
+            if (CmbTransferFrom.SelectedValue != CmbTransferTo.SelectedValue && await AddTransfer())
                 CloseWindow();
-            else if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
+            else if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue)
                 new Notification("The source account and the destination account cannot be the same.", "Finances", NotificationButtons.OK, this).ShowDialog();
             else
                 new Notification("Unable to process transfer.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
-        private async void btnSaveAndDuplicate_Click(object sender, RoutedEventArgs e)
+        private async void BtnSaveAndDuplicate_Click(object sender, RoutedEventArgs e)
         {
-            if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue || !await AddTransfer())
+            if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue || !await AddTransfer())
             {
-                if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
+                if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue)
                     new Notification("The source account and the destination account cannot be the same.", "Finances",
                         NotificationButtons.OK, this).ShowDialog();
                 else
@@ -91,26 +89,26 @@ namespace Finances
             }
         }
 
-        private async void btnSaveAndNew_Click(object sender, RoutedEventArgs e)
+        private async void BtnSaveAndNew_Click(object sender, RoutedEventArgs e)
         {
-            if (cmbTransferFrom.SelectedValue != cmbTransferTo.SelectedValue && await AddTransfer())
+            if (CmbTransferFrom.SelectedValue != CmbTransferTo.SelectedValue && await AddTransfer())
             {
                 Reset();
-                cmbTransferFrom.Focus();
+                CmbTransferFrom.Focus();
             }
-            else if (cmbTransferFrom.SelectedValue == cmbTransferTo.SelectedValue)
+            else if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue)
                 new Notification("The source account and the destination account cannot be the same.", "Finances",
                     NotificationButtons.OK, this).ShowDialog();
             else
                 new Notification("Unable to process transfer.", "Finances", NotificationButtons.OK, this).ShowDialog();
         }
 
-        private void btnReset_Click(object sender, RoutedEventArgs e)
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
         {
             Reset();
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -122,36 +120,36 @@ namespace Finances
         /// <summary>Checks whether or not the Submit button should be enabled.</summary>
         private void TextChanged()
         {
-            if (datePicker.SelectedDate != null && cmbTransferFrom.SelectedIndex >= 0 && cmbTransferFrom.SelectedIndex >= 0 && txtTransferAmount.Text.Length > 0)
+            if (TransferDate.SelectedDate != null && CmbTransferFrom.SelectedIndex >= 0 && CmbTransferFrom.SelectedIndex >= 0 && TxtTransferAmount.Text.Length > 0)
                 ToggleButtons(true);
             else
                 ToggleButtons(false);
         }
 
-        private void datePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             TextChanged();
         }
 
-        private void cmbTransferFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbTransferFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbTransferFrom.SelectedIndex >= 0)
-                transferFromAccount = (Account)cmbTransferFrom.SelectedValue;
+            if (CmbTransferFrom.SelectedIndex >= 0)
+                _transferFromAccount = (Account)CmbTransferFrom.SelectedValue;
             else
-                transferFromAccount = new Account();
+                _transferFromAccount = new Account();
             TextChanged();
         }
 
-        private void cmbTransferTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbTransferTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbTransferTo.SelectedIndex >= 0)
-                transferToAccount = (Account)cmbTransferTo.SelectedValue;
+            if (CmbTransferTo.SelectedIndex >= 0)
+                _transferToAccount = (Account)CmbTransferTo.SelectedValue;
             else
-                transferToAccount = new Account();
+                _transferToAccount = new Account();
             TextChanged();
         }
 
-        private void txtTransferAmount_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtTransferAmount_TextChanged(object sender, TextChangedEventArgs e)
         {
             Functions.TextBoxTextChanged(sender, KeyType.Decimals);
             TextChanged();
@@ -164,30 +162,30 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public NewTransferWindow()
         {
             InitializeComponent();
-            cmbTransferFrom.ItemsSource = AllAccounts;
-            cmbTransferTo.ItemsSource = AllAccounts;
+            CmbTransferFrom.ItemsSource = _allAccounts;
+            CmbTransferTo.ItemsSource = _allAccounts;
         }
 
-        private void txtTransferAmount_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void TxtTransferAmount_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             Functions.PreviewKeyDown(e, KeyType.Decimals);
         }
 
-        private void txtTransferAmount_GotFocus(object sender, RoutedEventArgs e)
+        private void TxtTransferAmount_GotFocus(object sender, RoutedEventArgs e)
         {
             Functions.TextBoxGotFocus(sender);
         }
 
-        private void windowNewTransfer_Closing(object sender, CancelEventArgs e)
+        private void WindowNewTransfer_Closing(object sender, CancelEventArgs e)
         {
-            RefToViewAccountWindow.RefreshItemsSource();
-            RefToViewAccountWindow.Show();
+            PreviousWindow.RefreshItemsSource();
+            PreviousWindow.Show();
         }
 
         #endregion Window-Manipulation Methods

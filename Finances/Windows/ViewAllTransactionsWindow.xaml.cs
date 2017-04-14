@@ -11,11 +11,11 @@ namespace Finances
     /// <summary>Interaction logic for ViewAllTransactionsWindow.xaml</summary>
     public partial class ViewAllTransactionsWindow : INotifyPropertyChanged
     {
-        private readonly List<Transaction> AllTransactions = AppState.AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+        private readonly List<Transaction> _allTransactions = AppState.AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
         private GridViewColumnHeader _listViewSortCol;
         private SortAdorner _listViewSortAdorner;
 
-        internal MainWindow RefToMainWindow { private get; set; }
+        internal MainWindow PreviousWindow { private get; set; }
 
         #region Data-Binding
 
@@ -28,7 +28,7 @@ namespace Finances
 
         #endregion Data-Binding
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             CloseWindow();
         }
@@ -38,21 +38,21 @@ namespace Finances
         /// <summary>Closes the Window.</summary>
         private void CloseWindow()
         {
-            this.Close();
+            Close();
         }
 
         public ViewAllTransactionsWindow()
         {
             InitializeComponent();
-            lvTransactions.ItemsSource = AllTransactions;
+            LVTransactions.ItemsSource = _allTransactions;
         }
 
-        private void windowViewAllTransactions_Closing(object sender, CancelEventArgs e)
+        private void WindowViewAllTransactions_Closing(object sender, CancelEventArgs e)
         {
-            RefToMainWindow.Show();
+            PreviousWindow.Show();
         }
 
-        private void lvTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
+        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader column = (sender as GridViewColumnHeader);
             if (column != null)
@@ -61,7 +61,7 @@ namespace Finances
                 if (_listViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(_listViewSortCol).Remove(_listViewSortAdorner);
-                    lvTransactions.Items.SortDescriptions.Clear();
+                    LVTransactions.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -71,7 +71,7 @@ namespace Finances
                 _listViewSortCol = column;
                 _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(_listViewSortCol).Add(_listViewSortAdorner);
-                lvTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                LVTransactions.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
             }
         }
 
