@@ -6,7 +6,7 @@ namespace Finances
     /// <summary>Represents required interactions for implementations of databases.</summary>
     internal interface IDatabaseInteraction
     {
-        bool VerifyDatabaseIntegrity();
+        void VerifyDatabaseIntegrity();
 
         #region Load
 

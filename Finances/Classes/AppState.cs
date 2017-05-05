@@ -23,21 +23,19 @@ namespace Finances
         /// <returns>Returns true if successful</returns>
         internal static async Task LoadAll()
         {
-            if (DatabaseInteraction.VerifyDatabaseIntegrity())
-            {
-                AllAccounts = await DatabaseInteraction.LoadAccounts();
-                AllAccountTypes = await DatabaseInteraction.LoadAccountTypes();
-                AllCategories = await DatabaseInteraction.LoadCategories();
+            DatabaseInteraction.VerifyDatabaseIntegrity();
+            AllAccounts = await DatabaseInteraction.LoadAccounts();
+            AllAccountTypes = await DatabaseInteraction.LoadAccountTypes();
+            AllCategories = await DatabaseInteraction.LoadCategories();
 
-                foreach (Account account in AllAccounts)
-                    foreach (Transaction trans in account.AllTransactions)
-                        AllTransactions.Add(trans);
+            foreach (Account account in AllAccounts)
+                foreach (Transaction trans in account.AllTransactions)
+                    AllTransactions.Add(trans);
 
-                AllAccountTypes.Sort();
-                AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
-                LoadMonths();
-                LoadYears();
-            }
+            AllAccountTypes.Sort();
+            AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+            LoadMonths();
+            LoadYears();
         }
 
         /// <summary>Loads all the Months from AllTransactions.</summary>
