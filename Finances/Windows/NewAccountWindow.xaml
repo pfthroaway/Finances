@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="New Account" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico" Closing="WindowNewAccount_Closing">
+        Style="{StaticResource WindowStyle}"
+        Title="New Account" WindowStartupLocation="CenterScreen" Closing="WindowNewAccount_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -23,8 +24,12 @@
         <ComboBox x:Name="CmbAccountTypes" Grid.Column="1" Grid.Row="1" Width="150" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbAccountTypes_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <TextBox x:Name="TxtBalance" Grid.Column="2" Grid.Row="1" Width="100" TextAlignment="Center" TextChanged="TxtBalance_TextChanged" GotFocus="Txt_GotFocus" Margin="0,0,0,10" Padding="5" />
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="BtnSubmit" Height="30" Width="125" Content="Submit" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,20,0" />
-            <Button x:Name="BtnCancel" Height="30" Width="125" Content="Cancel" IsCancel="True" Click="BtnCancel_Click" />
+            <Button x:Name="BtnSubmit" Height="30" Width="125" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,20,0">
+                <AccessText Text="_Submit" />
+            </Button>
+            <Button x:Name="BtnCancel" Height="30" Width="125" IsCancel="True" Click="BtnCancel_Click">
+                <AccessText Text="_Cancel" />
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

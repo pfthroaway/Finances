@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Add Category" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Closing="WindowAddCategory_Closing" Icon="Finances.ico">
+        Style="{StaticResource WindowStyle}"
+        Title="Add Category" WindowStartupLocation="CenterScreen" Closing="WindowAddCategory_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -17,7 +18,11 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="What is the name of the category you would like to create?" Width="250" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" />
         <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Width="250" Grid.ColumnSpan="2" TextAlignment="Center" TextChanged="TxtName_TextChanged" GotFocus="TxtName_OnGotFocus" Margin="0,0,0,10" Padding="5" />
-        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Content="_Submit" Margin="0,0,10,0" Width="120" Height="30" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" />
-        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Content="_Cancel" Margin="0,0,0,0" Width="120" Height="30" Click="BtnCancel_Click" />
+        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Margin="0,0,10,0" Width="120" Height="30" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click">
+            <AccessText Text="_Submit" />
+        </Button>
+        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Margin="0,0,0,0" Width="120" Height="30" Click="BtnCancel_Click">
+            <AccessText Text="_Cancel" />
+        </Button>
     </Grid>
 </Window>

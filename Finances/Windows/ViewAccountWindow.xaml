@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="View Account" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico" Closing="WindowViewAccount_Closing">
+        Style="{StaticResource WindowStyle}"
+        Title="View Account" WindowStartupLocation="CenterScreen" Closing="WindowViewAccount_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -19,7 +20,7 @@
             <TextBlock x:Name="LblType" Text="{Binding Path=Type}" FontSize="20" Margin="0,0,0,10" />
             <TextBlock x:Name="LblBalance" Text="{Binding Path=BalanceToStringWithText}" FontSize="20" Margin="0,0,0,10" />
         </StackPanel>
-        <ListView x:Name="LVTransactions" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Height="610" SelectionChanged="LVTransactions_SelectionChanged" SelectionMode="Single">
+        <ListView x:Name="LVTransactions" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Height="610" SelectionChanged="LVTransactions_SelectionChanged" AlternationCount="2" SelectionMode="Single">
             <ListView.View>
                 <GridView ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateToString}">
@@ -61,14 +62,30 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,10,0">
-            <Button x:Name="BtnNewTransaction" Height="30" Width="175" Content="_New Transaction" Click="BtnNewTransaction_Click" Margin="0,0,0,10" IsDefault="True" />
-            <Button x:Name="BtnNewTransfer" Height="30" Width="175" Content="_New Transfer" Click="BtnNewTransfer_Click" Margin="0,0,0,10" />
-            <Button x:Name="BtnModifyTransaction" Height="30" Width="175" Content="_Modify Transaction" Click="BtnModifyTransaction_Click"  Margin="0,0,0,10" IsEnabled="False" />
-            <Button x:Name="BtnDeleteTransaction" Height="30" Width="175" Content="_Delete Transaction" Click="BtnDeleteTransaction_Click"  Margin="0,0,0,10" IsEnabled="False" />
-            <Button x:Name="BtnSearchTransactions" Height="30" Width="175" Content="_Search Transactions" Click="BtnSearchTransactions_Click"  Margin="0,0,0,10" />
-            <Button x:Name="BtnRenameAccount" Height="30" Width="175" Content="_Rename Account" Click="BtnRenameAccount_Click"  Margin="0,0,0,10" />
-            <Button x:Name="BtnDeleteAccount" Height="30" Width="175" Content="_Delete Account" Click="BtnDeleteAccount_Click"  Margin="0,0,0,10" />
-            <Button x:Name="BtnBack" Height="30" Width="175" Content="_Back" Click="BtnBack_Click" />
+            <Button x:Name="BtnNewTransaction" Height="30" Width="175" Click="BtnNewTransaction_Click" Margin="0,0,0,10" IsDefault="True">
+                <AccessText Text="_New Transaction" />
+            </Button>
+            <Button x:Name="BtnNewTransfer" Height="30" Width="175" Click="BtnNewTransfer_Click" Margin="0,0,0,10">
+                <AccessText Text="_New Transfer" />
+            </Button>
+            <Button x:Name="BtnModifyTransaction" Height="30" Width="175" Click="BtnModifyTransaction_Click"  Margin="0,0,0,10" IsEnabled="False">
+                <AccessText Text="_Modify Transaction" />
+            </Button>
+            <Button x:Name="BtnDeleteTransaction" Height="30" Width="175" Click="BtnDeleteTransaction_Click"  Margin="0,0,0,10" IsEnabled="False">
+                <AccessText Text="_Delete Transaction" />
+            </Button>
+            <Button x:Name="BtnSearchTransactions" Height="30" Width="175" Click="BtnSearchTransactions_Click"  Margin="0,0,0,10">
+                <AccessText Text="_Search Transactions" />
+            </Button>
+            <Button x:Name="BtnRenameAccount" Height="30" Width="175" Click="BtnRenameAccount_Click"  Margin="0,0,0,10">
+                <AccessText Text="_Rename Account" />
+            </Button>
+            <Button x:Name="BtnDeleteAccount" Height="30" Width="175" Click="BtnDeleteAccount_Click"  Margin="0,0,0,10">
+                <AccessText Text="_Delete Account" />
+            </Button>
+            <Button x:Name="BtnBack" Height="30" Width="175" Click="BtnBack_Click" IsCancel="True">
+                <AccessText Text="_Back" />
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

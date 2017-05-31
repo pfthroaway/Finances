@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using Extensions.ListViewHelp;
 
 namespace Extensions
 {
@@ -29,7 +30,7 @@ namespace Extensions
             if (resourceStream != null)
                 using (BinaryReader r = new BinaryReader(resourceStream))
                 using (FileStream fs =
-                    new FileStream(Directory.GetCurrentDirectory() + "\\" + resourceName, FileMode.OpenOrCreate))
+                new FileStream(Directory.GetCurrentDirectory() + "\\" + resourceName, FileMode.OpenOrCreate))
                 using (BinaryWriter w = new BinaryWriter(fs))
                 {
                     w.Write(r.ReadBytes((int)resourceStream.Length));
@@ -102,19 +103,19 @@ namespace Extensions
             Key k = e.Key;
 
             IEnumerable<bool> keys = GetListOfKeys(Key.Back, Key.Delete, Key.Home, Key.End, Key.LeftShift,
-                Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl,
-                Key.RightCtrl, Key.Escape);
+            Key.RightShift, Key.Enter, Key.Tab, Key.LeftAlt, Key.RightAlt, Key.Left, Key.Right, Key.LeftCtrl,
+            Key.RightCtrl, Key.Escape);
 
             switch (keyType)
             {
                 case KeyType.Decimals:
                     e.Handled = !keys.Any(key => key) && (Key.D0 > k || k > Key.D9) &&
-                                (Key.NumPad0 > k || k > Key.NumPad9) && k != Key.Decimal && k != Key.OemPeriod;
+                    (Key.NumPad0 > k || k > Key.NumPad9) && k != Key.Decimal && k != Key.OemPeriod;
                     break;
 
                 case KeyType.Integers:
                     e.Handled = !keys.Any(key => key) && (Key.D0 > k || k > Key.D9) &&
-                                (Key.NumPad0 > k || k > Key.NumPad9);
+                    (Key.NumPad0 > k || k > Key.NumPad9);
                     break;
 
                 case KeyType.Letters:
@@ -123,12 +124,12 @@ namespace Extensions
 
                 case KeyType.NegativeDecimals:
                     e.Handled = !keys.Any(key => key) && (Key.D0 > k || k > Key.D9) &&
-                                (Key.NumPad0 > k || k > Key.NumPad9) && k != Key.Decimal && k != Key.Subtract && k != Key.OemPeriod && k != Key.OemMinus;
+                    (Key.NumPad0 > k || k > Key.NumPad9) && k != Key.Decimal && k != Key.Subtract && k != Key.OemPeriod && k != Key.OemMinus;
                     break;
 
                 case KeyType.NegativeIntegers:
                     e.Handled = !keys.Any(key => key) && (Key.D0 > k || k > Key.D9) &&
-                                (Key.NumPad0 > k || k > Key.NumPad9) && k != Key.Subtract && k != Key.OemMinus;
+                    (Key.NumPad0 > k || k > Key.NumPad9) && k != Key.Subtract && k != Key.OemMinus;
                     break;
 
                 default:
@@ -215,15 +216,15 @@ namespace Extensions
         /// <param name="upperLimit">Maximum limit for the method, regardless of min and max.</param>
         /// <returns>Returns randomly generated integer between min and max with an upper limit of upperLimit.</returns>
         public static int GenerateRandomNumber(int min, int max, int lowerLimit = int.MinValue,
-            int upperLimit = int.MaxValue)
+        int upperLimit = int.MaxValue)
         {
             if (min < lowerLimit)
                 min = lowerLimit;
             if (max > upperLimit)
                 max = upperLimit;
             int result = min < max
-                ? ThreadSafeRandom.ThisThreadsRandom.Next(min, max + 1)
-                : ThreadSafeRandom.ThisThreadsRandom.Next(max, min + 1);
+            ? ThreadSafeRandom.ThisThreadsRandom.Next(min, max + 1)
+            : ThreadSafeRandom.ThisThreadsRandom.Next(max, min + 1);
 
             return result;
         }

@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Search Results" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico" Closing="WindowSearchResults_Closing">
+        Style="{StaticResource WindowStyle}"
+        Title="Search Results" WindowStartupLocation="CenterScreen" Closing="WindowSearchResults_Closing">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="LVTransactions" Grid.Row="0" Height="610" Margin="0,0,0,10" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible">
+        <ListView x:Name="LVTransactions" Grid.Row="0" Height="610" AlternationCount="2" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateToString}">
@@ -58,6 +59,8 @@
             </ListView.View>
         </ListView>
         <TextBlock Grid.Row="1" Text="{Binding Path=TransactionCount}" TextAlignment="Center" Margin="0,0,0,10" />
-        <Button x:Name="BtnBack" Grid.Row="2" Height="30" Width="175" Content="_Back" Click="BtnBack_Click" />
+        <Button x:Name="BtnBack" Grid.Row="2" Height="30" Width="175" Click="BtnBack_Click">
+            <AccessText Text="_Back" />
+        </Button>
     </Grid>
 </Window>

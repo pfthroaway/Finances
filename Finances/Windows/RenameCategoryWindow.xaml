@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        Style="{StaticResource WindowStyle}"
         Title="Rename Category" Width="Auto" Height="Auto" Closing="WindowRenameCategory_Closing" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -17,7 +18,11 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="What name would you like this category to have?" Width="250" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" />
         <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Width="250" TextAlignment="Center" TextChanged="TxtName_TextChanged" Margin="0,0,0,10" Padding="5" GotFocus="TxtName_GotFocus" />
-        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Content="_Submit" Width="120" Height="30" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,10,0" />
-        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Width="120" Height="30" Content="_Cancel" Click="BtnCancel_Click" />
+        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Width="120" Height="30" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,10,0">
+            <AccessText Text="_Submit" />
+        </Button>
+        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Width="120" Height="30" Click="BtnCancel_Click">
+            <AccessText Text="_Cancel" />
+        </Button>
     </Grid>
 </Window>

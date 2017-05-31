@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Extensions
+namespace Extensions.DatabaseHelp
 {
     /// <summary>Provides an extension into SQLite commands.</summary>
     public static class SQLite
@@ -28,9 +28,9 @@ namespace Extensions
                 catch (Exception ex)
                 {
                     Application.Current.Dispatcher.Invoke(delegate
-                    {
-                        new Notification(ex.Message, "Error Filling DataSet", NotificationButtons.OK).ShowDialog();
-                    });
+         {
+             new Notification(ex.Message, "Error Filling DataSet", NotificationButtons.OK).ShowDialog();
+         });
                 }
                 finally { connection.Close(); }
             });
@@ -61,9 +61,9 @@ namespace Extensions
                 catch (Exception ex)
                 {
                     Application.Current.Dispatcher.Invoke(delegate
-                        {
-                            new Notification(ex.Message, "Error Executing Command", NotificationButtons.OK).ShowDialog();
-                        });
+         {
+             new Notification(ex.Message, "Error Executing Command", NotificationButtons.OK).ShowDialog();
+         });
                 }
                 finally { connection.Close(); }
             });

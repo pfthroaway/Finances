@@ -1,6 +1,6 @@
 ﻿using Sodium;
 
-namespace Extensions
+namespace Extensions.Encryption
 {
     /// <summary>Provides an extension into the libsodium Argon2 hashing scheme.</summary>
     public static class Argon2

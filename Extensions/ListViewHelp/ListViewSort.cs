@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Extensions
+namespace Extensions.ListViewHelp
 {
     public class ListViewSort
     {

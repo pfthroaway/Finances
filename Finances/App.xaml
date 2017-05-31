@@ -3,5 +3,158 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="Windows\MainWindow.xaml">
     <Application.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="1" />
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="8" BorderBrush="Black" BorderThickness="2" Background="DarkBlue">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#0000CC" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#BDC7C1" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#666666" />
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type DatePickerTextBox}">
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="Background" Value="#000033" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <TextBox x:Name="PART_TextBox"
+                                 Text="{Binding Path=SelectedDate, StringFormat='yyyy/MM/dd', RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type DatePicker}">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="BorderBrush" Value="#BDC7C1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#000033" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#000033" />
+                    <Setter Property="Background" Value="#BDC7C1" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="BorderBrush" Value="#BDC7C1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#000033" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#BDC7C1" />
+                    <Setter Property="BorderBrush" Value="#BDC7C1" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Background" Value="#000033" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                    <Setter Property="Background" Value="#000033" />
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                    <Setter Property="Background" Value="#000066" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#000033" />
+                    <Setter Property="Background" Value="#BDC7C1" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Foreground" Value="#000033" />
+                    <Setter Property="BorderBrush" Value="#BDC7C1" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Background" Value="#5B6073" />
+                    <Setter Property="Opacity" Value="1.0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}">
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="BorderBrush" Value="#BDC7C1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#000033" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#BDC7C1" />
+                    <Setter Property="BorderBrush" Value="#BDC7C1" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Background" Value="#000033" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                    <Setter Property="Background" Value="#000033" />
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                    <Setter Property="Background" Value="#000066" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#000033" />
+                    <Setter Property="Background" Value="#BDC7C1" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Foreground" Value="#000033" />
+                    <Setter Property="BorderBrush" Value="#BDC7C1" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Background" Value="#5B6073" />
+                    <Setter Property="Opacity" Value="1.0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type PasswordBox}">
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="BorderBrush" Value="#BDC7C1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#000033" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="BorderBrush" Value="#BDC7C1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#000033" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+            <Setter Property="Background" Value="#000033" />
+            <Setter Property="FontFamily" Value="Segoe UI Semibold" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            <Setter Property="Foreground" Value="#BDC7C1" />
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="Icon" Value="Windows/Finances.ico" />
+        </Style>
     </Application.Resources>
 </Application>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using Extensions.ListViewHelp;
 
 namespace Finances
 {

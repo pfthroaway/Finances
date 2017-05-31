@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Modify Transaction" ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI Semibold" FontSize="17" Icon="Finances.ico" Closing="WindowModifyTransaction_Closing">
+        Style="{StaticResource WindowStyle}"
+        Title="Modify Transaction" WindowStartupLocation="CenterScreen" Closing="WindowModifyTransaction_Closing">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -23,7 +24,7 @@
         <TextBlock Grid.Column="1" Grid.Row="0" Text="Major Category:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="2" Grid.Row="0" Text="Minor Category:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="3" Grid.Row="0" Text="Memo:" TextAlignment="Center" Margin="0,0,0,5" />
-        <DatePicker x:Name="TransactionDate" Grid.Column="0" Grid.Row="1" Width="200" Height="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="DatePicker_SelectedDateChanged" Margin="0,0,10,10" />
+        <DatePicker x:Name="TransactionDate" Grid.Column="0" Grid.Row="1" Width="200" Height="30" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="DatePicker_SelectedDateChanged" Margin="0,0,10,10" />
         <ComboBox x:Name="CmbMajorCategory" Grid.Column="1" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbCategory_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <ComboBox x:Name="CmbMinorCategory" Grid.Column="2" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbCategory_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <TextBox x:Name="TxtMemo" Grid.Column="3" Grid.Row="1" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" GotFocus="Txt_GotFocus" Margin="0,0,0,10" />
@@ -36,8 +37,12 @@
         <TextBox x:Name="TxtInflow" Grid.Column="2" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="TxtInOutflow_TextChanged" TextAlignment="Center" PreviewKeyDown="TxtInflowOutflow_PreviewKeyDown" GotFocus="Txt_GotFocus" Margin="0,0,10,10" />
         <ComboBox x:Name="CmbAccount" Grid.Column="3" Grid.Row="3" Width="200" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="CmbAccount_SelectionChanged"  Margin="0,0,0,10" />
         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="BtnSave" Width="125" Height="30" Content="_Save" Click="BtnSave_Click" IsDefault="True" IsEnabled="False" Margin="0,0,20,0" />
-            <Button x:Name="BtnCancel" Width="125" Height="30" Content="_Cancel" Click="BtnCancel_Click" IsCancel="True" />
+            <Button x:Name="BtnSave" Width="125" Height="30" Click="BtnSave_Click" IsDefault="True" IsEnabled="False" Margin="0,0,20,0">
+                <AccessText Text="_Save" />
+            </Button>
+            <Button x:Name="BtnCancel" Width="125" Height="30" Click="BtnCancel_Click" IsCancel="True">
+                <AccessText Text="_Cancel" />
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
