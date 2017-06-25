@@ -1,0 +1,35 @@
+﻿<Window x:Name="WindowNewAccount" x:Class="Finances.Windows.Accounts.NewAccountWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Style="{StaticResource WindowStyle}"
+        Title="New Account" WindowStartupLocation="CenterScreen" Closing="WindowNewAccount_Closing">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Account Name:" TextAlignment="Center" Margin="0,0,10,5" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="Account Type:" TextAlignment="Center" Margin="0,0,10,5" />
+        <TextBlock Grid.Column="2" Grid.Row="0" Text="Balance:" TextAlignment="Center" Margin="0,0,0,5" />
+        <TextBox x:Name="TxtAccountName" Grid.Column="0" Grid.Row="1" Width="200" TextAlignment="Center" TextChanged="TxtAccountName_TextChanged" GotFocus="Txt_GotFocus" Margin="0,0,10,10" Padding="5" />
+        <ComboBox x:Name="CmbAccountTypes" Grid.Column="1" Grid.Row="1" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbAccountTypes_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
+        <TextBox x:Name="TxtBalance" Grid.Column="2" Grid.Row="1" Width="100" TextAlignment="Center" TextChanged="TxtBalance_TextChanged" GotFocus="Txt_GotFocus" Margin="0,0,0,10" Padding="5" />
+        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="BtnSubmit" Width="125" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,20,0">
+                <AccessText Text="_Submit" />
+            </Button>
+            <Button x:Name="BtnCancel" Width="125" IsCancel="True" Click="BtnCancel_Click">
+                <AccessText Text="_Cancel" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

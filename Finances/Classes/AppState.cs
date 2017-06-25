@@ -1,11 +1,16 @@
 ﻿using Extensions;
+using Extensions.Enums;
+using Finances.Classes.Categories;
+using Finances.Classes.Data;
+using Finances.Classes.Database;
+using Finances.Classes.Sorting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Finances
+namespace Finances.Classes
 {
     /// <summary>Represents the current state of the application.</summary>
     internal static class AppState
@@ -235,10 +240,10 @@ namespace Finances
                 {
                     AllCategories.Add(new Category(
                         name: newName,
-                        minorCategories: new List<string>()));
+                        minorCategories: new List<MinorCategory>()));
                 }
                 else
-                    selectedCategory.MinorCategories.Add(newName);
+                    selectedCategory.MinorCategories.Add(new MinorCategory(newName));
 
                 AllCategories = AllCategories.OrderBy(category => category.Name).ToList();
                 success = true;
@@ -267,7 +272,8 @@ namespace Finances
                 else
                 {
                     selectedCategory = AllCategories.Find(category => category.Name == selectedCategory.Name);
-                    selectedCategory.MinorCategories.Select(category => category == oldName ? newName : category).ToList();
+                    MinorCategory minor = selectedCategory.MinorCategories.Find(category => category.Name == oldName);
+                    minor.Name = newName;
                     AllTransactions.Select(transaction => transaction.MinorCategory == oldName ? newName : oldName).ToList();
                 }
 
@@ -318,7 +324,7 @@ namespace Finances
                 }
 
                 selectedCategory = AllCategories.Find(category => category.Name == selectedCategory.Name);
-                selectedCategory.MinorCategories.Remove(minorCategory);
+                selectedCategory.MinorCategories.Remove(new MinorCategory(minorCategory));
                 success = true;
             }
 
@@ -329,29 +335,43 @@ namespace Finances
 
         #region Notification Management
 
-        /// <summary>Displays a GameState.DisplayNotification in a thread-safe way.</summary>
+        /// <summary>Displays a new Notification in a thread-safe way.</summary>
         /// <param name="message">Message to be displayed</param>
         /// <param name="title">Title of the Notification Window</param>
-        /// <param name="buttons">Button type to be displayed on the Window</param>
-        internal static void DisplayNotification(string message, string title, NotificationButtons buttons)
+        internal static void DisplayNotification(string message, string title)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
-                new Notification(message, title, buttons).ShowDialog();
+                new Notification(message, title, NotificationButtons.OK).ShowDialog();
             });
         }
 
         /// <summary>Displays a new Notification in a thread-safe way.</summary>
         /// <param name="message">Message to be displayed</param>
         /// <param name="title">Title of the Notification Window</param>
-        /// <param name="buttons">Button type to be displayed on the Window</param>
         /// <param name="window">Window being referenced</param>
-        internal static void DisplayNotification(string message, string title, NotificationButtons buttons, Window window)
+        internal static void DisplayNotification(string message, string title, Window window)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
-                new Notification(message, title, buttons, window).ShowDialog();
+                new Notification(message, title, NotificationButtons.OK, window).ShowDialog();
             });
+        }
+
+        /// <summary>Displays a new Notification in a thread-safe way and retrieves a boolean result upon its closing.</summary>
+        /// <param name="message">Message to be displayed</param>
+        /// <param name="title">Title of the Notification Window</param>
+        /// <param name="window">Window being referenced</param>
+        /// <returns>Returns value of clicked button on Notification.</returns>
+        internal static bool YesNoNotification(string message, string title, Window window)
+        {
+            bool result = false;
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                if (new Notification(message, title, NotificationButtons.YesNo, window).ShowDialog() == true)
+                    result = true;
+            });
+            return result;
         }
 
         #endregion Notification Management

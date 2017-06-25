@@ -1,0 +1,28 @@
+﻿<Window x:Name="WindowAddCategory" x:Class="Finances.Windows.Categories.AddCategoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Style="{StaticResource WindowStyle}"
+        Title="Add Category" WindowStartupLocation="CenterScreen" Closing="WindowAddCategory_Closing">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="What is the name of the category you would like to create?" Width="250" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" />
+        <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Width="250" Grid.ColumnSpan="2" TextAlignment="Center" TextChanged="TxtName_TextChanged" GotFocus="TxtName_OnGotFocus" Margin="0,0,0,10" Padding="5" />
+        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Margin="0,0,10,0" Width="120" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click">
+            <AccessText Text="_Submit" />
+        </Button>
+        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Margin="0,0,0,0" Width="120" Click="BtnCancel_Click">
+            <AccessText Text="_Cancel" />
+        </Button>
+    </Grid>
+</Window>

@@ -1,1 +1,3 @@
 CHANGE TRANSFER TO MAKE MEMO THE NECESSARY FIELD FOR THE ACCOUNT NAME
+
+ I might be better off making it just a search Period and adding all Transactions between two dates.

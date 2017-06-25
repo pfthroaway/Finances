@@ -1,0 +1,53 @@
+﻿<Window x:Name="WindowCategorizedMonthlyReport" x:Class="Finances.Windows.Reports.CategorizedMonthlyReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Style="{StaticResource WindowStyle}"
+        Title="Categorized Monthly Report" WindowStartupLocation="CenterScreen" Closing="WindowCategorizedMonthlyReport_Closing">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=FormattedMonth}" TextAlignment="Center" Margin="0,0,0,10" />
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Path=ExpensesToStringWithText}" TextAlignment="Center" Margin="0,0,0,10" />
+        <TextBlock Grid.Column="2" Grid.Row="0" Text="{Binding Path=IncomeToStringWithText}" TextAlignment="Center" Margin="0,0,0,10" />
+        <ListView x:Name="LVCategorized" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Height="450" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=MajorCategory}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MajorCategory" Click="LVCategorizedColumnHeader_Click" Content="Major Category" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=MinorCategory}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MinorCategory" Click="LVCategorizedColumnHeader_Click" Content="Minor Category" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=ExpensesToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Expenses" Click="LVCategorizedColumnHeader_Click" Content="Expenses" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=IncomeToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Income" Click="LVCategorizedColumnHeader_Click" Content="Income" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="BtnBack" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Width="100" Click="BtnBack_Click" IsCancel="True">
+            <AccessText Text="_Back" />
+        </Button>
+    </Grid>
+</Window>

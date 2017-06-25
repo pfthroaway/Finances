@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Extensions.Enums;
+using System;
 
 namespace Extensions.DataTypeHelpers
 {

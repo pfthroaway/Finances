@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Extensions.Enums;
+using System;
 
 namespace Extensions.DataTypeHelpers
 {
@@ -61,9 +62,6 @@ namespace Extensions.DataTypeHelpers
         /// <summary>Converts a boolean to integer.</summary>
         /// <param name="bln">Boolean to be parsed</param>
         /// <returns>Parsed integer</returns>
-        public static int Parse(bool bln)
-        {
-            return bln ? 1 : 0;
-        }
+        public static int Parse(bool bln) => bln ? 1 : 0;
     }
 }

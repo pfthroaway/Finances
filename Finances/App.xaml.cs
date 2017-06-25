@@ -1,8 +1,6 @@
 ﻿namespace Finances
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
+    /// <summary>Interaction logic for App.xaml</summary>
     public partial class App
     {
     }

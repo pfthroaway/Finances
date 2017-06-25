@@ -66,26 +66,16 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.105.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.105.1\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.105.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.105.1\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.105.1, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.1\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libraries\Extensions\packages\System.Data.SQLite.Core.1.0.105.1\lib\net451\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -102,74 +92,75 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Classes\AccountTypes.cs" />
+    <Compile Include="Classes\Enums\AccountTypes.cs" />
     <Compile Include="Classes\AppState.cs" />
-    <Compile Include="Classes\CategorizedExpense.cs" />
-    <Compile Include="Classes\Category.cs" />
-    <Compile Include="Classes\IDatabaseInteraction.cs" />
-    <Compile Include="Classes\Year.cs" />
-    <Compile Include="Classes\SQLiteDatabaseInteraction.cs" />
-    <Compile Include="Classes\Transaction.cs" />
-    <Compile Include="Windows\AddCategoryWindow.xaml.cs">
+    <Compile Include="Classes\Sorting\CategorizedExpense.cs" />
+    <Compile Include="Classes\Categories\Category.cs" />
+    <Compile Include="Classes\Database\IDatabaseInteraction.cs" />
+    <Compile Include="Classes\Categories\MinorCategory.cs" />
+    <Compile Include="Classes\Sorting\Year.cs" />
+    <Compile Include="Classes\Database\SQLiteDatabaseInteraction.cs" />
+    <Compile Include="Classes\Data\Transaction.cs" />
+    <Compile Include="Windows\Categories\AddCategoryWindow.xaml.cs">
       <DependentUpon>AddCategoryWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\RenameCategoryWindow.xaml.cs">
+    <Compile Include="Windows\Categories\RenameCategoryWindow.xaml.cs">
       <DependentUpon>RenameCategoryWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SearchResultsWindow.xaml.cs">
+    <Compile Include="Windows\Search\SearchResultsWindow.xaml.cs">
       <DependentUpon>SearchResultsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\SearchTransactionsWindow.xaml.cs">
+    <Compile Include="Windows\Search\SearchTransactionsWindow.xaml.cs">
       <DependentUpon>SearchTransactionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ViewAllTransactionsWindow.xaml.cs">
+    <Compile Include="Windows\Transactions\ViewAllTransactionsWindow.xaml.cs">
       <DependentUpon>ViewAllTransactionsWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Windows\AddCategoryWindow.xaml">
+    <Page Include="Windows\Categories\AddCategoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\CategorizedMonthlyReportWindow.xaml">
+    <Page Include="Windows\Reports\CategorizedMonthlyReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\RenameCategoryWindow.xaml">
+    <Page Include="Windows\Categories\RenameCategoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ModifyTransactionWindow.xaml">
+    <Page Include="Windows\Transactions\ModifyTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ManageCategoriesWindow.xaml">
+    <Page Include="Windows\Categories\ManageCategoriesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\MonthlyReportWindow.xaml">
+    <Page Include="Windows\Reports\MonthlyReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\NewAccountWindow.xaml">
+    <Page Include="Windows\Accounts\NewAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\NewTransferWindow.xaml">
+    <Page Include="Windows\Transactions\NewTransferWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\RenameAccountWindow.xaml">
+    <Page Include="Windows\Accounts\RenameAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\SearchResultsWindow.xaml">
+    <Page Include="Windows\Search\SearchResultsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\SearchTransactionsWindow.xaml">
+    <Page Include="Windows\Search\SearchTransactionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ViewAccountWindow.xaml">
+    <Page Include="Windows\Accounts\ViewAccountWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -177,51 +168,51 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Classes\Account.cs" />
+    <Compile Include="Classes\Data\Account.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Month.cs" />
-    <Compile Include="Windows\CategorizedMonthlyReportWindow.xaml.cs">
+    <Compile Include="Classes\Sorting\Month.cs" />
+    <Compile Include="Windows\Reports\CategorizedMonthlyReportWindow.xaml.cs">
       <DependentUpon>CategorizedMonthlyReportWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ModifyTransactionWindow.xaml.cs">
+    <Compile Include="Windows\Transactions\ModifyTransactionWindow.xaml.cs">
       <DependentUpon>ModifyTransactionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ManageCategoriesWindow.xaml.cs">
+    <Compile Include="Windows\Categories\ManageCategoriesWindow.xaml.cs">
       <DependentUpon>ManageCategoriesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\MonthlyReportWindow.xaml.cs">
+    <Compile Include="Windows\Reports\MonthlyReportWindow.xaml.cs">
       <DependentUpon>MonthlyReportWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\NewAccountWindow.xaml.cs">
+    <Compile Include="Windows\Accounts\NewAccountWindow.xaml.cs">
       <DependentUpon>NewAccountWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\NewTransferWindow.xaml.cs">
+    <Compile Include="Windows\Transactions\NewTransferWindow.xaml.cs">
       <DependentUpon>NewTransferWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\RenameAccountWindow.xaml.cs">
+    <Compile Include="Windows\Accounts\RenameAccountWindow.xaml.cs">
       <DependentUpon>RenameAccountWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\ViewAccountWindow.xaml.cs">
+    <Compile Include="Windows\Accounts\ViewAccountWindow.xaml.cs">
       <DependentUpon>ViewAccountWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Windows\NewTransactionWindow.xaml">
+    <Page Include="Windows\Transactions\NewTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\ViewAllTransactionsWindow.xaml">
+    <Page Include="Windows\Transactions\ViewAllTransactionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Windows\NewTransactionWindow.xaml.cs">
+    <Compile Include="Windows\Transactions\NewTransactionWindow.xaml.cs">
       <DependentUpon>NewTransactionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -242,7 +233,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -268,19 +258,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Extensions\Extensions.csproj">
+    <ProjectReference Include="..\..\..\Libraries\Extensions\Extensions\Extensions.csproj">
       <Project>{20f40385-5991-461c-9340-2f5de0e320f4}</Project>
       <Name>Extensions</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.105.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.105.1\build\net46\System.Data.SQLite.Core.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.105.1\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.105.1\build\net46\System.Data.SQLite.Core.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -47,7 +47,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.105.1\lib\net46\System.Data.SQLite.dll</HintPath>
@@ -76,6 +75,7 @@
     <Compile Include="DataTypeHelpers\DecimalHelper.cs" />
     <Compile Include="DataTypeHelpers\DoubleHelper.cs" />
     <Compile Include="Encryption\Argon2.cs" />
+    <Compile Include="Enums\NotificationButtons.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="DataTypeHelpers\Int32Helper.cs" />
@@ -87,7 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="KeyType.cs" />
+    <Compile Include="Enums\KeyType.cs" />
     <Compile Include="Encryption\MD5.cs" />
     <Compile Include="Notification.xaml.cs">
       <DependentUpon>Notification.xaml</DependentUpon>

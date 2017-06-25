@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 namespace Extensions
 {
     public static class MyExtensions
-    {/// <summary>Adds multiple ranges to a List.</summary>
-     /// <typeparam name="T">Type</typeparam>
-     /// <param name="list">List for others to be added to</param>
-     /// <param name="lists">Lists to be added to list</param>
+    {
+        /// <summary>Adds multiple ranges to a List.</summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="list">List for others to be added to</param>
+        /// <param name="lists">Lists to be added to list</param>
         public static void AddRanges<T>(this List<T> list, params IEnumerable<T>[] lists)
         {
             foreach (IEnumerable<T> currentList in lists)
@@ -19,26 +20,17 @@ namespace Extensions
         /// <summary>Determines if this character is a hyphen.</summary>
         /// <param name="c">Character to be evaluated</param>
         /// <returns>Returns true if character is a hyphen</returns>
-        public static bool IsHyphen(this char c)
-        {
-            return c.Equals('-');
-        }
+        public static bool IsHyphen(this char c) => c.Equals('-');
 
         /// <summary>Determines if this character is a period.</summary>
         /// <param name="c">Character to be evaluated</param>
         /// <returns>Returns true if character is a period</returns>
-        public static bool IsPeriod(this char c)
-        {
-            return c.Equals('.');
-        }
+        public static bool IsPeriod(this char c) => c.Equals('.');
 
         /// <summary>Determines if this character is a period or comma.</summary>
         /// <param name="c">Character to be evaluated</param>
         /// <returns>Returns true if character is a period or comma</returns>
-        public static bool IsPeriodOrComma(this char c)
-        {
-            return c.Equals('.') | c.Equals(',');
-        }
+        public static bool IsPeriodOrComma(this char c) => c.Equals('.') | c.Equals(',');
 
         /// <summary>Shuffles a List.</summary>
         /// <typeparam name="T">Generic Type</typeparam>
@@ -60,7 +52,8 @@ namespace Extensions
         /// <param name="process">Process to be awaited</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Task</returns>
-        public static Task WaitForExitAsync(this Process process, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task WaitForExitAsync(this Process process,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
             process.EnableRaisingEvents = true;
