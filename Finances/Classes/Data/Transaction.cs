@@ -164,17 +164,9 @@ namespace Finances.Classes.Data
         }
 
         /// <summary>Replaces this instance of Transaction with another instance</summary>
-        /// <param name="otherTransaction">Transaction to replace this instance</param>
-        public Transaction(Transaction otherTransaction)
+        /// <param name="other">Transaction to replace this instance</param>
+        public Transaction(Transaction other) : this(other.Date, other.Payee, other.MajorCategory, other.MinorCategory, other.Memo, other.Outflow, other.Inflow, other.Account)
         {
-            Date = otherTransaction.Date;
-            Payee = otherTransaction.Payee;
-            MajorCategory = otherTransaction.MajorCategory;
-            MinorCategory = otherTransaction.MinorCategory;
-            Memo = otherTransaction.Memo;
-            Outflow = otherTransaction.Outflow;
-            Inflow = otherTransaction.Inflow;
-            Account = otherTransaction.Account;
         }
 
         #endregion Constructors

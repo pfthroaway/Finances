@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Extensions.Enums;
 
 namespace Finances.Windows.Accounts
 {
@@ -36,7 +37,7 @@ namespace Finances.Windows.Accounts
                     outflow: 0.00M,
                     inflow: DecimalHelper.Parse(TxtBalance.Text),
                     account: newAccount.Name);
-                newAccount.AddTransaction(new Transaction(newTransaction));
+                newAccount.AddTransaction(newTransaction);
                 if (await AppState.AddAccount(newAccount))
                 {
                     if (await AppState.AddTransaction(newTransaction, newAccount))

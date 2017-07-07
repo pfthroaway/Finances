@@ -205,11 +205,9 @@ namespace Finances.Classes.Data
         }
 
         /// <summary>Replaces this instance of Account with another instance</summary>
-        /// <param name="otherAccount">Account to replace this instance</param>
-        public Account(Account otherAccount)
+        /// <param name="other">Account to replace this instance</param>
+        public Account(Account other) : this(other.Name, other.AccountType, other.AllTransactions)
         {
-            Name = otherAccount.Name;
-            _allTransactions = new List<Transaction>(otherAccount.AllTransactions);
         }
 
         #endregion Constructors

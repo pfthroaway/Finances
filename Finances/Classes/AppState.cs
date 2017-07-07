@@ -44,7 +44,7 @@ namespace Finances.Classes
         }
 
         /// <summary>Loads all the Months from AllTransactions.</summary>
-        internal static void LoadMonths()
+        private static void LoadMonths()
         {
             AllMonths.Clear();
 
