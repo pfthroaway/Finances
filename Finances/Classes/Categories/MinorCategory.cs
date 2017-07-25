@@ -6,14 +6,14 @@ namespace Finances.Classes.Categories
     /// <summary>Represents a minor category.</summary>
     public class MinorCategory : INotifyPropertyChanged, IEquatable<MinorCategory>
     {
-        private string name;
+        private string _name;
 
         public string Name
         {
-            get => name;
+            get => _name;
             set
             {
-                name = value;
+                _name = value;
                 OnPropertyChanged("Name");
             }
         }
@@ -79,8 +79,8 @@ namespace Finances.Classes.Categories
             Name = name;
         }
 
-        /// <summary>Replaces this instance of MinorCategory with a new instance.</summary>
-        /// <param name="otherCategory">MinorCategory to replace this instance</param>
+        /// <summary>Replaces  instance of MinorCategory with a new instance.</summary>
+        /// <param name="otherCategory">MinorCategory to replace  instance</param>
         public MinorCategory(MinorCategory otherCategory)
         {
             Name = otherCategory.Name;

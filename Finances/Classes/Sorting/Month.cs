@@ -34,7 +34,7 @@ namespace Finances.Classes.Sorting
 
         #region Helper Properties
 
-        /// <summary>Income for this month</summary>
+        /// <summary>Income for  month</summary>
         public decimal Income
         {
             get
@@ -49,13 +49,13 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Income for this month, formatted to currency</summary>
+        /// <summary>Income for  month, formatted to currency</summary>
         public string IncomeToString => Income.ToString("C2");
 
-        /// <summary>Income for this month, formatted to currency, with preceding text</summary>
+        /// <summary>Income for  month, formatted to currency, with preceding text</summary>
         public string IncomeToStringWithText => $"Income: {Income:C2}";
 
-        /// <summary>Expenses for this month</summary>
+        /// <summary>Expenses for  month</summary>
         public decimal Expenses
         {
             get
@@ -70,10 +70,10 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Expenses for this month, formatted to currency</summary>
+        /// <summary>Expenses for  month, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
 
-        /// <summary>Expenses for this month, formatted to currency, with preceding text</summary>
+        /// <summary>Expenses for  month, formatted to currency, with preceding text</summary>
         public string ExpensesToStringWithText => $"Expenses: {Expenses:C2}";
 
         /// <summary>Last day of the month</summary>
@@ -100,7 +100,7 @@ namespace Finances.Classes.Sorting
 
         #region Transaction Management
 
-        /// <summary>Adds a transaction to this month.</summary>
+        /// <summary>Adds a transaction to  month.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void AddTransaction(Transaction transaction)
         {
@@ -109,7 +109,7 @@ namespace Finances.Classes.Sorting
             OnPropertyChanged("BalanceToStringWithText");
         }
 
-        /// <summary>Modifies a transaction in this account.</summary>
+        /// <summary>Modifies a transaction in  account.</summary>
         /// <param name="index">Index of transaction to be modified</param>
         /// <param name="transaction">Transaction to replace current in list</param>
         internal void ModifyTransaction(int index, Transaction transaction)
@@ -117,7 +117,7 @@ namespace Finances.Classes.Sorting
             _allTransactions[index] = transaction;
         }
 
-        /// <summary>Removes a transaction to this account.</summary>
+        /// <summary>Removes a transaction to  account.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void RemoveTransaction(Transaction transaction)
         {
@@ -182,7 +182,7 @@ namespace Finances.Classes.Sorting
 
         /// <summary>Initializes an instance of Month by assigning Properties.</summary>
         /// <param name="monthStart">First day of the month</param>
-        /// <param name="transactions">Transactions during this month</param>
+        /// <param name="transactions">Transactions during  month</param>
         public Month(DateTime monthStart, IEnumerable<Transaction> transactions)
         {
             MonthStart = monthStart;
@@ -191,8 +191,8 @@ namespace Finances.Classes.Sorting
             _allTransactions = newTransactions;
         }
 
-        /// <summary>Replaces this instance of Account with another instance</summary>
-        /// <param name="otherMonth">Month to replace this instance</param>
+        /// <summary>Replaces  instance of Account with another instance</summary>
+        /// <param name="otherMonth">Month to replace  instance</param>
         public Month(Month otherMonth)
         {
             MonthStart = otherMonth.MonthStart;

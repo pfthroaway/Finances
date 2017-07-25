@@ -1,0 +1,58 @@
+﻿<Page x:Class="Finances.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Style="{StaticResource PageStyle}"
+      Loaded="MainPage_OnLoaded"
+      Title="MainPage">
+    <Grid x:Name="Grid" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListView x:Name="LVAccounts" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" SelectionChanged="LVAccounts_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="350" DisplayMemberBinding="{Binding Path=Name}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="LVAccountsColumnHeader_Click" Content="Account Name" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path=Type}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Type" Click="LVAccountsColumnHeader_Click" Content="Type" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=BalanceToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Balance" Click="LVAccountsColumnHeader_Click" Content="Balance" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="BtnViewTransactions" Grid.Column="0" Grid.Row="1" Width="175" Click="BtnViewAccount_Click" IsEnabled="False" IsDefault="True" Margin="0,0,0,10">
+            <AccessText Text="_View Account" />
+        </Button>
+        <Button x:Name="BtnNewAccount" Grid.Column="1" Grid.Row="1" Width="175" Click="BtnNewAccount_Click" Margin="0,0,0,10">
+            <AccessText Text="New _Account" />
+        </Button>
+        <Button x:Name="BtnMonthlyReport" Grid.Column="0" Grid.Row="2" Width="175" Click="BtnMonthlyReport_Click" Margin="0,0,0,10">
+            <AccessText Text="_Monthly Report" />
+        </Button>
+        <Button x:Name="BtnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Click="BtnManageCategories_Click" Margin="0,0,0,10">
+            <AccessText Text="_Manage Categories" />
+        </Button>
+        <Button x:Name="BtnViewAllTransactions" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="200" Click="BtnViewAllTransactions_Click">
+            <AccessText Text="_View All Transactions" />
+        </Button>
+    </Grid>
+</Page>

@@ -22,24 +22,24 @@ namespace Finances.Classes.Sorting
             private set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
         }
 
-        /// <summary>Income for this month</summary>
+        /// <summary>Income for  month</summary>
         public decimal Income
         {
             get => _income;
             set { _income = value; OnPropertyChanged("Income"); OnPropertyChanged("IncomeToString"); }
         }
 
-        /// <summary>Income for this month.</summary>
+        /// <summary>Income for  month.</summary>
         public string IncomeToString => Income.ToString("C2");
 
-        /// <summary>Expenses for this month</summary>
+        /// <summary>Expenses for  month</summary>
         public decimal Expenses
         {
             get => _expenses * -1;
             set { _expenses = value; OnPropertyChanged("Expenses"); OnPropertyChanged("ExpensesToString"); }
         }
 
-        /// <summary>Expenses for this month, formatted to currency</summary>
+        /// <summary>Expenses for  month, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
 
         #region Data-Binding
@@ -85,8 +85,8 @@ namespace Finances.Classes.Sorting
             Income = income;
         }
 
-        /// <summary>Replaces this instance of CategorizedExpense with another instance</summary>
-        /// <param name="otherCategorizedExpense">Instance of CategorizedExpense to replace this instance</param>
+        /// <summary>Replaces  instance of CategorizedExpense with another instance</summary>
+        /// <param name="otherCategorizedExpense">Instance of CategorizedExpense to replace  instance</param>
         public CategorizedExpense(CategorizedExpense otherCategorizedExpense)
         {
             MajorCategory = otherCategorizedExpense.MajorCategory;

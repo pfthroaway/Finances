@@ -47,21 +47,21 @@ namespace Finances.Classes.Data
             private set { _memo = value; OnPropertyChanged("Memo"); }
         }
 
-        /// <summary>How much money left the account during this transaction</summary>
+        /// <summary>How much money left the account during  transaction</summary>
         public decimal Outflow
         {
             get => _outflow;
             private set { _outflow = value; OnPropertyChanged("Outflow"); OnPropertyChanged("OutflowToString"); }
         }
 
-        /// <summary>How much money entered the account during this transaction</summary>
+        /// <summary>How much money entered the account during  transaction</summary>
         public decimal Inflow
         {
             get => _inflow;
             private set { _inflow = value; OnPropertyChanged("Inflow"); OnPropertyChanged("InflowToString"); }
         }
 
-        /// <summary>Name of the account this transaction is associated with</summary>
+        /// <summary>Name of the account  transaction is associated with</summary>
         public string Account
         {
             get => _account;
@@ -75,10 +75,10 @@ namespace Finances.Classes.Data
         /// <summary>Date the transaction occurred, formatted properly</summary>
         public string DateToString => Date.ToString("yyyy/MM/dd");
 
-        /// <summary>How much money left the account during this transaction, formatted to currency</summary>
+        /// <summary>How much money left the account during  transaction, formatted to currency</summary>
         public string OutflowToString => Outflow.ToString("C2");
 
-        /// <summary>How much money entered the account during this transaction, formatted to currency</summary>
+        /// <summary>How much money entered the account during  transaction, formatted to currency</summary>
         public string InflowToString => Inflow.ToString("C2");
 
         #endregion Helper Properties
@@ -148,8 +148,8 @@ namespace Finances.Classes.Data
         /// <param name="majorCategory">Primary category of which the transaction regards</param>
         /// <param name="minorCategory">Secondary category of which the transaction regards</param>
         /// <param name="memo">Extra information regarding the transaction</param>
-        /// <param name="outflow">How much money left the account during this transaction</param>
-        /// <param name="inflow">How much money entered the account during this transaction</param>
+        /// <param name="outflow">How much money left the account during  transaction</param>
+        /// <param name="inflow">How much money entered the account during  transaction</param>
         /// <param name="account">Account name related to the transaction</param>
         public Transaction(DateTime date, string payee, string majorCategory, string minorCategory, string memo, decimal outflow, decimal inflow, string account)
         {
@@ -163,8 +163,8 @@ namespace Finances.Classes.Data
             Account = account;
         }
 
-        /// <summary>Replaces this instance of Transaction with another instance</summary>
-        /// <param name="other">Transaction to replace this instance</param>
+        /// <summary>Replaces  instance of Transaction with another instance</summary>
+        /// <param name="other">Transaction to replace  instance</param>
         public Transaction(Transaction other) : this(other.Date, other.Payee, other.MajorCategory, other.MinorCategory, other.Memo, other.Outflow, other.Inflow, other.Account)
         {
         }

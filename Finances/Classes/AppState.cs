@@ -4,11 +4,13 @@ using Finances.Classes.Categories;
 using Finances.Classes.Data;
 using Finances.Classes.Database;
 using Finances.Classes.Sorting;
+using Finances.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Finances.Classes
 {
@@ -23,6 +25,29 @@ namespace Finances.Classes
         internal static List<Transaction> AllTransactions = new List<Transaction>();
         internal static List<Month> AllMonths = new List<Month>();
         internal static List<Year> AllYears = new List<Year>();
+
+        internal static MainWindow MainWindow { get; set; }
+
+        internal static double CurrentPageWidth { get; set; }
+        internal static double CurrentPageHeight { get; set; }
+
+        internal static void CalculateScale(Grid grid)
+        {
+            CurrentPageHeight = grid.ActualHeight;
+            CurrentPageWidth = grid.ActualWidth;
+            MainWindow.CalculateScale();
+        }
+
+        internal static void Navigate(Page newPage)
+        {
+            MainWindow.MainFrame.Navigate(newPage);
+        }
+
+        internal static void GoBack()
+        {
+            if (MainWindow.MainFrame.CanGoBack)
+                MainWindow.MainFrame.GoBack();
+        }
 
         /// <summary>Loads all information from the database.</summary>
         /// <returns>Returns true if successful</returns>
@@ -337,38 +362,25 @@ namespace Finances.Classes
 
         /// <summary>Displays a new Notification in a thread-safe way.</summary>
         /// <param name="message">Message to be displayed</param>
-        /// <param name="title">Title of the Notification Window</param>
+        /// <param name="title">Title of the Notification window</param>
         internal static void DisplayNotification(string message, string title)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
-                new Notification(message, title, NotificationButtons.OK).ShowDialog();
-            });
-        }
-
-        /// <summary>Displays a new Notification in a thread-safe way.</summary>
-        /// <param name="message">Message to be displayed</param>
-        /// <param name="title">Title of the Notification Window</param>
-        /// <param name="window">Window being referenced</param>
-        internal static void DisplayNotification(string message, string title, Window window)
-        {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                new Notification(message, title, NotificationButtons.OK, window).ShowDialog();
+                new Notification(message, title, NotificationButtons.OK, MainWindow).ShowDialog();
             });
         }
 
         /// <summary>Displays a new Notification in a thread-safe way and retrieves a boolean result upon its closing.</summary>
         /// <param name="message">Message to be displayed</param>
-        /// <param name="title">Title of the Notification Window</param>
-        /// <param name="window">Window being referenced</param>
+        /// <param name="title">Title of the Notification window</param>
         /// <returns>Returns value of clicked button on Notification.</returns>
-        internal static bool YesNoNotification(string message, string title, Window window)
+        internal static bool YesNoNotification(string message, string title)
         {
             bool result = false;
             Application.Current.Dispatcher.Invoke(delegate
             {
-                if (new Notification(message, title, NotificationButtons.YesNo, window).ShowDialog() == true)
+                if (new Notification(message, title, NotificationButtons.YesNo, MainWindow).ShowDialog() == true)
                     result = true;
             });
             return result;

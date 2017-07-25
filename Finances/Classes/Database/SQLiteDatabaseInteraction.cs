@@ -137,7 +137,7 @@ namespace Finances.Classes.Database
             SQLiteCommand cmd = new SQLiteCommand
             {
                 CommandText =
-                    "INSERT INTO Transactions([Date], [Payee], [MajorCategory], [MinorCategory], [Memo], [Outflow], [Inflow], [Account]) VALUES((@date, @payee, @majorCategory, @minorCategory, @memo, @outflow, @inflow, @name);UPDATE Accounts SET [Balance] = @balance WHERE [Name] = @name"
+                    "INSERT INTO Transactions([Date], [Payee], [MajorCategory], [MinorCategory], [Memo], [Outflow], [Inflow], [Account]) VALUES(@date, @payee, @majorCategory, @minorCategory, @memo, @outflow, @inflow, @name);UPDATE Accounts SET [Balance] = @balance WHERE [Name] = @name"
             };
             cmd.Parameters.AddWithValue("@date", transaction.DateToString);
             cmd.Parameters.AddWithValue("@payee", transaction.Payee);

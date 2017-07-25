@@ -1,0 +1,65 @@
+﻿<Page x:Name="PageViewAllTransactions" x:Class="Finances.Pages.Transactions.ViewAllTransactionsPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+      Loaded="ViewAllTransactionsPage_OnLoaded"
+        Style="{StaticResource PageStyle}"
+        Title="View All Transactions">
+    <Grid x:Name="Grid" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ListView x:Name="LVTransactions" Grid.Row="0" Height="610" SelectionMode="Single"  ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Date" Click="LVTransactionsColumnHeader_Click" Content="Date" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=Payee}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Payee" Click="LVTransactionsColumnHeader_Click" Content="Payee" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=MajorCategory}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MajorCategory" Click="LVTransactionsColumnHeader_Click" Content="Major Category" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=MinorCategory}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MinorCategory" Click="LVTransactionsColumnHeader_Click" Content="Minor Category" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=Memo}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Memo" Click="LVTransactionsColumnHeader_Click" Content="Memo" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=OutflowToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Outflow" Click="LVTransactionsColumnHeader_Click" Content="Outflow" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=InflowToString}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Inflow" Click="LVTransactionsColumnHeader_Click" Content="Inflow" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=Account}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Account" Click="LVTransactionsColumnHeader_Click" Content="Account" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="BtnBack" Grid.Row="1" Width="175" Click="BtnBack_Click">
+            <AccessText Text="_Back" />
+        </Button>
+    </Grid>
+</Page>

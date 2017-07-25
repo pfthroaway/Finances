@@ -29,7 +29,7 @@ namespace Finances.Classes.Sorting
 
         #region Helper Properties
 
-        /// <summary>Income for this year</summary>
+        /// <summary>Income for  year</summary>
         public decimal Income
         {
             get
@@ -44,13 +44,13 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Income for this year, formatted to currency</summary>
+        /// <summary>Income for  year, formatted to currency</summary>
         public string IncomeToString => Income.ToString("C2");
 
-        /// <summary>Income for this year, formatted to currency, with preceding text</summary>
+        /// <summary>Income for  year, formatted to currency, with preceding text</summary>
         public string IncomeToStringWithText => $"Income: {Income:C2}";
 
-        /// <summary>Expenses for this year</summary>
+        /// <summary>Expenses for  year</summary>
         public decimal Expenses
         {
             get
@@ -65,10 +65,10 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Expenses for this year, formatted to currency</summary>
+        /// <summary>Expenses for  year, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
 
-        /// <summary>Expenses for this year, formatted to currency, with preceding text</summary>
+        /// <summary>Expenses for  year, formatted to currency, with preceding text</summary>
         public string ExpensesToStringWithText => $"Expenses: {Expenses:C2}";
 
         /// <summary>Last day of the year</summary>
@@ -92,7 +92,7 @@ namespace Finances.Classes.Sorting
 
         #region Transaction Management
 
-        /// <summary>Adds a transaction to this year.</summary>
+        /// <summary>Adds a transaction to  year.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void AddTransaction(Transaction transaction)
         {
@@ -101,7 +101,7 @@ namespace Finances.Classes.Sorting
             OnPropertyChanged("BalanceToStringWithText");
         }
 
-        /// <summary>Modifies a transaction in this account.</summary>
+        /// <summary>Modifies a transaction in  account.</summary>
         /// <param name="index">Index of transaction to be modified</param>
         /// <param name="transaction">Transaction to replace current in list</param>
         internal void ModifyTransaction(int index, Transaction transaction)
@@ -109,7 +109,7 @@ namespace Finances.Classes.Sorting
             _allTransactions[index] = transaction;
         }
 
-        /// <summary>Removes a transaction to this account.</summary>
+        /// <summary>Removes a transaction to  account.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void RemoveTransaction(Transaction transaction)
         {
@@ -174,7 +174,7 @@ namespace Finances.Classes.Sorting
 
         /// <summary>Initializes an instance of Year by assigning Properties.</summary>
         /// <param name="yearStart">First day of the year</param>
-        /// <param name="transactions">Transactions during this year</param>
+        /// <param name="transactions">Transactions during  year</param>
         public Year(DateTime yearStart, IEnumerable<Transaction> transactions)
         {
             YearStart = yearStart;
@@ -183,8 +183,8 @@ namespace Finances.Classes.Sorting
             _allTransactions = newTransactions;
         }
 
-        /// <summary>Replaces this instance of Account with another instance</summary>
-        /// <param name="otherYear">Year to replace this instance</param>
+        /// <summary>Replaces  instance of Account with another instance</summary>
+        /// <param name="otherYear">Year to replace  instance</param>
         public Year(Year otherYear)
         {
             YearStart = otherYear.YearStart;

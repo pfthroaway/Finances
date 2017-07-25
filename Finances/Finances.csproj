@@ -54,7 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Windows\Finances.ico</ApplicationIcon>
+    <ApplicationIcon>Pages\Finances.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>0FFDB72931359D33770C3DF5FFAC331B7D38A47A</ManifestCertificateThumbprint>
@@ -112,70 +112,77 @@
     <Compile Include="Classes\Sorting\Year.cs" />
     <Compile Include="Classes\Database\SQLiteDatabaseInteraction.cs" />
     <Compile Include="Classes\Data\Transaction.cs" />
-    <Compile Include="Windows\Categories\AddCategoryWindow.xaml.cs">
-      <DependentUpon>AddCategoryWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Categories\AddCategoryPage.xaml.cs">
+      <DependentUpon>AddCategoryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Categories\RenameCategoryWindow.xaml.cs">
-      <DependentUpon>RenameCategoryWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Categories\RenameCategoryPage.xaml.cs">
+      <DependentUpon>RenameCategoryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Search\SearchResultsWindow.xaml.cs">
-      <DependentUpon>SearchResultsWindow.xaml</DependentUpon>
+    <Compile Include="Pages\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Search\SearchTransactionsWindow.xaml.cs">
-      <DependentUpon>SearchTransactionsWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Search\SearchResultsPage.xaml.cs">
+      <DependentUpon>SearchResultsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Transactions\ViewAllTransactionsWindow.xaml.cs">
-      <DependentUpon>ViewAllTransactionsWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Search\SearchTransactionsPage.xaml.cs">
+      <DependentUpon>SearchTransactionsPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="Windows\Categories\AddCategoryWindow.xaml">
+    <Compile Include="Pages\Transactions\ViewAllTransactionsPage.xaml.cs">
+      <DependentUpon>ViewAllTransactionsPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Pages\Categories\AddCategoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Reports\CategorizedMonthlyReportWindow.xaml">
+    <Page Include="Pages\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Categories\RenameCategoryWindow.xaml">
+    <Page Include="Pages\Reports\CategorizedMonthlyReportPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Transactions\ModifyTransactionWindow.xaml">
+    <Page Include="Pages\Categories\RenameCategoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Categories\ManageCategoriesWindow.xaml">
+    <Page Include="Pages\Transactions\ModifyTransactionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Reports\MonthlyReportWindow.xaml">
+    <Page Include="Pages\Categories\ManageCategoriesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Accounts\NewAccountWindow.xaml">
+    <Page Include="Pages\Reports\MonthlyReportPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Transactions\NewTransferWindow.xaml">
+    <Page Include="Pages\Accounts\NewAccountPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Accounts\RenameAccountWindow.xaml">
+    <Page Include="Pages\Transactions\NewTransferPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Search\SearchResultsWindow.xaml">
+    <Page Include="Pages\Accounts\RenameAccountPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Search\SearchTransactionsWindow.xaml">
+    <Page Include="Pages\Search\SearchResultsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Accounts\ViewAccountWindow.xaml">
+    <Page Include="Pages\Search\SearchTransactionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\MainWindow.xaml">
+    <Page Include="Pages\Accounts\ViewAccountPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -185,46 +192,46 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\Sorting\Month.cs" />
-    <Compile Include="Windows\Reports\CategorizedMonthlyReportWindow.xaml.cs">
-      <DependentUpon>CategorizedMonthlyReportWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Reports\CategorizedMonthlyReportPage.xaml.cs">
+      <DependentUpon>CategorizedMonthlyReportPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Transactions\ModifyTransactionWindow.xaml.cs">
-      <DependentUpon>ModifyTransactionWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Transactions\ModifyTransactionPage.xaml.cs">
+      <DependentUpon>ModifyTransactionPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Categories\ManageCategoriesWindow.xaml.cs">
-      <DependentUpon>ManageCategoriesWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Categories\ManageCategoriesPage.xaml.cs">
+      <DependentUpon>ManageCategoriesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Reports\MonthlyReportWindow.xaml.cs">
-      <DependentUpon>MonthlyReportWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Reports\MonthlyReportPage.xaml.cs">
+      <DependentUpon>MonthlyReportPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Accounts\NewAccountWindow.xaml.cs">
-      <DependentUpon>NewAccountWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Accounts\NewAccountPage.xaml.cs">
+      <DependentUpon>NewAccountPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Transactions\NewTransferWindow.xaml.cs">
-      <DependentUpon>NewTransferWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Transactions\NewTransferPage.xaml.cs">
+      <DependentUpon>NewTransferPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Accounts\RenameAccountWindow.xaml.cs">
-      <DependentUpon>RenameAccountWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Accounts\RenameAccountPage.xaml.cs">
+      <DependentUpon>RenameAccountPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Accounts\ViewAccountWindow.xaml.cs">
-      <DependentUpon>ViewAccountWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Accounts\ViewAccountPage.xaml.cs">
+      <DependentUpon>ViewAccountPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\MainWindow.xaml.cs">
+    <Compile Include="Pages\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Windows\Transactions\NewTransactionWindow.xaml">
+    <Page Include="Pages\Transactions\NewTransactionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Transactions\ViewAllTransactionsWindow.xaml">
+    <Page Include="Pages\Transactions\ViewAllTransactionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Windows\Transactions\NewTransactionWindow.xaml.cs">
-      <DependentUpon>NewTransactionWindow.xaml</DependentUpon>
+    <Compile Include="Pages\Transactions\NewTransactionPage.xaml.cs">
+      <DependentUpon>NewTransactionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -255,7 +262,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Windows\Finances.ico" />
+    <Resource Include="Pages\Finances.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
