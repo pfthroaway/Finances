@@ -8,48 +8,72 @@ namespace Finances.Classes.Sorting
         private string _majorCategory, _minorCategory;
         private decimal _expenses, _income;
 
+        #region Modifying Properties
+
         /// <summary>Primary category</summary>
         public string MajorCategory
         {
             get => _majorCategory;
-            private set { _majorCategory = value; OnPropertyChanged("MajorCategory"); }
+            private set
+            {
+                _majorCategory = value;
+                OnPropertyChanged("MajorCategory");
+            }
         }
 
         /// <summary>Secondary category</summary>
         public string MinorCategory
         {
             get => _minorCategory;
-            private set { _minorCategory = value; OnPropertyChanged("MinorCategory"); }
+            private set
+            {
+                _minorCategory = value;
+                OnPropertyChanged("MinorCategory");
+            }
         }
 
         /// <summary>Income for  month</summary>
         public decimal Income
         {
             get => _income;
-            set { _income = value; OnPropertyChanged("Income"); OnPropertyChanged("IncomeToString"); }
+            set
+            {
+                _income = value;
+                OnPropertyChanged("Income");
+                OnPropertyChanged("IncomeToString");
+            }
         }
-
-        /// <summary>Income for  month.</summary>
-        public string IncomeToString => Income.ToString("C2");
 
         /// <summary>Expenses for  month</summary>
         public decimal Expenses
         {
             get => _expenses * -1;
-            set { _expenses = value; OnPropertyChanged("Expenses"); OnPropertyChanged("ExpensesToString"); }
+            set
+            {
+                _expenses = value;
+                OnPropertyChanged("Expenses");
+                OnPropertyChanged("ExpensesToString");
+            }
         }
+
+        #endregion Modifying Properties
+
+        #region Helper Properties
 
         /// <summary>Expenses for  month, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
+
+        /// <summary>Income for  month.</summary>
+        public string IncomeToString => Income.ToString("C2");
+
+        #endregion Helper Properties
 
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -62,10 +86,9 @@ namespace Finances.Classes.Sorting
             Income += income;
         }
 
-        public override string ToString()
-        {
-            return $"{MajorCategory} - {MinorCategory}";
-        }
+        public override string ToString() => $"{MajorCategory} - {MinorCategory}";
+
+        #region Constructors
 
         /// <summary>Initializes a default instance of CategorizedExpense.</summary>
         public CategorizedExpense()
@@ -86,13 +109,11 @@ namespace Finances.Classes.Sorting
         }
 
         /// <summary>Replaces  instance of CategorizedExpense with another instance</summary>
-        /// <param name="otherCategorizedExpense">Instance of CategorizedExpense to replace  instance</param>
-        public CategorizedExpense(CategorizedExpense otherCategorizedExpense)
+        /// <param name="other">Instance of CategorizedExpense to replace  instance</param>
+        public CategorizedExpense(CategorizedExpense other) : this(other.MajorCategory, other.MinorCategory, other.Expenses, other.Income)
         {
-            MajorCategory = otherCategorizedExpense.MajorCategory;
-            MinorCategory = otherCategorizedExpense.MinorCategory;
-            Expenses = otherCategorizedExpense.Expenses;
-            Income = otherCategorizedExpense.Income;
         }
+
+        #endregion Constructors
     }
 }

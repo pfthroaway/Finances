@@ -13,8 +13,6 @@ namespace Finances.Pages.Categories
         private string _minorCategory;
         private bool _isMajor;
 
-        internal ManageCategoriesPage PreviousWindow { get; set; }
-
         /// <summary>Loads the necessary components for the Window.</summary>
         /// <param name="selectedCategory">Selected Major Category</param>
         /// <param name="minorCategory">Selected Minor Category</param>
@@ -36,50 +34,33 @@ namespace Finances.Pages.Categories
             if (_isMajor)
             {
                 if (await AppState.RenameCategory(_selectedCategory, TxtName.Text, _selectedCategory.Name, _isMajor))
-                    CloseWindow();
+                    ClosePage();
             }
             else
             {
                 if (await AppState.RenameCategory(_selectedCategory, TxtName.Text, _minorCategory, _isMajor))
-                    CloseWindow();
+                    ClosePage();
             }
         }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
         #region Window Manipulation
 
-        private void CloseWindow()
-        {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
-        public RenameCategoryPage()
-        {
-            InitializeComponent();
-        }
+        public RenameCategoryPage() => InitializeComponent();
 
-        private void TxtName_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void RenameCategoryPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void TxtName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            BtnSubmit.IsEnabled = TxtName.Text.Length > 0;
-        }
+        private void TxtName_GotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
+
+        private void TxtName_TextChanged(object sender, TextChangedEventArgs e) => BtnSubmit.IsEnabled =
+            TxtName.Text.Length > 0;
 
         #endregion Window Manipulation
-
-        private void RenameCategoryPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
     }
 }

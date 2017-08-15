@@ -57,8 +57,10 @@ namespace Finances.Pages.Categories
         /// <param name="isMajor">Is the category being added a Major Category?</param>
         private void ShowAddCategoryWindow(bool isMajor)
         {
-            AddCategoryPage addCategoryWindow = new AddCategoryPage { PreviousWindow = this };
+            AddCategoryPage addCategoryWindow = new AddCategoryPage();
             addCategoryWindow.LoadWindow(_selectedMajorCategory, isMajor);
+            LVMajor.ItemsSource = null;
+            LVMinor.ItemsSource = null;
             AppState.Navigate(addCategoryWindow);
         }
 
@@ -66,8 +68,10 @@ namespace Finances.Pages.Categories
         /// <param name="isMajor">Is the category being added a Major Category?</param>
         private void ShowRenameCategoryWindow(bool isMajor)
         {
-            RenameCategoryPage categoryRenameWindow = new RenameCategoryPage { PreviousWindow = this };
+            RenameCategoryPage categoryRenameWindow = new RenameCategoryPage();
             categoryRenameWindow.LoadWindow(_selectedMajorCategory, _selectedMinorCategory, isMajor);
+            LVMajor.ItemsSource = null;
+            LVMinor.ItemsSource = null;
             AppState.Navigate(categoryRenameWindow);
         }
 
@@ -75,15 +79,9 @@ namespace Finances.Pages.Categories
 
         #region Click Methods
 
-        private void BtnAddMajor_Click(object sender, RoutedEventArgs e)
-        {
-            ShowAddCategoryWindow(true);
-        }
+        private void BtnAddMajor_Click(object sender, RoutedEventArgs e) => ShowAddCategoryWindow(true);
 
-        private void BtnRenameMajor_Click(object sender, RoutedEventArgs e)
-        {
-            ShowRenameCategoryWindow(true);
-        }
+        private void BtnRenameMajor_Click(object sender, RoutedEventArgs e) => ShowRenameCategoryWindow(true);
 
         private async void BtnRemoveMajor_Click(object sender, RoutedEventArgs e)
         {
@@ -92,15 +90,9 @@ namespace Finances.Pages.Categories
                     RefreshItemsSource();
         }
 
-        private void BtnAddMinor_Click(object sender, RoutedEventArgs e)
-        {
-            ShowAddCategoryWindow(false);
-        }
+        private void BtnAddMinor_Click(object sender, RoutedEventArgs e) => ShowAddCategoryWindow(false);
 
-        private void BtnRenameMinor_Click(object sender, RoutedEventArgs e)
-        {
-            ShowRenameCategoryWindow(false);
-        }
+        private void BtnRenameMinor_Click(object sender, RoutedEventArgs e) => ShowRenameCategoryWindow(false);
 
         private async void BtnRemoveMinor_Click(object sender, RoutedEventArgs e)
         {
@@ -109,35 +101,28 @@ namespace Finances.Pages.Categories
                     RefreshItemsSource();
         }
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnBack_Click(object sender, RoutedEventArgs e) => ClosePage();
 
-        private void LVMajorColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _lvMajor = Functions.ListViewColumnHeaderClick(sender, _lvMajor, LVMajor, "#BDC7C1");
-        }
+        private void LVMajorColumnHeader_Click(object sender, RoutedEventArgs e) => _lvMajor = Functions.ListViewColumnHeaderClick(sender, _lvMajor, LVMajor, "#CCCCCC");
 
-        private void LVMinorColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _lvMinor = Functions.ListViewColumnHeaderClick(sender, _lvMinor, LVMinor, "#BDC7C1");
-        }
+        private void LVMinorColumnHeader_Click(object sender, RoutedEventArgs e) => _lvMinor = Functions.ListViewColumnHeaderClick(sender, _lvMinor, LVMinor, "#CCCCCC");
 
         #endregion Click Methods
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public ManageCategoriesPage()
         {
             InitializeComponent();
-            LVMajor.ItemsSource = _allCategories;
+        }
+
+        private void ManageCategoriesPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppState.CalculateScale(Grid);
+            RefreshItemsSource();
         }
 
         private void LVMajor_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -168,11 +153,6 @@ namespace Finances.Pages.Categories
             ToggleMinorEnabled(LVMinor.SelectedIndex >= 0);
         }
 
-        #endregion Window-Manipulation Methods
-
-        private void ManageCategoriesPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

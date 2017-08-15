@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="PageModifyTransaction" x:Class="Finances.Pages.Transactions.ModifyTransactionPage"
     mc:Ignorable="d"
-    Loaded="ModifyTransactionPage_OnLoaded"
+    Loaded="ModifyTransactionPage_Loaded"
     Title="Modify Transaction"
     Style="{StaticResource PageStyle}">
     <Grid x:Name="Grid" Margin="10">

@@ -12,34 +12,31 @@ namespace Finances.Pages.Transactions
     /// <summary>Interaction logic for ViewAllTransactionsWindow.xaml</summary>
     public partial class ViewAllTransactionsPage : INotifyPropertyChanged
     {
-        private readonly List<Transaction> _allTransactions = AppState.AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+        private readonly List<Transaction> _allTransactions = AppState.AllTransactions.OrderByDescending(transaction => transaction.Date).ThenByDescending(transaction => transaction.ID).ToList();
         private ListViewSort _sort = new ListViewSort();
-
-        internal MainWindow PreviousWindow { private get; set; }
 
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        #region Click
 
-        #region Window-Manipulation Methods
+        private void BtnBack_Click(object sender, RoutedEventArgs e) => ClosePage();
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e) => _sort =
+            Functions.ListViewColumnHeaderClick(sender, _sort, LVTransactions, "#CCCCCC");
+
+        #endregion Click
+
+        #region Page-Manipulation Methods
+
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public ViewAllTransactionsPage()
         {
@@ -47,16 +44,8 @@ namespace Finances.Pages.Transactions
             LVTransactions.ItemsSource = _allTransactions;
         }
 
-        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVTransactions, "#BDC7C1");
-        }
+        private void ViewAllTransactionsPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        #endregion Window-Manipulation Methods
-
-        private void ViewAllTransactionsPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

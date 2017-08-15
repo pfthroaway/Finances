@@ -26,28 +26,16 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Collection of all the transactions that occurred in the month</summary>
-        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(
-            _allTransactions);
-
         #endregion Modifying Properties
 
         #region Helper Properties
 
+        /// <summary>Collection of all the transactions that occurred in the month</summary>
+        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(
+            _allTransactions);
+
         /// <summary>Income for  month</summary>
-        public decimal Income
-        {
-            get
-            {
-                decimal income = 0.00M;
-                foreach (Transaction transaction in AllTransactions)
-                {
-                    if (transaction.MajorCategory != "Transfer")
-                        income += transaction.Inflow;
-                }
-                return income;
-            }
-        }
+        public decimal Income => AllTransactions.Where(transaction => transaction.MajorCategory != "Transfer").Sum(transaction => transaction.Inflow);
 
         /// <summary>Income for  month, formatted to currency</summary>
         public string IncomeToString => Income.ToString("C2");
@@ -56,19 +44,7 @@ namespace Finances.Classes.Sorting
         public string IncomeToStringWithText => $"Income: {Income:C2}";
 
         /// <summary>Expenses for  month</summary>
-        public decimal Expenses
-        {
-            get
-            {
-                decimal expenses = 0.00M;
-                foreach (Transaction transaction in AllTransactions)
-                {
-                    if (transaction.MajorCategory != "Transfer")
-                        expenses += transaction.Outflow;
-                }
-                return expenses;
-            }
-        }
+        public decimal Expenses => AllTransactions.Where(transaction => transaction.MajorCategory != "Transfer").Sum(transaction => transaction.Outflow);
 
         /// <summary>Expenses for  month, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
@@ -77,10 +53,8 @@ namespace Finances.Classes.Sorting
         public string ExpensesToStringWithText => $"Expenses: {Expenses:C2}";
 
         /// <summary>Last day of the month</summary>
-        public DateTime MonthEnd => new DateTime(
-            year: MonthStart.Year,
-            month: MonthStart.Month,
-            day: DateTime.DaysInMonth(MonthStart.Year, MonthStart.Month));
+        public DateTime MonthEnd => new DateTime(MonthStart.Year, MonthStart.Month,
+            DateTime.DaysInMonth(MonthStart.Year, MonthStart.Month));
 
         /// <summary>Formatted text representing the year and month</summary>
         public string FormattedMonth => MonthStart.ToString("yyyy/MM");
@@ -91,10 +65,8 @@ namespace Finances.Classes.Sorting
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -112,10 +84,7 @@ namespace Finances.Classes.Sorting
         /// <summary>Modifies a transaction in  account.</summary>
         /// <param name="index">Index of transaction to be modified</param>
         /// <param name="transaction">Transaction to replace current in list</param>
-        internal void ModifyTransaction(int index, Transaction transaction)
-        {
-            _allTransactions[index] = transaction;
-        }
+        internal void ModifyTransaction(int index, Transaction transaction) => _allTransactions[index] = transaction;
 
         /// <summary>Removes a transaction to  account.</summary>
         /// <param name="transaction">Transaction to be added</param>
@@ -127,10 +96,9 @@ namespace Finances.Classes.Sorting
 
         #endregion Transaction Management
 
-        private void Sort()
-        {
-            _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date).ToList();
-        }
+        /// <summary>Sorts the List by date, newest to oldest.</summary>
+        private void Sort() => _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date)
+            .ThenByDescending(transaction => transaction.ID).ToList();
 
         #region Override Operators
 
@@ -141,35 +109,17 @@ namespace Finances.Classes.Sorting
             return left.MonthStart == right.MonthStart && left.Income == right.Income && left.Expenses == right.Expenses;
         }
 
-        public sealed override bool Equals(object obj)
-        {
-            return Equals(this, obj as Month);
-        }
+        public sealed override bool Equals(object obj) => Equals(this, obj as Month);
 
-        public bool Equals(Month otherMonth)
-        {
-            return Equals(this, otherMonth);
-        }
+        public bool Equals(Month otherMonth) => Equals(this, otherMonth);
 
-        public static bool operator ==(Month left, Month right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Month left, Month right) => Equals(left, right);
 
-        public static bool operator !=(Month left, Month right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Month left, Month right) => !Equals(left, right);
 
-        public sealed override int GetHashCode()
-        {
-            return base.GetHashCode() ^ 17;
-        }
+        public sealed override int GetHashCode() => base.GetHashCode() ^ 17;
 
-        public sealed override string ToString()
-        {
-            return FormattedMonth;
-        }
+        public sealed override string ToString() => FormattedMonth;
 
         #endregion Override Operators
 
@@ -192,11 +142,9 @@ namespace Finances.Classes.Sorting
         }
 
         /// <summary>Replaces  instance of Account with another instance</summary>
-        /// <param name="otherMonth">Month to replace  instance</param>
-        public Month(Month otherMonth)
+        /// <param name="other">Month to replace  instance</param>
+        public Month(Month other) : this(other.MonthStart, other.AllTransactions)
         {
-            MonthStart = otherMonth.MonthStart;
-            _allTransactions = new List<Transaction>(otherMonth.AllTransactions);
         }
 
         #endregion Constructors

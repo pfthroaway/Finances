@@ -4,13 +4,13 @@ using Extensions.Enums;
 using Finances.Classes;
 using Finances.Classes.Categories;
 using Finances.Classes.Data;
-using Finances.Pages.Accounts;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Finances.Pages.Accounts;
 
 namespace Finances.Pages.Transactions
 {
@@ -22,16 +22,12 @@ namespace Finances.Pages.Transactions
         private Category _selectedCategory = new Category();
         private Account _selectedAccount = new Account();
 
-        internal ViewAccountPage PreviousWindow { private get; set; }
-
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -39,15 +35,10 @@ namespace Finances.Pages.Transactions
         /// <returns>Returns true if successfully added</returns>
         private async Task<bool> AddTransaction()
         {
-            Transaction newTransaction = new Transaction(
-                date: DateTimeHelper.Parse(TransactionDate.SelectedDate),
-                payee: TxtPayee.Text,
-                majorCategory: CmbMajorCategory.SelectedValue.ToString(),
-                minorCategory: CmbMinorCategory.SelectedValue.ToString(),
-                memo: TxtMemo.Text,
-                outflow: DecimalHelper.Parse(TxtOutflow.Text),
-                inflow: DecimalHelper.Parse(TxtInflow.Text),
-                account: _selectedAccount.Name);
+            Transaction newTransaction = new Transaction(await AppState.GetNextTransactionsIndex(), DateTimeHelper.Parse(TransactionDate.SelectedDate),
+                TxtPayee.Text, CmbMajorCategory.SelectedValue.ToString(), CmbMinorCategory.SelectedValue.ToString(),
+                TxtMemo.Text, DecimalHelper.Parse(TxtOutflow.Text), DecimalHelper.Parse(TxtInflow.Text),
+                _selectedAccount.Name);
             _selectedAccount.AddTransaction(newTransaction);
             AppState.AllTransactions.Add(newTransaction);
 
@@ -57,6 +48,7 @@ namespace Finances.Pages.Transactions
         /// <summary>Resets all values to default status.</summary>
         private void Reset()
         {
+            TransactionDate.Text = "";
             CmbMajorCategory.SelectedIndex = -1;
             CmbMinorCategory.SelectedIndex = -1;
             TxtMemo.Text = "";
@@ -80,16 +72,10 @@ namespace Finances.Pages.Transactions
         private async void BtnSaveAndDone_Click(object sender, RoutedEventArgs e)
         {
             if (await AddTransaction())
-                CloseWindow();
-            else
-                AppState.DisplayNotification("Unable to process transaction.", "Finances");
+                ClosePage();
         }
 
-        private async void BtnSaveAndDuplicate_Click(object sender, RoutedEventArgs e)
-        {
-            if (!await AddTransaction())
-                AppState.DisplayNotification("Unable to process transaction.", "Finances");
-        }
+        private async void BtnSaveAndDuplicate_Click(object sender, RoutedEventArgs e) => await AddTransaction();
 
         private async void BtnSaveAndNew_Click(object sender, RoutedEventArgs e)
         {
@@ -98,19 +84,11 @@ namespace Finances.Pages.Transactions
                 Reset();
                 CmbMinorCategory.Focus();
             }
-            else
-                AppState.DisplayNotification("Unable to process transaction.", "Finances");
         }
 
-        private void BtnReset_Click(object sender, RoutedEventArgs e)
-        {
-            Reset();
-        }
+        private void BtnReset_Click(object sender, RoutedEventArgs e) => Reset();
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
@@ -122,10 +100,7 @@ namespace Finances.Pages.Transactions
             ToggleButtons(TransactionDate.SelectedDate != null && CmbMajorCategory.SelectedIndex >= 0 && CmbMinorCategory.SelectedIndex >= 0 && TxtPayee.Text.Length > 0 && (TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0) && CmbAccount.SelectedIndex >= 0);
         }
 
-        private void Txt_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void Txt_TextChanged(object sender, TextChangedEventArgs e) => TextChanged();
 
         private void TxtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -133,10 +108,7 @@ namespace Finances.Pages.Transactions
             TextChanged();
         }
 
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e) => TextChanged();
 
         private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -167,14 +139,10 @@ namespace Finances.Pages.Transactions
 
         #endregion Text/Selection Changed
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public NewTransactionPage()
         {
@@ -184,21 +152,12 @@ namespace Finances.Pages.Transactions
             CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
         }
 
-        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Functions.PreviewKeyDown(e, KeyType.Decimals);
-        }
+        private void NewTransactionPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void Txt_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e) => Functions.PreviewKeyDown(e, KeyType.Decimals);
 
-        #endregion Window-Manipulation Methods
+        private void Txt_GotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
 
-        private void NewTransactionPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

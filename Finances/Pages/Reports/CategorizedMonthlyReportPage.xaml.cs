@@ -14,8 +14,6 @@ namespace Finances.Pages.Reports
         private List<CategorizedExpense> _allCategorizedExpenses = new List<CategorizedExpense>();
         private ListViewSort _sort = new ListViewSort();
 
-        internal MonthlyReportPage PreviousWindow { private get; set; }
-
         internal void LoadMonth(Month selectedMonth, List<CategorizedExpense> expenses)
         {
             _allCategorizedExpenses = expenses;
@@ -24,34 +22,23 @@ namespace Finances.Pages.Reports
             DataContext = _currentMonth;
         }
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        #region Click
 
-        #region Window-Manipulation Methods
+        private void BtnBack_Click(object sender, RoutedEventArgs e) => ClosePage();
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        private void LVCategorizedColumnHeader_Click(object sender, RoutedEventArgs e) => _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVCategorized, "#CCCCCC");
 
-        public CategorizedMonthlyReportPage()
-        {
-            InitializeComponent();
-        }
+        #endregion Click
 
-        private void LVCategorizedColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVCategorized, "#BDC7C1");
-        }
+        #region Page-Manipulation Methods
 
-        #endregion Window-Manipulation Methods
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
-        private void CategorizedMonthlyReportPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        public CategorizedMonthlyReportPage() => InitializeComponent();
+
+        private void CategorizedMonthlyReportPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
+
+        #endregion Page-Manipulation Methods
     }
 }

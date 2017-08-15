@@ -22,27 +22,15 @@ namespace Finances.Classes.Sorting
             private set { _yearStart = value; OnPropertyChanged("YearStart"); }
         }
 
-        /// <summary>Collection of all the transactions that occurred in the year</summary>
-        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(_allTransactions);
-
         #endregion Modifying Properties
 
         #region Helper Properties
 
+        /// <summary>Collection of all the transactions that occurred in the year</summary>
+        internal ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(_allTransactions);
+
         /// <summary>Income for  year</summary>
-        public decimal Income
-        {
-            get
-            {
-                decimal income = 0.00M;
-                foreach (Transaction transaction in AllTransactions)
-                {
-                    if (transaction.MajorCategory != "Transfer")
-                        income += transaction.Inflow;
-                }
-                return income;
-            }
-        }
+        public decimal Income => AllTransactions.Where(transaction => transaction.MajorCategory != "Transfer").Sum(transaction => transaction.Inflow);
 
         /// <summary>Income for  year, formatted to currency</summary>
         public string IncomeToString => Income.ToString("C2");
@@ -51,19 +39,7 @@ namespace Finances.Classes.Sorting
         public string IncomeToStringWithText => $"Income: {Income:C2}";
 
         /// <summary>Expenses for  year</summary>
-        public decimal Expenses
-        {
-            get
-            {
-                decimal expenses = 0.00M;
-                foreach (Transaction transaction in AllTransactions)
-                {
-                    if (transaction.MajorCategory != "Transfer")
-                        expenses += transaction.Outflow;
-                }
-                return expenses;
-            }
-        }
+        public decimal Expenses => AllTransactions.Where(transaction => transaction.MajorCategory != "Transfer").Sum(transaction => transaction.Outflow);
 
         /// <summary>Expenses for  year, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
@@ -83,10 +59,8 @@ namespace Finances.Classes.Sorting
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -104,10 +78,7 @@ namespace Finances.Classes.Sorting
         /// <summary>Modifies a transaction in  account.</summary>
         /// <param name="index">Index of transaction to be modified</param>
         /// <param name="transaction">Transaction to replace current in list</param>
-        internal void ModifyTransaction(int index, Transaction transaction)
-        {
-            _allTransactions[index] = transaction;
-        }
+        internal void ModifyTransaction(int index, Transaction transaction) => _allTransactions[index] = transaction;
 
         /// <summary>Removes a transaction to  account.</summary>
         /// <param name="transaction">Transaction to be added</param>
@@ -119,10 +90,9 @@ namespace Finances.Classes.Sorting
 
         #endregion Transaction Management
 
-        private void Sort()
-        {
-            _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date).ToList();
-        }
+        /// <summary>Sorts the List by date, newest to oldest.</summary>
+        private void Sort() => _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date)
+            .ThenByDescending(transaction => transaction.ID).ToList();
 
         #region Override Operators
 
@@ -133,35 +103,17 @@ namespace Finances.Classes.Sorting
             return left.YearStart == right.YearStart && left.Income == right.Income && left.Expenses == right.Expenses;
         }
 
-        public sealed override bool Equals(object obj)
-        {
-            return Equals(this, obj as Year);
-        }
+        public sealed override bool Equals(object obj) => Equals(this, obj as Year);
 
-        public bool Equals(Year otherYear)
-        {
-            return Equals(this, otherYear);
-        }
+        public bool Equals(Year otherYear) => Equals(this, otherYear);
 
-        public static bool operator ==(Year left, Year right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Year left, Year right) => Equals(left, right);
 
-        public static bool operator !=(Year left, Year right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Year left, Year right) => !Equals(left, right);
 
-        public sealed override int GetHashCode()
-        {
-            return base.GetHashCode() ^ 17;
-        }
+        public sealed override int GetHashCode() => base.GetHashCode() ^ 17;
 
-        public sealed override string ToString()
-        {
-            return FormattedYear;
-        }
+        public sealed override string ToString() => FormattedYear;
 
         #endregion Override Operators
 
@@ -184,11 +136,9 @@ namespace Finances.Classes.Sorting
         }
 
         /// <summary>Replaces  instance of Account with another instance</summary>
-        /// <param name="otherYear">Year to replace  instance</param>
-        public Year(Year otherYear)
+        /// <param name="other">Year to replace  instance</param>
+        public Year(Year other) : this(other.YearStart, other.AllTransactions)
         {
-            YearStart = otherYear.YearStart;
-            _allTransactions = new List<Transaction>(otherYear.AllTransactions);
         }
 
         #endregion Constructors

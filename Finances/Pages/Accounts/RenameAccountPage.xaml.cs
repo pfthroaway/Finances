@@ -8,7 +8,6 @@ namespace Finances.Pages.Accounts
     public partial class RenameAccountPage
     {
         private Account _selectedAccount;
-        internal ViewAccountPage PreviousWindow { private get; set; }
 
         internal void LoadAccountName(Account currentAccount)
         {
@@ -23,10 +22,7 @@ namespace Finances.Pages.Accounts
             if (TxtAccountName.Text != _selectedAccount.Name)
             {
                 if (await AppState.RenameAccount(_selectedAccount, TxtAccountName.Text))
-                {
-                    PreviousWindow.RefreshItemsSource();
-                    CloseWindow();
-                }
+                    ClosePage();
                 else
                     AppState.DisplayNotification("Unable to process account name change.", "Finances");
             }
@@ -34,31 +30,19 @@ namespace Finances.Pages.Accounts
                 AppState.DisplayNotification("The account name can't be changed to what it already is.", "Finances");
         }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
-        public RenameAccountPage()
-        {
-            InitializeComponent();
-        }
+        public RenameAccountPage() => InitializeComponent();
 
-        #endregion Window-Manipulation Methods
+        private void RenameAccountPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void RenameAccountPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

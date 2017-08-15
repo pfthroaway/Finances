@@ -4,7 +4,6 @@ using Extensions.Enums;
 using Finances.Classes;
 using Finances.Classes.Categories;
 using Finances.Classes.Data;
-using Finances.Pages.Accounts;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -22,16 +21,12 @@ namespace Finances.Pages.Transactions
         private Category _selectedCategory = new Category();
         private Account _selectedAccount = new Account();
         private Transaction _modifyTransaction = new Transaction();
-        internal ViewAccountPage PreviousWindow { private get; set; }
 
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -40,7 +35,7 @@ namespace Finances.Pages.Transactions
             TransactionDate.SelectedDate = setTransaction.Date;
             CmbAccount.SelectedValue = setAccount;
             CmbMajorCategory.SelectedItem = _allCategories.Find(category => category.Name == setTransaction.MajorCategory);
-            CmbMinorCategory.SelectedItem = setTransaction.MinorCategory;
+            CmbMinorCategory.SelectedItem = new MinorCategory(setTransaction.MinorCategory);
             TxtPayee.Text = setTransaction.Payee;
             TxtOutflow.Text = setTransaction.Outflow.ToString(CultureInfo.InvariantCulture);
             TxtInflow.Text = setTransaction.Inflow.ToString(CultureInfo.InvariantCulture);
@@ -52,15 +47,10 @@ namespace Finances.Pages.Transactions
 
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            Transaction newTransaction = new Transaction(
-                date: DateTimeHelper.Parse(TransactionDate.SelectedDate),
-                payee: TxtPayee.Text,
-                majorCategory: CmbMajorCategory.SelectedItem.ToString(),
-                minorCategory: CmbMinorCategory.SelectedItem.ToString(),
-                memo: TxtMemo.Text,
-                outflow: DecimalHelper.Parse(TxtOutflow.Text),
-                inflow: DecimalHelper.Parse(TxtInflow.Text),
-                account: _selectedAccount.Name);
+            Transaction newTransaction = new Transaction(_modifyTransaction.ID,
+                DateTimeHelper.Parse(TransactionDate.SelectedDate), TxtPayee.Text,
+                CmbMajorCategory.SelectedItem.ToString(), CmbMinorCategory.SelectedItem.ToString(), TxtMemo.Text,
+                DecimalHelper.Parse(TxtOutflow.Text), DecimalHelper.Parse(TxtInflow.Text), _selectedAccount.Name);
 
             if (newTransaction != _modifyTransaction)
             {
@@ -78,7 +68,7 @@ namespace Finances.Pages.Transactions
                     _allAccounts[index].ModifyTransaction(_allAccounts[index].AllTransactions.IndexOf(_modifyTransaction), newTransaction);
                 }
                 if (await AppState.ModifyTransaction(newTransaction, _modifyTransaction))
-                    CloseWindow();
+                    ClosePage();
                 else
                     AppState.DisplayNotification("Unable to modify transaction.", "Finances");
             }
@@ -86,10 +76,7 @@ namespace Finances.Pages.Transactions
                 AppState.DisplayNotification("This transaction has not been modified.", "Finances");
         }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
@@ -106,10 +93,7 @@ namespace Finances.Pages.Transactions
                 CmbAccount.SelectedIndex >= 0;
         }
 
-        private void Txt_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void Txt_TextChanged(object sender, TextChangedEventArgs e) => TextChanged();
 
         private void TxtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -117,10 +101,7 @@ namespace Finances.Pages.Transactions
             TextChanged();
         }
 
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e) => TextChanged();
 
         private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -141,14 +122,10 @@ namespace Finances.Pages.Transactions
 
         #endregion Text/Selection Changed
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public ModifyTransactionPage()
         {
@@ -158,21 +135,12 @@ namespace Finances.Pages.Transactions
             CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
         }
 
-        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Functions.PreviewKeyDown(e, KeyType.Decimals);
-        }
+        private void ModifyTransactionPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void Txt_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e) => Functions.PreviewKeyDown(e, KeyType.Decimals);
 
-        #endregion Window-Manipulation Methods
+        private void Txt_GotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
 
-        private void ModifyTransactionPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

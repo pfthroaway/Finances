@@ -4,6 +4,7 @@ using Finances.Classes;
 using Finances.Classes.Data;
 using Finances.Pages.Accounts;
 using Finances.Pages.Categories;
+using Finances.Pages.Credit;
 using Finances.Pages.Reports;
 using Finances.Pages.Transactions;
 using System.Collections.Generic;
@@ -15,45 +16,8 @@ namespace Finances.Pages
     /// <summary>Interaction logic for MainPage.xaml</summary>
     public partial class MainPage
     {
-        private List<Account> _allAccounts = new List<Account>();
+        private List<Account> _allAccounts;
         private ListViewSort _sort = new ListViewSort();
-
-        #region Button-Click Methods
-
-        private void BtnNewAccount_Click(object sender, RoutedEventArgs e)
-        {
-            AppState.Navigate(new NewAccountPage { PreviousWindow = this });
-        }
-
-        private void LVAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            BtnViewTransactions.IsEnabled = LVAccounts.SelectedIndex >= 0;
-        }
-
-        private void BtnManageCategories_Click(object sender, RoutedEventArgs e)
-        {
-            AppState.Navigate(new ManageCategoriesPage());
-        }
-
-        private void BtnMonthlyReport_Click(object sender, RoutedEventArgs e)
-        {
-            AppState.Navigate(new MonthlyReportPage());
-        }
-
-        private void BtnViewAccount_Click(object sender, RoutedEventArgs e)
-        {
-            Account selectedAccount = (Account)(LVAccounts.SelectedValue);
-            ViewAccountPage viewAccountWindow = new ViewAccountPage { PreviousWindow = this };
-            viewAccountWindow.LoadAccount(selectedAccount);
-            AppState.Navigate(viewAccountWindow);
-        }
-
-        private void BtnViewAllTransactions_Click(object sender, RoutedEventArgs e)
-        {
-            AppState.Navigate(new ViewAllTransactionsPage());
-        }
-
-        #endregion Button-Click Methods
 
         /// <summary>Refreshes the ListView's ItemsSource.</summary>
         internal void RefreshItemsSource()
@@ -63,21 +27,43 @@ namespace Finances.Pages
             LVAccounts.Items.Refresh();
         }
 
-        private void LVAccountsColumnHeader_Click(object sender, RoutedEventArgs e)
+        #region Click Methods
+
+        private void BtnNewAccount_Click(object sender, RoutedEventArgs e) => AppState.Navigate(new NewAccountPage());
+
+        private void LVAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e) => BtnViewTransactions.IsEnabled = LVAccounts.SelectedIndex >= 0;
+
+        private void BtnManageCategories_Click(object sender, RoutedEventArgs e) => AppState.Navigate(new ManageCategoriesPage());
+
+        private void BtnMonthlyReport_Click(object sender, RoutedEventArgs e) => AppState.Navigate(new MonthlyReportPage());
+
+        private void BtnViewAccount_Click(object sender, RoutedEventArgs e)
         {
-            _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVAccounts, "#BDC7C1");
+            Account selectedAccount = (Account)LVAccounts.SelectedValue;
+            ViewAccountPage viewAccountWindow = new ViewAccountPage();
+            viewAccountWindow.LoadAccount(selectedAccount);
+            AppState.Navigate(viewAccountWindow);
         }
 
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+        private void BtnViewCreditScores_Click(object sender, RoutedEventArgs e) =>
+            AppState.Navigate(new CreditScorePage());
 
-        private void MainPage_OnLoaded(object sender, RoutedEventArgs e)
+        private void BtnViewAllTransactions_Click(object sender, RoutedEventArgs e) => AppState.Navigate(new ViewAllTransactionsPage());
+
+        private void LVAccountsColumnHeader_Click(object sender, RoutedEventArgs e) => _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVAccounts, "#CCCCCC");
+
+        #endregion Click Methods
+
+        #region Page-Manipulation Methods
+
+        public MainPage() => InitializeComponent();
+
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             AppState.CalculateScale(Grid);
-            _allAccounts = AppState.AllAccounts;
-            LVAccounts.ItemsSource = _allAccounts;
+            RefreshItemsSource();
         }
+
+        #endregion Page-Manipulation Methods
     }
 }

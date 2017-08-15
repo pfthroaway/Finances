@@ -13,23 +13,21 @@ namespace Finances.Pages.Accounts
     /// <summary>Interaction logic for ViewAccountWindow.xaml</summary>
     public partial class ViewAccountPage : INotifyPropertyChanged
     {
-        private Account _selectedAccount = new Account();
-        private Transaction _selectedTransaction = new Transaction();
+        private Account _selectedAccount;
+        private Transaction _selectedTransaction;
         private ListViewSort _sort = new ListViewSort();
-
-        internal MainPage PreviousWindow { private get; set; }
 
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
+        /// <summary>Loads the Account that was selected.</summary>
+        /// <param name="account">Selected Account</param>
         internal void LoadAccount(Account account)
         {
             _selectedAccount = account;
@@ -48,20 +46,14 @@ namespace Finances.Pages.Accounts
 
         #region Button-Click Methods
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnBack_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         private async void BtnDeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             if (AppState.YesNoNotification("Are you sure you want to delete this account? All transactions associated with it will be lost forever!", "Finances"))
             {
                 if (await AppState.DeleteAccount(_selectedAccount))
-                {
-                    PreviousWindow.RefreshItemsSource();
-                    CloseWindow();
-                }
+                    ClosePage();
             }
         }
 
@@ -80,56 +72,49 @@ namespace Finances.Pages.Accounts
 
         private void BtnModifyTransaction_Click(object sender, RoutedEventArgs e)
         {
-            ModifyTransactionPage modifyTransactionWindow = new ModifyTransactionPage
-            {
-                PreviousWindow = this
-            };
+            ModifyTransactionPage modifyTransactionWindow = new ModifyTransactionPage();
             modifyTransactionWindow.SetCurrentTransaction(_selectedTransaction, _selectedAccount);
             AppState.Navigate(modifyTransactionWindow);
         }
 
         private void BtnNewTransaction_Click(object sender, RoutedEventArgs e)
         {
-            AppState.Navigate(new NewTransactionPage { PreviousWindow = this });
+            AppState.Navigate(new NewTransactionPage());
+            LVTransactions.ItemsSource = null;
         }
 
         private void BtnNewTransfer_Click(object sender, RoutedEventArgs e)
         {
-            AppState.Navigate(new NewTransferPage { PreviousWindow = this });
+            AppState.Navigate(new NewTransferPage());
+            LVTransactions.ItemsSource = null;
         }
 
         private void BtnRenameAccount_Click(object sender, RoutedEventArgs e)
         {
-            RenameAccountPage renameAccountWindow = new RenameAccountPage { PreviousWindow = this };
+            RenameAccountPage renameAccountWindow = new RenameAccountPage();
             renameAccountWindow.LoadAccountName(_selectedAccount);
             AppState.Navigate(renameAccountWindow);
         }
 
-        private void BtnSearchTransactions_Click(object sender, RoutedEventArgs e)
-        {
-            AppState.Navigate(new SearchTransactionsPage());
-        }
+        private void BtnSearchTransactions_Click(object sender, RoutedEventArgs e) => AppState.Navigate(
+            new SearchTransactionsPage());
 
         #endregion Button-Click Methods
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
+
+        public ViewAccountPage() => InitializeComponent();
+
+        private void ViewAccountPage_Loaded(object sender, RoutedEventArgs e)
         {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
+            AppState.CalculateScale(Grid);
+            RefreshItemsSource();
         }
 
-        public ViewAccountPage()
-        {
-            InitializeComponent();
-        }
-
-        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVTransactions, "#BDC7C1");
-        }
+        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e) => _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVTransactions, "#CCCCCC");
 
         private void LVTransactions_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -147,11 +132,6 @@ namespace Finances.Pages.Accounts
             }
         }
 
-        #endregion Window-Manipulation Methods
-
-        private void ViewAccountPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

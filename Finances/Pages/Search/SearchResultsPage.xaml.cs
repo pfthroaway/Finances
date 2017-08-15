@@ -15,55 +15,41 @@ namespace Finances.Pages.Search
         private List<Transaction> _allTransactions;
         private ListViewSort _sort = new ListViewSort();
 
-        internal SearchTransactionsPage PreviousWindow { private get; set; }
-
         public string TransactionCount => $"Transaction Count: {_allTransactions.Count}";
 
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
         internal void LoadWindow(List<Transaction> matchingTransactions)
         {
-            _allTransactions = matchingTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+            _allTransactions = matchingTransactions.OrderByDescending(transaction => transaction.Date)
+                .ThenByDescending(transaction => transaction.ID).ToList();
             LVTransactions.ItemsSource = _allTransactions;
         }
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        #region Click
 
-        #region Window-Manipulation Methods
+        private void BtnBack_Click(object sender, RoutedEventArgs e) => ClosePage();
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e) => _sort =
+            Functions.ListViewColumnHeaderClick(sender, _sort, LVTransactions, "#CCCCCC");
 
-        public SearchResultsPage()
-        {
-            InitializeComponent();
-        }
+        #endregion Click
 
-        private void LVTransactionsColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVTransactions, "#BDC7C1");
-        }
+        #region Page-Manipulation Methods
 
-        #endregion Window-Manipulation Methods
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
-        private void SearchResultsPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        public SearchResultsPage() => InitializeComponent();
+
+        private void SearchResultsPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
+
+        #endregion Page-Manipulation Methods
     }
 }

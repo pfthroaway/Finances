@@ -32,23 +32,18 @@ namespace Finances.Classes.Categories
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
+        /// <summary>Sorts the minor categories alphabetically.</summary>
         internal void Sort()
         {
             if (MinorCategories.Count > 0)
                 MinorCategories = MinorCategories.OrderBy(cat => cat.Name).ToList();
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         #region Constructors
 

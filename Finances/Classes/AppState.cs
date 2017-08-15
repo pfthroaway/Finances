@@ -26,28 +26,44 @@ namespace Finances.Classes
         internal static List<Month> AllMonths = new List<Month>();
         internal static List<Year> AllYears = new List<Year>();
 
+        #region Navigation
+
+        /// <summary>Instance of MainWindow currently loaded</summary>
         internal static MainWindow MainWindow { get; set; }
 
+        /// <summary>Width of the Page currently being displayed in the MainWindow</summary>
         internal static double CurrentPageWidth { get; set; }
+
+        /// <summary>Height of the Page currently being displayed in the MainWindow</summary>
         internal static double CurrentPageHeight { get; set; }
 
+        /// <summary>Calculates the scale needed for the MainWindow.</summary>
+        /// <param name="grid">Grid of current Page</param>
         internal static void CalculateScale(Grid grid)
         {
             CurrentPageHeight = grid.ActualHeight;
             CurrentPageWidth = grid.ActualWidth;
             MainWindow.CalculateScale();
+
+            Page newPage = MainWindow.MainFrame.Content as Page;
+            if (newPage != null)
+                newPage.Style = (Style)MainWindow.FindResource("PageStyle");
         }
 
-        internal static void Navigate(Page newPage)
-        {
-            MainWindow.MainFrame.Navigate(newPage);
-        }
+        /// <summary>Navigates to selected Page.</summary>
+        /// <param name="newPage">Page to navigate to.</param>
+        internal static void Navigate(Page newPage) => MainWindow.MainFrame.Navigate(newPage);
 
+        /// <summary>Navigates to the previous Page.</summary>
         internal static void GoBack()
         {
             if (MainWindow.MainFrame.CanGoBack)
                 MainWindow.MainFrame.GoBack();
         }
+
+        #endregion Navigation
+
+        #region Load
 
         /// <summary>Loads all information from the database.</summary>
         /// <returns>Returns true if successful</returns>
@@ -63,10 +79,14 @@ namespace Finances.Classes
                     AllTransactions.Add(trans);
 
             AllAccountTypes.Sort();
-            AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+            AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ThenByDescending(transaction => transaction.ID).ToList();
             LoadMonths();
             LoadYears();
         }
+
+        /// <summary>Loads all credit scores from the database.</summary>
+        /// <returns>List of all credit scores</returns>
+        public static async Task<List<CreditScore>> LoadCreditScores() => await DatabaseInteraction.LoadCreditScores();
 
         /// <summary>Loads all the Months from AllTransactions.</summary>
         private static void LoadMonths()
@@ -122,69 +142,7 @@ namespace Finances.Classes
             }
         }
 
-        #region Transaction Manipulation
-
-        /// <summary>Adds a transaction to an account and the database</summary>
-        /// <param name="transaction">Transaction to be added</param>
-        /// <param name="account">Account the transaction will be added to</param>
-        /// <returns>Returns true if successful</returns>
-        internal static async Task<bool> AddTransaction(Transaction transaction, Account account)
-        {
-            bool success = false;
-            if (await DatabaseInteraction.AddTransaction(transaction, account))
-            {
-                if (AllMonths.Any(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date))
-                    AllMonths.Find(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date).AddTransaction(transaction);
-                else
-                {
-                    Month newMonth = new Month(new DateTime(transaction.Date.Year, transaction.Date.Month, 1), new List<Transaction>());
-                    newMonth.AddTransaction(transaction);
-                    AllMonths.Add(newMonth);
-                }
-
-                AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
-                success = true;
-            }
-
-            return success;
-        }
-
-        /// <summary>Modifies the selected Transaction in the database.</summary>
-        /// <param name="newTransaction">Transaction to replace the current one in the database</param>
-        /// <param name="oldTransaction">Current Transaction in the database</param>
-        /// <returns>Returns true if successful</returns>
-        internal static async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
-        {
-            bool success = false;
-            if (await DatabaseInteraction.ModifyTransaction(newTransaction, oldTransaction))
-            {
-                AllTransactions[AllTransactions.IndexOf(oldTransaction)] = newTransaction;
-                AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
-                LoadMonths();
-                LoadYears();
-                success = true;
-            }
-
-            return success;
-        }
-
-        /// <summary>Deletes a transaction from the database.</summary>
-        /// <param name="transaction">Transaction to be deleted</param>
-        /// <param name="account">Account the transaction will be deleted from</param>
-        /// <returns>Returns true if successful</returns>
-        internal static async Task<bool> DeleteTransaction(Transaction transaction, Account account)
-        {
-            bool success = false;
-            if (await DatabaseInteraction.DeleteTransaction(transaction, account))
-            {
-                AllTransactions.Remove(transaction);
-                success = true;
-            }
-
-            return success;
-        }
-
-        #endregion Transaction Manipulation
+        #endregion Load
 
         #region Account Manipulation
 
@@ -199,7 +157,7 @@ namespace Finances.Classes
                 AllAccounts.Add(newAccount);
                 AllAccounts = AllAccounts.OrderBy(account => account.Name).ToList();
                 AllTransactions.Add(newAccount.AllTransactions[0]);
-                AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ToList();
+                AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ThenByDescending(transaction => transaction.ID).ToList();
                 success = true;
             }
 
@@ -264,8 +222,8 @@ namespace Finances.Classes
                 if (isMajor)
                 {
                     AllCategories.Add(new Category(
-                        name: newName,
-                        minorCategories: new List<MinorCategory>()));
+                        newName,
+                        new List<MinorCategory>()));
                 }
                 else
                     selectedCategory.MinorCategories.Add(new MinorCategory(newName));
@@ -358,34 +316,113 @@ namespace Finances.Classes
 
         #endregion Category Management
 
+        #region Credit Score Management
+
+        /// <summary>Adds a new credit score to the database.</summary>
+        /// <param name="newScore">Score to be added</param>
+        /// <returns>True if successful</returns>
+        public static async Task<bool> AddCreditScore(CreditScore newScore) =>
+            await DatabaseInteraction.AddCreditScore(newScore);
+
+        /// <summary>Deletes a credit score from the database</summary>
+        /// <param name="deleteScore">Score to be deleted</param>
+        /// <returns>True if successful</returns>
+        public static async Task<bool> DeleteCreditScore(CreditScore deleteScore) =>
+            await DatabaseInteraction.DeleteCreditScore(deleteScore);
+
+        /// <summary>Modifies a credit score in the database.</summary>
+        /// <param name="oldScore">Original score</param>
+        /// <param name="newScore">Modified score</param>
+        /// <returns>True if successful</returns>
+        public static async Task<bool> ModifyCreditScore(CreditScore oldScore, CreditScore newScore) =>
+            await DatabaseInteraction.ModifyCreditScore(oldScore, newScore);
+
+        #endregion Credit Score Management
+
         #region Notification Management
 
         /// <summary>Displays a new Notification in a thread-safe way.</summary>
         /// <param name="message">Message to be displayed</param>
         /// <param name="title">Title of the Notification window</param>
-        internal static void DisplayNotification(string message, string title)
-        {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                new Notification(message, title, NotificationButtons.OK, MainWindow).ShowDialog();
-            });
-        }
+        internal static void DisplayNotification(string message, string title) => Application.Current.Dispatcher.Invoke(
+            () => { new Notification(message, title, NotificationButtons.OK, MainWindow).ShowDialog(); });
 
         /// <summary>Displays a new Notification in a thread-safe way and retrieves a boolean result upon its closing.</summary>
         /// <param name="message">Message to be displayed</param>
         /// <param name="title">Title of the Notification window</param>
         /// <returns>Returns value of clicked button on Notification.</returns>
-        internal static bool YesNoNotification(string message, string title)
-        {
-            bool result = false;
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                if (new Notification(message, title, NotificationButtons.YesNo, MainWindow).ShowDialog() == true)
-                    result = true;
-            });
-            return result;
-        }
+        internal static bool YesNoNotification(string message, string title) => Application.Current.Dispatcher.Invoke(() => (new Notification(message, title, NotificationButtons.YesNo, MainWindow).ShowDialog() == true));
 
         #endregion Notification Management
+
+        #region Transaction Manipulation
+
+        /// <summary>Adds a transaction to an account and the database</summary>
+        /// <param name="transaction">Transaction to be added</param>
+        /// <param name="account">Account the transaction will be added to</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> AddTransaction(Transaction transaction, Account account)
+        {
+            bool success = false;
+            if (await DatabaseInteraction.AddTransaction(transaction, account))
+            {
+                if (AllMonths.Any(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date))
+                    AllMonths.Find(month => month.MonthStart <= transaction.Date && transaction.Date <= month.MonthEnd.Date).AddTransaction(transaction);
+                else
+                {
+                    Month newMonth = new Month(new DateTime(transaction.Date.Year, transaction.Date.Month, 1), new List<Transaction>());
+                    newMonth.AddTransaction(transaction);
+                    AllMonths.Add(newMonth);
+                }
+
+                AllMonths = AllMonths.OrderByDescending(month => month.FormattedMonth).ToList();
+                success = true;
+            }
+            else
+                DisplayNotification("Unable to process transaction.", "Finances");
+
+            return success;
+        }
+
+        /// <summary>Gets the next Transaction ID autoincrement value in the database for the Transactions table.</summary>
+        /// <returns>Next Transactions ID value</returns>
+        public static async Task<int> GetNextTransactionsIndex() => await DatabaseInteraction.GetNextTransactionsIndex();
+
+        /// <summary>Modifies the selected Transaction in the database.</summary>
+        /// <param name="newTransaction">Transaction to replace the current one in the database</param>
+        /// <param name="oldTransaction">Current Transaction in the database</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
+        {
+            bool success = false;
+            if (await DatabaseInteraction.ModifyTransaction(newTransaction, oldTransaction))
+            {
+                AllTransactions[AllTransactions.IndexOf(oldTransaction)] = newTransaction;
+                AllTransactions = AllTransactions.OrderByDescending(transaction => transaction.Date).ThenByDescending(transaction => transaction.ID).ToList();
+                LoadMonths();
+                LoadYears();
+                success = true;
+            }
+
+            return success;
+        }
+
+        /// <summary>Deletes a transaction from the database.</summary>
+        /// <param name="transaction">Transaction to be deleted</param>
+        /// <param name="account">Account the transaction will be deleted from</param>
+        /// <returns>Returns true if successful</returns>
+        internal static async Task<bool> DeleteTransaction(Transaction transaction, Account account)
+        {
+            bool success = false;
+            if (await DatabaseInteraction.DeleteTransaction(transaction, account))
+            {
+                AllTransactions.Remove(transaction);
+                success = true;
+            }
+
+            return success;
+        }
+
+        #endregion Transaction Manipulation
     }
 }

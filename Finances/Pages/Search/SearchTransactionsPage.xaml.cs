@@ -4,7 +4,6 @@ using Extensions.Enums;
 using Finances.Classes;
 using Finances.Classes.Categories;
 using Finances.Classes.Data;
-using Finances.Pages.Accounts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,16 +23,11 @@ namespace Finances.Pages.Search
         private Account _selectedAccount = new Account();
         private List<Transaction> _matchingTransactions = new List<Transaction>(AppState.AllTransactions);
 
-        internal ViewAccountPage PreviousWindow { private get; set; }
-
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -92,20 +86,14 @@ namespace Finances.Pages.Search
 
         #region Button-Click Methods
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             if (SearchTransaction())
             {
                 CmbMinorCategory.Focus();
-                SearchResultsPage searchResultsWindow = new SearchResultsPage
-                {
-                    PreviousWindow = this
-                };
+                SearchResultsPage searchResultsWindow = new SearchResultsPage();
                 searchResultsWindow.LoadWindow(_matchingTransactions);
                 AppState.Navigate(searchResultsWindow);
             }
@@ -113,28 +101,20 @@ namespace Finances.Pages.Search
                 AppState.DisplayNotification("No results found matching your search criteria.", "Finances");
         }
 
-        private void BtnReset_Click(object sender, RoutedEventArgs e)
-        {
-            Reset();
-        }
+        private void BtnReset_Click(object sender, RoutedEventArgs e) => Reset();
 
         #endregion Button-Click Methods
 
         #region Text/Selection Changed
 
         /// <summary>Checks whether or not the Submit button should be enabled.</summary>
-        private void TextChanged()
-        {
-            BtnSearch.IsEnabled = (TransactionDate.SelectedDate != null | CmbMajorCategory.SelectedIndex >= 0 |
-                                   CmbMinorCategory.SelectedIndex >= 0 | TxtPayee.Text.Length > 0 |
-                                   TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0 |
-                                   CmbAccount.SelectedIndex >= 0);
-        }
+        private void TextChanged() => BtnSearch.IsEnabled =
+            TransactionDate.SelectedDate != null | CmbMajorCategory.SelectedIndex >= 0 |
+            CmbMinorCategory.SelectedIndex >= 0 | TxtPayee.Text.Length > 0 |
+            TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0 |
+            CmbAccount.SelectedIndex >= 0;
 
-        private void Txt_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void Txt_TextChanged(object sender, TextChangedEventArgs e) => TextChanged();
 
         private void TxtInOutflow_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -142,10 +122,7 @@ namespace Finances.Pages.Search
             TextChanged();
         }
 
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e) => TextChanged();
 
         private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -176,13 +153,10 @@ namespace Finances.Pages.Search
 
         #endregion Text/Selection Changed
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public SearchTransactionsPage()
         {
@@ -192,21 +166,12 @@ namespace Finances.Pages.Search
             CmbMinorCategory.ItemsSource = _selectedCategory.MinorCategories;
         }
 
-        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Functions.PreviewKeyDown(e, KeyType.Decimals);
-        }
+        private void SearchTransactionsPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void Txt_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void TxtInflowOutflow_PreviewKeyDown(object sender, KeyEventArgs e) => Functions.PreviewKeyDown(e, KeyType.Decimals);
 
-        #endregion Window-Manipulation Methods
+        private void Txt_GotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
 
-        private void SearchTransactionsPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

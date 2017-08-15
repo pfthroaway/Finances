@@ -18,20 +18,16 @@ namespace Finances.Pages.Reports
         private readonly List<Month> _allMonths = AppState.AllMonths;
         private ListViewSort _sort = new ListViewSort();
 
-        internal MainWindow PreviousWindow { private get; set; }
-
         #region Data-Binding
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
-        #region Button-Click methods
+        #region Click methods
 
         private void BtnViewCategorizedReport_Click(object sender, RoutedEventArgs e)
         {
@@ -58,34 +54,24 @@ namespace Finances.Pages.Reports
 
             categorizedExpenses = categorizedExpenses.OrderBy(expense => expense.MajorCategory).ThenBy(expense => expense.MinorCategory).ToList();
 
-            CategorizedMonthlyReportPage categorizedMonthlyReportWindow = new CategorizedMonthlyReportPage
-            {
-                PreviousWindow = this
-            };
+            CategorizedMonthlyReportPage categorizedMonthlyReportWindow = new CategorizedMonthlyReportPage();
             categorizedMonthlyReportWindow.LoadMonth(selectedMonth, categorizedExpenses);
 
             AppState.Navigate(categorizedMonthlyReportWindow);
         }
 
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnBack_Click(object sender, RoutedEventArgs e) => ClosePage();
 
-        private void LVMonths_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            BtnViewCategorizedReport.IsEnabled = LVMonths.SelectedIndex >= 0;
-        }
+        private void LVMonthsColumnHeader_Click(object sender, RoutedEventArgs e) => _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVMonths, "#CCCCCC");
 
-        #endregion Button-Click methods
+        private void LVMonths_SelectionChanged(object sender, SelectionChangedEventArgs e) => BtnViewCategorizedReport.IsEnabled = LVMonths.SelectedIndex >= 0;
 
-        #region Window-Manipulation Methods
+        #endregion Click methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            AppState.GoBack();
-        }
+        #region Page-Manipulation Methods
+
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public MonthlyReportPage()
         {
@@ -93,16 +79,8 @@ namespace Finances.Pages.Reports
             LVMonths.ItemsSource = _allMonths;
         }
 
-        private void LVMonthsColumnHeader_Click(object sender, RoutedEventArgs e)
-        {
-            _sort = Functions.ListViewColumnHeaderClick(sender, _sort, LVMonths, "#BDC7C1");
-        }
+        private void MonthlyReportPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        #endregion Window-Manipulation Methods
-
-        private void MonthlyReportPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

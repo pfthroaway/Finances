@@ -3,7 +3,6 @@ using Extensions.DataTypeHelpers;
 using Extensions.Enums;
 using Finances.Classes;
 using Finances.Classes.Data;
-using Finances.Pages.Accounts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,29 +18,13 @@ namespace Finances.Pages.Transactions
         private Account _transferFromAccount = new Account();
         private Account _transferToAccount = new Account();
 
-        internal ViewAccountPage PreviousWindow { private get; set; }
-
+        /// <summary>Adds a transfer to the database.</summary>
+        /// <returns>True if successful</returns>
         private async Task<bool> AddTransfer()
         {
-            Transaction transferFrom = new Transaction(
-                date: DateTimeHelper.Parse(TransferDate.SelectedDate),
-                payee: "Transfer",
-                majorCategory: "Transfer",
-                minorCategory: "Transfer",
-                memo: _transferToAccount.Name,
-                outflow: DecimalHelper.Parse(TxtTransferAmount.Text),
-                inflow: 0.00M,
-                account: _transferFromAccount.Name);
+            Transaction transferFrom = new Transaction(await AppState.GetNextTransactionsIndex(), DateTimeHelper.Parse(TransferDate.SelectedDate), "Transfer", "Transfer", "Transfer", _transferToAccount.Name, DecimalHelper.Parse(TxtTransferAmount.Text), 0.00M, _transferFromAccount.Name);
             _transferFromAccount.AddTransaction(transferFrom);
-            Transaction transferTo = new Transaction(
-                date: DateTimeHelper.Parse(TransferDate.SelectedDate),
-                payee: "Transfer",
-                majorCategory: "Transfer",
-                minorCategory: "Transfer",
-                memo: _transferFromAccount.Name,
-                outflow: 0.00M,
-                inflow: DecimalHelper.Parse(TxtTransferAmount.Text),
-                account: _transferToAccount.Name);
+            Transaction transferTo = new Transaction(await AppState.GetNextTransactionsIndex() + 1, DateTimeHelper.Parse(TransferDate.SelectedDate), "Transfer", "Transfer", "Transfer", _transferFromAccount.Name, 0.00M, DecimalHelper.Parse(TxtTransferAmount.Text), _transferToAccount.Name);
             _transferToAccount.AddTransaction(transferTo);
             if (await AppState.AddTransaction(transferFrom, _transferFromAccount))
             {
@@ -54,6 +37,7 @@ namespace Finances.Pages.Transactions
         /// <summary>Resets all values to default status.</summary>
         private void Reset()
         {
+            TransferDate.Text = "";
             CmbTransferFrom.SelectedIndex = -1;
             CmbTransferTo.SelectedIndex = -1;
             TxtTransferAmount.Text = "";
@@ -73,23 +57,10 @@ namespace Finances.Pages.Transactions
         private async void BtnSaveAndDone_Click(object sender, RoutedEventArgs e)
         {
             if (CmbTransferFrom.SelectedValue != CmbTransferTo.SelectedValue && await AddTransfer())
-                CloseWindow();
-            else if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue)
-                AppState.DisplayNotification("The source account and the destination account cannot be the same.", "Finances");
-            else
-                AppState.DisplayNotification("Unable to process transfer.", "Finances");
+                ClosePage();
         }
 
-        private async void BtnSaveAndDuplicate_Click(object sender, RoutedEventArgs e)
-        {
-            if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue || !await AddTransfer())
-            {
-                if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue)
-                    AppState.DisplayNotification("The source account and the destination account cannot be the same.", "Finances");
-                else
-                    AppState.DisplayNotification("Unable to process transfer.", "Finances");
-            }
-        }
+        private async void BtnSaveAndDuplicate_Click(object sender, RoutedEventArgs e) => await AddTransfer();
 
         private async void BtnSaveAndNew_Click(object sender, RoutedEventArgs e)
         {
@@ -98,22 +69,11 @@ namespace Finances.Pages.Transactions
                 Reset();
                 CmbTransferFrom.Focus();
             }
-            else if (CmbTransferFrom.SelectedValue == CmbTransferTo.SelectedValue)
-                AppState.DisplayNotification("The source account and the destination account cannot be the same.", "Finances"
-                     );
-            else
-                AppState.DisplayNotification("Unable to process transfer.", "Finances");
         }
 
-        private void BtnReset_Click(object sender, RoutedEventArgs e)
-        {
-            Reset();
-        }
+        private void BtnReset_Click(object sender, RoutedEventArgs e) => Reset();
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
@@ -122,16 +82,13 @@ namespace Finances.Pages.Transactions
         /// <summary>Checks whether or not the Submit button should be enabled.</summary>
         private void TextChanged()
         {
-            if (TransferDate.SelectedDate != null && CmbTransferFrom.SelectedIndex >= 0 && CmbTransferFrom.SelectedIndex >= 0 && TxtTransferAmount.Text.Length > 0)
+            if (TransferDate.SelectedDate != null && CmbTransferFrom.SelectedIndex >= 0 && CmbTransferFrom.SelectedIndex >= 0 && TxtTransferAmount.Text.Length > 0 && CmbTransferFrom.SelectedValue != CmbTransferTo.SelectedValue)
                 ToggleButtons(true);
             else
                 ToggleButtons(false);
         }
 
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e) => TextChanged();
 
         private void CmbTransferFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -159,14 +116,10 @@ namespace Finances.Pages.Transactions
 
         #endregion Text/Selection Changed
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public NewTransferPage()
         {
@@ -175,21 +128,12 @@ namespace Finances.Pages.Transactions
             CmbTransferTo.ItemsSource = _allAccounts;
         }
 
-        private void TxtTransferAmount_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            Functions.PreviewKeyDown(e, KeyType.Decimals);
-        }
+        private void NewTransferPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void TxtTransferAmount_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void TxtTransferAmount_PreviewKeyDown(object sender, KeyEventArgs e) => Functions.PreviewKeyDown(e, KeyType.Decimals);
 
-        #endregion Window-Manipulation Methods
+        private void TxtTransferAmount_GotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
 
-        private void NewTransferPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

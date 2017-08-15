@@ -61,21 +61,15 @@ namespace Finances.Classes.Data
             }
         }
 
-        /// <summary>Balance of the account</summary>
-        public decimal Balance
-        {
-            get
-            {
-                return AllTransactions.Sum(transaction => (-1 * transaction.Outflow) + transaction.Inflow);
-            }
-        }
+        #endregion Modifying Properties
+
+        #region Helper Properties
 
         /// <summary>Collection of all the transactions in the account</summary>
         public ReadOnlyCollection<Transaction> AllTransactions => new ReadOnlyCollection<Transaction>(_allTransactions);
 
-        #endregion Modifying Properties
-
-        #region Helper Properties
+        /// <summary>Balance of the account</summary>
+        public decimal Balance => AllTransactions.Sum(transaction => (-1 * transaction.Outflow) + transaction.Inflow);
 
         /// <summary>Balance of the account, formatted to currency</summary>
         public string BalanceToString => Balance.ToString("C2");
@@ -89,10 +83,7 @@ namespace Finances.Classes.Data
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -117,7 +108,7 @@ namespace Finances.Classes.Data
             else
                 RemoveTransaction(index);
             Sort();
-            OnPropertyChanged("BalanceToStringWithText");
+            UpdateTransactions();
         }
 
         /// <summary>Removes a transaction to  account.</summary>
@@ -125,7 +116,7 @@ namespace Finances.Classes.Data
         internal void RemoveTransaction(Transaction transaction)
         {
             _allTransactions.Remove(transaction);
-            OnPropertyChanged("BalanceToStringWithText");
+            UpdateTransactions();
         }
 
         /// <summary>Removes a transaction from  account at a specific index.</summary>
@@ -133,15 +124,21 @@ namespace Finances.Classes.Data
         internal void RemoveTransaction(int index)
         {
             _allTransactions.RemoveAt(index);
+            UpdateTransactions();
+        }
+
+        /// <summary>Keeps the Transactions List updated when a Transactions is added/removed/modified.</summary>
+        private void UpdateTransactions()
+        {
+            OnPropertyChanged("Transactions");
             OnPropertyChanged("BalanceToStringWithText");
         }
 
         #endregion Transaction Management
 
-        internal void Sort()
-        {
-            _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date).ToList();
-        }
+        /// <summary>Sorts all Transactions in the Account by date.</summary>
+        internal void Sort() => _allTransactions = _allTransactions.OrderByDescending(transaction => transaction.Date)
+            .ThenByDescending(transaction => transaction.ID).ToList();
 
         #region Override Operators
 
@@ -152,35 +149,17 @@ namespace Finances.Classes.Data
             return string.Equals(left.Name, right.Name, StringComparison.OrdinalIgnoreCase) && left.AccountType == right.AccountType && left.Balance == right.Balance && (left.AllTransactions.Count == right.AllTransactions.Count && !left.AllTransactions.Except(right.AllTransactions).Any());
         }
 
-        public sealed override bool Equals(object obj)
-        {
-            return Equals(this, obj as Account);
-        }
+        public sealed override bool Equals(object obj) => Equals(this, obj as Account);
 
-        public bool Equals(Account otherAccount)
-        {
-            return Equals(this, otherAccount);
-        }
+        public bool Equals(Account otherAccount) => Equals(this, otherAccount);
 
-        public static bool operator ==(Account left, Account right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(Account left, Account right) => Equals(left, right);
 
-        public static bool operator !=(Account left, Account right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(Account left, Account right) => !Equals(left, right);
 
-        public sealed override int GetHashCode()
-        {
-            return base.GetHashCode() ^ 17;
-        }
+        public sealed override int GetHashCode() => base.GetHashCode() ^ 17;
 
-        public sealed override string ToString()
-        {
-            return Name;
-        }
+        public sealed override string ToString() => Name;
 
         #endregion Override Operators
 

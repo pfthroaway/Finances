@@ -103,8 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Data\CreditScore.cs" />
     <Compile Include="Classes\Enums\AccountTypes.cs" />
     <Compile Include="Classes\AppState.cs" />
+    <Compile Include="Classes\Enums\Providers.cs" />
     <Compile Include="Classes\Sorting\CategorizedExpense.cs" />
     <Compile Include="Classes\Categories\Category.cs" />
     <Compile Include="Classes\Database\IDatabaseInteraction.cs" />
@@ -117,6 +119,15 @@
     </Compile>
     <Compile Include="Pages\Categories\RenameCategoryPage.xaml.cs">
       <DependentUpon>RenameCategoryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Credit\AddCreditScorePage.xaml.cs">
+      <DependentUpon>AddCreditScorePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Credit\CreditScorePage.xaml.cs">
+      <DependentUpon>CreditScorePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Credit\ModifyCreditScorePage.xaml.cs">
+      <DependentUpon>ModifyCreditScorePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -131,6 +142,18 @@
       <DependentUpon>ViewAllTransactionsPage.xaml</DependentUpon>
     </Compile>
     <Page Include="Pages\Categories\AddCategoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Credit\AddCreditScorePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Credit\CreditScorePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Credit\ModifyCreditScorePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

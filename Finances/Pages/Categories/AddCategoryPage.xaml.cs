@@ -12,7 +12,6 @@ namespace Finances.Pages.Categories
     {
         private Category _majorCategory;
         private bool _isMajor;
-        internal ManageCategoriesPage PreviousWindow { get; set; }
 
         internal void LoadWindow(Category selectedMajorCategory, bool isMajor = false)
         {
@@ -29,52 +28,34 @@ namespace Finances.Pages.Categories
             {
                 if (AppState.AllCategories.All(category => category.Name != TxtName.Text))
                     if (await AppState.AddCategory(_majorCategory, TxtName.Text, _isMajor))
-                        CloseWindow();
+                        ClosePage();
             }
             else
             {
                 if (!_majorCategory.MinorCategories.Contains(new MinorCategory(TxtName.Text)))
                     if (await AppState.AddCategory(_majorCategory, TxtName.Text, _isMajor))
-                        CloseWindow();
+                        ClosePage();
             }
         }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
-        public AddCategoryPage()
-        {
-            InitializeComponent();
-        }
+        public AddCategoryPage() => InitializeComponent();
 
-        private void TxtName_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void AddCategoryPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void TxtName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            BtnSubmit.IsEnabled = TxtName.Text.Length > 0;
-        }
+        private void TxtName_OnGotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
 
-        #endregion Window-Manipulation Methods
+        private void TxtName_TextChanged(object sender, TextChangedEventArgs e) => BtnSubmit.IsEnabled =
+            TxtName.Text.Length > 0;
 
-        private void AddCategoryPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

@@ -22,10 +22,7 @@ namespace Finances.Classes.Categories
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -38,34 +35,21 @@ namespace Finances.Classes.Categories
             return string.Equals(left.Name, right.Name);
         }
 
-        public sealed override bool Equals(object obj)
-        {
-            return Equals(this, obj as MinorCategory);
-        }
+        public sealed override bool Equals(object obj) => Equals(this, obj as MinorCategory);
 
-        public bool Equals(MinorCategory otherMinorCategory)
-        {
-            return Equals(this, otherMinorCategory);
-        }
+        public bool Equals(MinorCategory otherMinorCategory) => Equals(this, otherMinorCategory);
 
-        public static bool operator ==(MinorCategory left, MinorCategory right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(MinorCategory left, MinorCategory right) => Equals(left, right);
 
-        public static bool operator !=(MinorCategory left, MinorCategory right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(MinorCategory left, MinorCategory right) => !Equals(left, right);
 
-        public sealed override int GetHashCode()
-        {
-            return base.GetHashCode() ^ 17;
-        }
+        public sealed override int GetHashCode() => base.GetHashCode() ^ 17;
 
         public sealed override string ToString() => Name;
 
         #endregion Override Operators
+
+        #region Constructors
 
         /// <summary>Initializes a default instance of MinorCategory.</summary>
         public MinorCategory()
@@ -74,16 +58,12 @@ namespace Finances.Classes.Categories
 
         /// <summary>Iniitalizes an instance of MinorCategory by assigning its name.</summary>
         /// <param name="name">Name</param>
-        public MinorCategory(string name)
-        {
-            Name = name;
-        }
+        public MinorCategory(string name) => Name = name;
 
         /// <summary>Replaces  instance of MinorCategory with a new instance.</summary>
         /// <param name="otherCategory">MinorCategory to replace  instance</param>
-        public MinorCategory(MinorCategory otherCategory)
-        {
-            Name = otherCategory.Name;
-        }
+        public MinorCategory(MinorCategory otherCategory) => Name = otherCategory.Name;
+
+        #endregion Constructors
     }
 }

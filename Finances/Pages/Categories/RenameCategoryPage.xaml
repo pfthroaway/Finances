@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-      Loaded="RenameCategoryPage_OnLoaded"
+      Loaded="RenameCategoryPage_Loaded"
         Style="{StaticResource PageStyle}"
         Title="Rename Category">
     <Grid x:Name="Grid" Margin="10">

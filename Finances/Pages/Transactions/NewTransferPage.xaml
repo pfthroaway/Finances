@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-      Loaded="NewTransferPage_OnLoaded"
+      Loaded="NewTransferPage_Loaded"
         Style="{StaticResource PageStyle}"
         Title="New Transfer">
     <Grid x:Name="Grid" Margin="10">
@@ -22,7 +22,7 @@
         <TextBlock Grid.Column="0" Grid.Row="0" Text="Transaction Date:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="1" Grid.Row="0" Text="Transfer From:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="2" Grid.Row="0" Text="Transfer To:" TextAlignment="Center" Margin="0,0,10,5" />
-        <DatePicker x:Name="TransferDate" Grid.Column="0" Grid.Row="1" Width="200" Height="30" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="DatePicker_SelectedDateChanged" Margin="0,0,10,10" />
+        <DatePicker x:Name="TransferDate" Grid.Column="0" Grid.Row="1" Width="200" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" SelectedDateChanged="DatePicker_SelectedDateChanged" Margin="0,0,10,10" />
         <ComboBox x:Name="CmbTransferFrom" Grid.Column="1" Grid.Row="1" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbTransferFrom_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" Padding="5" />
         <ComboBox x:Name="CmbTransferTo" Grid.Column="2" Grid.Row="1" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbTransferTo_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" Padding="5" />
         <TextBlock Grid.Column="3" Grid.Row="0" Width="200" Text="Amount Transferred:" TextAlignment="Center" Margin="0,0,0,5" />

@@ -15,8 +15,6 @@ namespace Finances.Pages.Accounts
     /// <summary>Interaction logic for NewAccountWindow.xaml</summary>
     public partial class NewAccountPage
     {
-        internal MainPage PreviousWindow { private get; set; }
-
         private readonly List<string> _allAccountTypes = AppState.AllAccountTypes;
 
         #region Button-Click Methods
@@ -27,20 +25,14 @@ namespace Finances.Pages.Accounts
             {
                 Enum.TryParse(CmbAccountTypes.SelectedValue.ToString().Replace(" ", ""), out AccountTypes currentType);
                 Account newAccount = new Account(TxtAccountName.Text, currentType, new List<Transaction>());
-                Transaction newTransaction = new Transaction(
-                    date: DateTime.Now,
-                    payee: "Income",
-                    majorCategory: "Income",
-                    minorCategory: "Starting Balance",
-                    memo: "",
-                    outflow: 0.00M,
-                    inflow: DecimalHelper.Parse(TxtBalance.Text),
-                    account: newAccount.Name);
+                Transaction newTransaction = new Transaction(await AppState.GetNextTransactionsIndex(), DateTime.Now,
+                    "Income", "Income", "Starting Balance", "", 0.00M, DecimalHelper.Parse(TxtBalance.Text),
+                    newAccount.Name);
                 newAccount.AddTransaction(newTransaction);
                 if (await AppState.AddAccount(newAccount))
                 {
                     if (await AppState.AddTransaction(newTransaction, newAccount))
-                        CloseWindow();
+                        ClosePage();
                     else
                         AppState.DisplayNotification("Unable to process new account.", "Finances");
                 }
@@ -49,24 +41,15 @@ namespace Finances.Pages.Accounts
                 AppState.DisplayNotification("That account name already exists.", "Finances");
         }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            CloseWindow();
-        }
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => ClosePage();
 
         #endregion Button-Click Methods
 
         #region Text Changed
 
-        private void TextChanged()
-        {
-            BtnSubmit.IsEnabled = TxtAccountName.Text.Length > 0 && CmbAccountTypes.SelectedIndex >= 0 && TxtBalance.Text.Length > 0;
-        }
+        private void TextChanged() => BtnSubmit.IsEnabled = TxtAccountName.Text.Length > 0 && CmbAccountTypes.SelectedIndex >= 0 && TxtBalance.Text.Length > 0;
 
-        private void TxtAccountName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void TxtAccountName_TextChanged(object sender, TextChangedEventArgs e) => TextChanged();
 
         private void TxtBalance_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -76,14 +59,10 @@ namespace Finances.Pages.Accounts
 
         #endregion Text Changed
 
-        #region Window-Manipulation Methods
+        #region Page-Manipulation Methods
 
-        /// <summary>Closes the Window.</summary>
-        private void CloseWindow()
-        {
-            PreviousWindow.RefreshItemsSource();
-            AppState.GoBack();
-        }
+        /// <summary>Closes the Page.</summary>
+        private void ClosePage() => AppState.GoBack();
 
         public NewAccountPage()
         {
@@ -92,21 +71,12 @@ namespace Finances.Pages.Accounts
             CmbAccountTypes.ItemsSource = _allAccountTypes;
         }
 
-        private void CmbAccountTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TextChanged();
-        }
+        private void NewAccountPage_Loaded(object sender, RoutedEventArgs e) => AppState.CalculateScale(Grid);
 
-        private void Txt_GotFocus(object sender, RoutedEventArgs e)
-        {
-            Functions.TextBoxGotFocus(sender);
-        }
+        private void CmbAccountTypes_SelectionChanged(object sender, SelectionChangedEventArgs e) => TextChanged();
 
-        #endregion Window-Manipulation Methods
+        private void Txt_GotFocus(object sender, RoutedEventArgs e) => Functions.TextBoxGotFocus(sender);
 
-        private void NewAccountPage_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            AppState.CalculateScale(Grid);
-        }
+        #endregion Page-Manipulation Methods
     }
 }

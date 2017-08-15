@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Style="{StaticResource PageStyle}"
-      Loaded="NewAccountPage_OnLoaded"
+      Loaded="NewAccountPage_Loaded"
         Title="New Account">
     <Grid x:Name="Grid" Margin="10">
         <Grid.ColumnDefinitions>

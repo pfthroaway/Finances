@@ -5,12 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
       Style="{StaticResource PageStyle}"
-      Loaded="MainPage_OnLoaded"
+      Loaded="MainPage_Loaded"
       Title="MainPage">
     <Grid x:Name="Grid" Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -48,11 +48,10 @@
         <Button x:Name="BtnMonthlyReport" Grid.Column="0" Grid.Row="2" Width="175" Click="BtnMonthlyReport_Click" Margin="0,0,0,10">
             <AccessText Text="_Monthly Report" />
         </Button>
-        <Button x:Name="BtnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Click="BtnManageCategories_Click" Margin="0,0,0,10">
-            <AccessText Text="_Manage Categories" />
-        </Button>
-        <Button x:Name="BtnViewAllTransactions" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Width="200" Click="BtnViewAllTransactions_Click">
+        <Button x:Name="BtnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Content="Manage _Categories" Click="BtnManageCategories_Click" Margin="0,0,0,10" />
+        <Button x:Name="BtnViewAllTransactions" Grid.Column="0" Grid.Row="3" Width="200" Click="BtnViewAllTransactions_Click">
             <AccessText Text="_View All Transactions" />
         </Button>
+        <Button x:Name="BtnViewCreditScores" Grid.Column="1" Grid.Row="3" Width="175" Content="View Credit _Scores" Click="BtnViewCreditScores_Click" />
     </Grid>
 </Page>

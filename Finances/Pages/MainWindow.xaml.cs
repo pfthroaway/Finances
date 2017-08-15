@@ -61,10 +61,8 @@ namespace Finances.Pages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        protected void OnPropertyChanged(string property) => PropertyChanged?.Invoke(this,
+            new PropertyChangedEventArgs(property));
 
         #endregion Data-Binding
 
@@ -83,10 +81,7 @@ namespace Finances.Pages
             page.RefreshItemsSource();
         }
 
-        private void MainFrame_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            CalculateScale();
-        }
+        private void MainFrame_OnSizeChanged(object sender, SizeChangedEventArgs e) => CalculateScale();
 
         #endregion Window-Manipulation Methods
     }
