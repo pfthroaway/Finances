@@ -1,32 +1,36 @@
-﻿<Page x:Name="PageMonthlyReport" x:Class="Finances.Pages.Reports.MonthlyReportPage"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
+﻿<Page x:Class="Finances.Pages.Reports.MonthlyReportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
       Loaded="MonthlyReportPage_Loaded"
-        Style="{StaticResource PageStyle}"
-        Title="Monthly Report">
+      Style="{StaticResource PageStyle}"
+      Title="Finances - Monthly Report">
     <Grid x:Name="Grid" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="LVMonths" Grid.Row="0" Height="450" SelectionChanged="LVMonths_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+        <ListView x:Name="LVMonths" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" SelectionChanged="LVMonths_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=FormattedMonth}">
+                    <GridViewColumn Width="140" DisplayMemberBinding="{Binding Path=FormattedMonth}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="FormattedMonth" Click="LVMonthsColumnHeader_Click" Content="Month" />
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=ExpensesToString}">
+                    <GridViewColumn Width="140" DisplayMemberBinding="{Binding Path=ExpensesToString}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Expenses" Click="LVMonthsColumnHeader_Click" Content="Expenses" />
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=IncomeToString}">
+                    <GridViewColumn Width="140" DisplayMemberBinding="{Binding Path=IncomeToString}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Income" Click="LVMonthsColumnHeader_Click" Content="Income" />
                         </GridViewColumn.Header>
@@ -34,11 +38,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="BtnViewCategorizedReport" Grid.Row="1" Width="225" Click="BtnViewCategorizedReport_Click" IsEnabled="False" IsDefault="True" Margin="0,0,0,10">
-            <AccessText Text="_View Categorized Report" />
-        </Button>
-        <Button x:Name="BtnBack" Grid.Row="2" Width="100" Click="BtnBack_Click" IsCancel="True">
-            <AccessText Text="_Back" />
-        </Button>
+        <Button x:Name="BtnViewCategorizedReport" Grid.Column="0" Grid.Row="1" Width="220" Content="_View Categorized Report" Click="BtnViewCategorizedReport_Click" IsEnabled="False" IsDefault="True" Margin="0,0,10,0" />
+        <Button x:Name="BtnBack" Grid.Column="1" Grid.Row="1" Width="220" Content="_Back" Click="BtnBack_Click" IsCancel="True" />
     </Grid>
 </Page>

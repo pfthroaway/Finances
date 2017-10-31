@@ -1,12 +1,12 @@
-﻿<Page x:Name="PageCategorizedMonthlyReport" x:Class="Finances.Pages.Reports.CategorizedMonthlyReportPage"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
+﻿<Page x:Class="Finances.Pages.Reports.CategorizedMonthlyReportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
       Loaded="CategorizedMonthlyReportPage_Loaded"
-        Style="{StaticResource PageStyle}"
-        Title="Categorized Monthly Report">
+      Style="{StaticResource PageStyle}"
+      Title="Finances - Categorized Monthly Report">
     <Grid x:Name="Grid" Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

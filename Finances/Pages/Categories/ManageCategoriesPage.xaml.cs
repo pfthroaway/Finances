@@ -114,10 +114,7 @@ namespace Finances.Pages.Categories
         /// <summary>Closes the Page.</summary>
         private void ClosePage() => AppState.GoBack();
 
-        public ManageCategoriesPage()
-        {
-            InitializeComponent();
-        }
+        public ManageCategoriesPage() => InitializeComponent();
 
         private void ManageCategoriesPage_Loaded(object sender, RoutedEventArgs e)
         {

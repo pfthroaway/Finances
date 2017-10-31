@@ -1,23 +1,25 @@
-﻿<Page x:Name="PageRenameAccount" x:Class="Finances.Pages.Accounts.RenameAccountPage"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
+﻿<Page x:Class="Finances.Pages.Accounts.RenameAccountPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
       Loaded="RenameAccountPage_Loaded"
-        Style="{StaticResource PageStyle}"
-        Title="Rename Account">
+      Style="{StaticResource PageStyle}"
+      Title="Finances - Rename Account">
     <Grid x:Name="Grid" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="What name would you like this account to have?" Width="250" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,5" />
-        <TextBox x:Name="TxtAccountName" Grid.Row="1" Width="300" Padding="5" Margin="0,0,0,10" />
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="BtnSubmit" Width="145" Content="_Submit" Click="BtnSubmit_Click" IsEnabled="False" IsDefault="True" Margin="0,0,10,0" />
-            <Button x:Name="BtnCancel" Width="145" Content="_Cancel" Click="BtnCancel_Click" IsCancel="True" />
-        </StackPanel>
+        <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Width="300" Text="What name would you like this account to have?" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,10" />
+        <TextBox x:Name="TxtAccountName" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Width="300" Margin="0,0,0,20" />
+        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Width="145" Content="_Submit" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,10,0" />
+        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Width="145" Content="_Cancel" Click="BtnCancel_Click" IsCancel="True" />
     </Grid>
 </Page>
