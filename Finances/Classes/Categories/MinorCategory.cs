@@ -60,8 +60,8 @@ namespace Finances.Classes.Categories
         /// <param name="name">Name</param>
         public MinorCategory(string name) => Name = name;
 
-        /// <summary>Replaces  instance of MinorCategory with a new instance.</summary>
-        /// <param name="otherCategory">MinorCategory to replace  instance</param>
+        /// <summary>Replaces this instance of MinorCategory with a new instance.</summary>
+        /// <param name="otherCategory">MinorCategory to replace this instance</param>
         public MinorCategory(MinorCategory otherCategory) => Name = otherCategory.Name;
 
         #endregion Constructors

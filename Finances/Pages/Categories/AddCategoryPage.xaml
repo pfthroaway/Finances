@@ -18,12 +18,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="What is the name of the category you would like to create?" Width="250" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" />
-        <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Width="250" Grid.ColumnSpan="2" TextAlignment="Center" TextChanged="TxtName_TextChanged" GotFocus="TxtName_OnGotFocus" Margin="0,0,0,10" Padding="5" />
-        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Margin="0,0,10,0" Width="120" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click">
-            <AccessText Text="_Submit" />
-        </Button>
-        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Margin="0,0,0,0" Width="120" Click="BtnCancel_Click">
-            <AccessText Text="_Cancel" />
-        </Button>
+        <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Width="300" Grid.ColumnSpan="2" TextAlignment="Center" TextChanged="TxtName_TextChanged" GotFocus="TxtName_OnGotFocus" Margin="0,0,0,10" Padding="5" />
+        <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Content="_Submit" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,10,0" />
+        <Button x:Name="BtnCancel" Grid.Column="1" Grid.Row="2" Content="_Cancel" IsCancel="True" Click="BtnCancel_Click" />
     </Grid>
 </Page>

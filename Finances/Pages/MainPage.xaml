@@ -6,7 +6,7 @@
       mc:Ignorable="d"
       Style="{StaticResource PageStyle}"
       Loaded="MainPage_Loaded"
-      Title="MainPage">
+      Title="Finances - View Accounts">
     <Grid x:Name="Grid" Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="LVAccounts" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="450" SelectionChanged="LVAccounts_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+        <ListView x:Name="LVAccounts" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Height="480" SelectionChanged="LVAccounts_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="350" DisplayMemberBinding="{Binding Path=Name}">
@@ -39,19 +39,11 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="BtnViewTransactions" Grid.Column="0" Grid.Row="1" Width="175" Click="BtnViewAccount_Click" IsEnabled="False" IsDefault="True" Margin="0,0,0,10">
-            <AccessText Text="_View Account" />
-        </Button>
-        <Button x:Name="BtnNewAccount" Grid.Column="1" Grid.Row="1" Width="175" Click="BtnNewAccount_Click" Margin="0,0,0,10">
-            <AccessText Text="New _Account" />
-        </Button>
-        <Button x:Name="BtnMonthlyReport" Grid.Column="0" Grid.Row="2" Width="175" Click="BtnMonthlyReport_Click" Margin="0,0,0,10">
-            <AccessText Text="_Monthly Report" />
-        </Button>
-        <Button x:Name="BtnManageCategories" Grid.Column="1" Grid.Row="2" Width="175" Content="Manage _Categories" Click="BtnManageCategories_Click" Margin="0,0,0,10" />
-        <Button x:Name="BtnViewAllTransactions" Grid.Column="0" Grid.Row="3" Width="200" Click="BtnViewAllTransactions_Click">
-            <AccessText Text="_View All Transactions" />
-        </Button>
-        <Button x:Name="BtnViewCreditScores" Grid.Column="1" Grid.Row="3" Width="175" Content="View Credit _Scores" Click="BtnViewCreditScores_Click" />
+        <Button x:Name="BtnViewTransactions" Grid.Column="0" Grid.Row="1" Content="_View Account" Click="BtnViewAccount_Click" IsEnabled="False" IsDefault="True" Margin="0,0,10,10" />
+        <Button x:Name="BtnNewAccount" Grid.Column="1" Grid.Row="1" Content="New _Account" Click="BtnNewAccount_Click" Margin="0,0,0,10" />
+        <Button x:Name="BtnMonthlyReport" Grid.Column="0" Grid.Row="2" Content="_Monthly Report" Click="BtnMonthlyReport_Click" Margin="0,0,10,10" />
+        <Button x:Name="BtnManageCategories" Grid.Column="1" Grid.Row="2" Content="Manage _Categories" Click="BtnManageCategories_Click" Margin="0,0,0,10" />
+        <Button x:Name="BtnViewAllTransactions" Grid.Column="0" Grid.Row="3" Content="View All _Transactions" Click="BtnViewAllTransactions_Click" Margin="0,0,10,0" />
+        <Button x:Name="BtnViewCreditScores" Grid.Column="1" Grid.Row="3" Content="View Credit _Scores" Click="BtnViewCreditScores_Click" />
     </Grid>
 </Page>

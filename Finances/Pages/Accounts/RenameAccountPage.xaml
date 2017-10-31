@@ -14,14 +14,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Text="What name would you like this account to have?" Width="250" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,5" />
-        <TextBox x:Name="TxtAccountName" Grid.Row="1" Width="250" Padding="5" Margin="0,0,0,10" />
+        <TextBox x:Name="TxtAccountName" Grid.Row="1" Width="300" Padding="5" Margin="0,0,0,10" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="BtnSubmit" Width="120" Click="BtnSubmit_Click" IsEnabled="False" IsDefault="True" Margin="0,0,10,0">
-                <AccessText Text="_Submit" />
-            </Button>
-            <Button x:Name="BtnCancel" Width="120" Click="BtnCancel_Click" IsCancel="True">
-                <AccessText Text="_Cancel" />
-            </Button>
+            <Button x:Name="BtnSubmit" Width="145" Content="_Submit" Click="BtnSubmit_Click" IsEnabled="False" IsDefault="True" Margin="0,0,10,0" />
+            <Button x:Name="BtnCancel" Width="145" Content="_Cancel" Click="BtnCancel_Click" IsCancel="True" />
         </StackPanel>
     </Grid>
 </Page>

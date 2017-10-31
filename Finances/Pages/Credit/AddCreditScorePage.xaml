@@ -33,7 +33,7 @@
         <CheckBox x:Name="ChkFICO" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,0,0,10" />
         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,0,10">
             <Button x:Name="BtnSaveAndDone" Width="150" Content="_Save and Done" Click="BtnSaveAndDone_Click" IsEnabled="False" IsDefault="True" Margin="0,0,10,0" />
-            <Button x:Name="BtnSaveAndDuplicate" Width="175" Content="Save and _Duplicate" Click="BtnSaveAndDuplicate_Click" IsEnabled="False"  Margin="0,0,10,0" />
+            <Button x:Name="BtnSaveAndDuplicate" Width="175" Content="Save and _Duplicate" Click="BtnSaveAndDuplicate_Click" IsEnabled="False" Margin="0,0,10,0" />
             <Button x:Name="BtnSaveAndNew" Width="150" Content="Save and _New" Click="BtnSaveAndNew_Click" IsEnabled="False" />
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Center" Orientation="Horizontal">

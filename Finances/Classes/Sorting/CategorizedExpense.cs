@@ -32,7 +32,7 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Income for  month</summary>
+        /// <summary>Income for this month</summary>
         public decimal Income
         {
             get => _income;
@@ -44,7 +44,7 @@ namespace Finances.Classes.Sorting
             }
         }
 
-        /// <summary>Expenses for  month</summary>
+        /// <summary>Expenses for this month</summary>
         public decimal Expenses
         {
             get => _expenses * -1;
@@ -60,10 +60,10 @@ namespace Finances.Classes.Sorting
 
         #region Helper Properties
 
-        /// <summary>Expenses for  month, formatted to currency</summary>
+        /// <summary>Expenses for this month, formatted to currency</summary>
         public string ExpensesToString => Expenses.ToString("C2");
 
-        /// <summary>Income for  month.</summary>
+        /// <summary>Income for this month.</summary>
         public string IncomeToString => Income.ToString("C2");
 
         #endregion Helper Properties
@@ -108,8 +108,8 @@ namespace Finances.Classes.Sorting
             Income = income;
         }
 
-        /// <summary>Replaces  instance of CategorizedExpense with another instance</summary>
-        /// <param name="other">Instance of CategorizedExpense to replace  instance</param>
+        /// <summary>Replaces this instance of CategorizedExpense with another instance</summary>
+        /// <param name="other">Instance of CategorizedExpense to replace this instance</param>
         public CategorizedExpense(CategorizedExpense other) : this(other.MajorCategory, other.MinorCategory, other.Expenses, other.Income)
         {
         }

@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="What name would you like this category to have?" Width="250" TextAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" />
-        <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Width="250" TextAlignment="Center" TextChanged="TxtName_TextChanged" Margin="0,0,0,10" Padding="5" GotFocus="TxtName_GotFocus" />
+        <TextBox x:Name="TxtName" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Width="300" TextAlignment="Center" TextChanged="TxtName_TextChanged" Margin="0,0,0,10" Padding="5" GotFocus="TxtName_GotFocus" />
         <Button x:Name="BtnSubmit" Grid.Column="0" Grid.Row="2" Width="120" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,10,0">
             <AccessText Text="_Submit" />
         </Button>

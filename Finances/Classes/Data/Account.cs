@@ -89,7 +89,7 @@ namespace Finances.Classes.Data
 
         #region Transaction Management
 
-        /// <summary>Adds a transaction to  account.</summary>
+        /// <summary>Adds a transaction to this account.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void AddTransaction(Transaction transaction)
         {
@@ -98,7 +98,7 @@ namespace Finances.Classes.Data
             OnPropertyChanged("BalanceToStringWithText");
         }
 
-        /// <summary>Modifies a transaction in  account.</summary>
+        /// <summary>Modifies a transaction in this account.</summary>
         /// <param name="index">Index of transaction to be modified</param>
         /// <param name="transaction">Transaction to replace current in list</param>
         internal void ModifyTransaction(int index, Transaction transaction)
@@ -111,7 +111,7 @@ namespace Finances.Classes.Data
             UpdateTransactions();
         }
 
-        /// <summary>Removes a transaction to  account.</summary>
+        /// <summary>Removes a transaction from this account.</summary>
         /// <param name="transaction">Transaction to be added</param>
         internal void RemoveTransaction(Transaction transaction)
         {
@@ -119,7 +119,7 @@ namespace Finances.Classes.Data
             UpdateTransactions();
         }
 
-        /// <summary>Removes a transaction from  account at a specific index.</summary>
+        /// <summary>Removes a transaction from this account at a specific index.</summary>
         /// <param name="index">Location in the List to remove the transaction</param>
         internal void RemoveTransaction(int index)
         {
@@ -183,8 +183,8 @@ namespace Finances.Classes.Data
             _allTransactions = newTransactions;
         }
 
-        /// <summary>Replaces  instance of Account with another instance</summary>
-        /// <param name="other">Account to replace  instance</param>
+        /// <summary>Replaces this instance of Account with another instance</summary>
+        /// <param name="other">Account to replace this instance</param>
         public Account(Account other) : this(other.Name, other.AccountType, other.AllTransactions)
         {
         }

@@ -12,7 +12,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="LVTransactions" Grid.Row="0" Height="610" SelectionMode="Single"  ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+        <ListView x:Name="LVTransactions" Grid.Row="0" Height="610" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateToString}">
@@ -50,7 +50,7 @@
                             <GridViewColumnHeader Tag="Inflow" Click="LVTransactionsColumnHeader_Click" Content="Inflow" />
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=Account}">
+                    <GridViewColumn Width="300" DisplayMemberBinding="{Binding Path=Account}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Account" Click="LVTransactionsColumnHeader_Click" Content="Account" />
                         </GridViewColumn.Header>
@@ -58,8 +58,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="BtnBack" Grid.Row="1" Width="175" Click="BtnBack_Click">
-            <AccessText Text="_Back" />
-        </Button>
+        <Button x:Name="BtnBack" Grid.Row="1" Width="125" Content="_Back" Click="BtnBack_Click" IsCancel="True" />
     </Grid>
 </Page>

@@ -8,11 +8,17 @@
       Loaded="CreditScorePage_Loaded"
       Title="Credit Scores">
     <Grid x:Name="Grid" Margin="0,0,0,10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListView x:Name="LVScores" Grid.Row="0" Height="450" SelectionChanged="LVScores_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
+        <ListView x:Name="LVScores" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Height="450" SelectionChanged="LVScores_SelectionChanged" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Visible" AlternationCount="2" Margin="0,0,0,10">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="130" DisplayMemberBinding="{Binding Path=DateToString}">
@@ -43,11 +49,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="BtnAddCreditScore" Width="160" Content="_Add Credit Score" Click="BtnAddCreditScore_Click" IsDefault="True" Margin="0,0,10,0" />
-            <Button x:Name="BtnDeleteCreditScore" Width="180" Content="_Delete Credit Score" Click="BtnDeleteCreditScore_Click" IsEnabled="False" Margin="0,0,10,0" />
-            <Button x:Name="BtnModifyCreditScore" Width="180" Content="_Modify Credit Score" Click="BtnModifyCreditScore_Click" IsEnabled="False" Margin="0,0,10,0" />
-            <Button x:Name="BtnBack" Width="125" Content="_Back" Click="BtnBack_Click" IsCancel="True" />
-        </StackPanel>
+        <Button x:Name="BtnAddCreditScore" Grid.Column="0" Grid.Row="1" Width="190" Content="_Add Credit Score" Click="BtnAddCreditScore_Click" IsDefault="True" Margin="0,0,10,0" />
+        <Button x:Name="BtnDeleteCreditScore" Grid.Column="1" Grid.Row="1" Width="190" Content="_Delete Credit Score" Click="BtnDeleteCreditScore_Click" IsEnabled="False" Margin="0,0,10,0" />
+        <Button x:Name="BtnModifyCreditScore" Grid.Column="2" Grid.Row="1" Width="190" Content="_Modify Credit Score" Click="BtnModifyCreditScore_Click" IsEnabled="False" Margin="0,0,10,0" />
+        <Button x:Name="BtnBack" Grid.Column="3" Grid.Row="1" Width="190" Content="_Back" Click="BtnBack_Click" IsCancel="True" />
     </Grid>
 </Page>

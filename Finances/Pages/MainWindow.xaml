@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Icon="/Pages/Finances.ico"
         Style="{DynamicResource WindowStyle}"
-        Title="Finances"
+        Title="{Binding Path=Content.Title, ElementName=MainFrame}"
         WindowState="Maximized"
         ResizeMode="CanResize"
         SizeToContent="Manual"

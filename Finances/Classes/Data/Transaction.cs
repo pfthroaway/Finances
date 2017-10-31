@@ -157,8 +157,8 @@ namespace Finances.Classes.Data
             Account = account;
         }
 
-        /// <summary>Replaces  instance of Transaction with another instance</summary>
-        /// <param name="other">Transaction to replace  instance</param>
+        /// <summary>Replaces this instance of Transaction with another instance</summary>
+        /// <param name="other">Transaction to replace this instance</param>
         public Transaction(Transaction other) : this(other.ID, other.Date, other.Payee, other.MajorCategory, other.MinorCategory, other.Memo, other.Outflow, other.Inflow, other.Account)
         {
         }

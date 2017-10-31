@@ -36,7 +36,7 @@
         <TextBox x:Name="TxtPayee" Grid.Column="0" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="Txt_TextChanged" TextAlignment="Center" GotFocus="Txt_GotFocus" Margin="0,0,10,10" />
         <TextBox x:Name="TxtOutflow" Grid.Column="1" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextAlignment="Center" PreviewKeyDown="TxtInflowOutflow_PreviewKeyDown" GotFocus="Txt_GotFocus" TextChanged="TxtInOutflow_TextChanged" Margin="0,0,10,10" />
         <TextBox x:Name="TxtInflow" Grid.Column="2" Grid.Row="3" Width="200" MaxLength="30" Padding="5" TextChanged="TxtInOutflow_TextChanged" TextAlignment="Center" PreviewKeyDown="TxtInflowOutflow_PreviewKeyDown" GotFocus="Txt_GotFocus" Margin="0,0,10,10" />
-        <ComboBox x:Name="CmbAccount" Grid.Column="3" Grid.Row="3" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="CmbAccount_SelectionChanged"  Margin="0,0,0,10" />
+        <ComboBox x:Name="CmbAccount" Grid.Column="3" Grid.Row="3" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectionChanged="CmbAccount_SelectionChanged" Margin="0,0,0,10" />
         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="BtnSearch" Width="125" Click="BtnSearch_Click" IsDefault="True" IsEnabled="False" Margin="0,0,20,0">
                 <AccessText Text="_Search" />

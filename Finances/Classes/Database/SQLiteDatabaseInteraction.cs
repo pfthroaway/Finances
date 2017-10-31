@@ -40,16 +40,7 @@ namespace Finances.Classes.Database
             DataSet ds = await SQLite.FillDataSet("SELECT * FROM Accounts", _con);
 
             if (ds.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    Enum.TryParse(dr["Type"].ToString(), out AccountTypes currentType);
-                    Account newAccount = new Account(dr["Name"].ToString(), currentType,
-                        new List<Transaction>());
-
-                    allAccounts.Add(newAccount);
-                }
-            }
+                allAccounts.AddRange(from DataRow dr in ds.Tables[0].Rows select new Account(dr["Name"].ToString(), EnumHelper.Parse<AccountTypes>(dr["Type"].ToString()), new List<Transaction>()));
 
             ds = await SQLite.FillDataSet("SELECT * FROM Transactions", _con);
             if (ds.Tables[0].Rows.Count > 0)

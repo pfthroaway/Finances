@@ -21,16 +21,12 @@
         <TextBlock Grid.Column="0" Grid.Row="0" Text="Account Name:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="1" Grid.Row="0" Text="Account Type:" TextAlignment="Center" Margin="0,0,10,5" />
         <TextBlock Grid.Column="2" Grid.Row="0" Text="Balance:" TextAlignment="Center" Margin="0,0,0,5" />
-        <TextBox x:Name="TxtAccountName" Grid.Column="0" Grid.Row="1" Width="200" TextAlignment="Center" TextChanged="TxtAccountName_TextChanged" GotFocus="Txt_GotFocus" Margin="0,0,10,10" Padding="5" />
+        <TextBox x:Name="TxtAccountName" Grid.Column="0" Grid.Row="1" Width="300" TextAlignment="Center" TextChanged="TxtAccountName_TextChanged" GotFocus="Txt_GotFocus" Margin="0,0,10,10" Padding="5" />
         <ComboBox x:Name="CmbAccountTypes" Grid.Column="1" Grid.Row="1" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" ItemsSource="{Binding}" SelectionChanged="CmbAccountTypes_SelectionChanged" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,10,10" />
         <TextBox x:Name="TxtBalance" Grid.Column="2" Grid.Row="1" Width="100" TextAlignment="Center" TextChanged="TxtBalance_TextChanged" GotFocus="Txt_GotFocus" Margin="0,0,0,10" Padding="5" />
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="BtnSubmit" Width="125" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,20,0">
-                <AccessText Text="_Submit" />
-            </Button>
-            <Button x:Name="BtnCancel" Width="125" IsCancel="True" Click="BtnCancel_Click">
-                <AccessText Text="_Cancel" />
-            </Button>
+            <Button x:Name="BtnSubmit" Width="280" Content="_Submit" IsDefault="True" IsEnabled="False" Click="BtnSubmit_Click" Margin="0,0,10,0" />
+            <Button x:Name="BtnCancel" Width="280" Content="_Cancel" IsCancel="True" Click="BtnCancel_Click" />
         </StackPanel>
     </Grid>
 </Page>
