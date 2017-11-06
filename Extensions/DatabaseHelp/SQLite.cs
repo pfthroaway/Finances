@@ -11,11 +11,10 @@ namespace Extensions.DatabaseHelp
     public static class SQLite
     {
         /// <summary>This method fills a DataSet with data from a table.</summary>
-        /// <param name="sql">SQL query to be executed</param>
         /// <param name="con">Connection information</param>
+        /// <param name="sql">SQL query to be executed</param>
         /// <returns>Returns DataSet with queried results</returns>
-        public static async Task<DataSet> FillDataSet(string sql, string con) => await FillDataSet(con,
-            new SQLiteCommand { CommandText = sql });
+        public static async Task<DataSet> FillDataSet(string con, string sql) => await FillDataSet(con, new SQLiteCommand { CommandText = sql });
 
         /// <summary>This method fills a DataSet with data from a table.</summary>
         /// <param name="con">Connection information</param>
@@ -52,7 +51,7 @@ namespace Extensions.DatabaseHelp
         /// <param name="cmd">SQLite command to be executed</param>
         /// <param name="con">Connection information</param>
         /// <returns>Returns DataSet with queried results</returns>
-        [Obsolete("This method has its parameters backwards. Use (string con, SQLiteCommand cmd) instead.", true)]
+        [Obsolete("This method has its parameters backwards. Use FillDataSet(string con, SQLiteCommand cmd) instead.", true)]
         public static async Task<DataSet> FillDataSet(SQLiteCommand cmd, string con)
         {
             DataSet ds = new DataSet();

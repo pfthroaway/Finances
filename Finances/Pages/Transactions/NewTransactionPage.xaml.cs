@@ -94,10 +94,7 @@ namespace Finances.Pages.Transactions
         #region Text/Selection Changed
 
         /// <summary>Checks whether or not the Save buttons should be enabled.</summary>
-        private void TextChanged()
-        {
-            ToggleButtons(TransactionDate.SelectedDate != null && CmbMajorCategory.SelectedIndex >= 0 && CmbMinorCategory.SelectedIndex >= 0 && TxtPayee.Text.Length > 0 && (TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0) && CmbAccount.SelectedIndex >= 0);
-        }
+        private void TextChanged() => ToggleButtons(TransactionDate.SelectedDate != null && CmbMajorCategory.SelectedIndex >= 0 && CmbMinorCategory.SelectedIndex >= 0 && TxtPayee.Text.Length > 0 && (TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0) && CmbAccount.SelectedIndex >= 0);
 
         private void Txt_TextChanged(object sender, TextChangedEventArgs e) => TextChanged();
 

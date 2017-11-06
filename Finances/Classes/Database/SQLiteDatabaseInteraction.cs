@@ -37,12 +37,12 @@ namespace Finances.Classes.Database
         public async Task<List<Account>> LoadAccounts()
         {
             List<Account> allAccounts = new List<Account>();
-            DataSet ds = await SQLite.FillDataSet("SELECT * FROM Accounts", _con);
+            DataSet ds = await SQLite.FillDataSet(_con, "SELECT * FROM Accounts");
 
             if (ds.Tables[0].Rows.Count > 0)
                 allAccounts.AddRange(from DataRow dr in ds.Tables[0].Rows select new Account(dr["Name"].ToString(), EnumHelper.Parse<AccountTypes>(dr["Type"].ToString()), new List<Transaction>()));
 
-            ds = await SQLite.FillDataSet("SELECT * FROM Transactions", _con);
+            ds = await SQLite.FillDataSet(_con, "SELECT * FROM Transactions");
             if (ds.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow dr in ds.Tables[0].Rows)
@@ -72,7 +72,7 @@ namespace Finances.Classes.Database
         public async Task<List<string>> LoadAccountTypes()
         {
             List<string> allAccountTypes = new List<string>();
-            DataSet ds = await SQLite.FillDataSet("SELECT * FROM AccountTypes", _con);
+            DataSet ds = await SQLite.FillDataSet(_con, "SELECT * FROM AccountTypes");
 
             if (ds.Tables[0].Rows.Count > 0)
                 allAccountTypes.AddRange(from DataRow dr in ds.Tables[0].Rows select dr["Name"].ToString());
@@ -85,12 +85,12 @@ namespace Finances.Classes.Database
         public async Task<List<Category>> LoadCategories()
         {
             List<Category> allCategories = new List<Category>();
-            DataSet ds = await SQLite.FillDataSet("SELECT * FROM MajorCategories", _con);
+            DataSet ds = await SQLite.FillDataSet(_con, "SELECT * FROM MajorCategories");
 
             if (ds.Tables[0].Rows.Count > 0)
                 allCategories.AddRange(from DataRow dr in ds.Tables[0].Rows select new Category(dr["Name"].ToString(), new List<MinorCategory>()));
 
-            ds = await SQLite.FillDataSet("SELECT * FROM MinorCategories", _con);
+            ds = await SQLite.FillDataSet(_con, "SELECT * FROM MinorCategories");
 
             if (ds.Tables[0].Rows.Count > 0)
             {
@@ -115,7 +115,7 @@ namespace Finances.Classes.Database
         public async Task<List<CreditScore>> LoadCreditScores()
         {
             List<CreditScore> scores = new List<CreditScore>();
-            DataSet ds = await SQLite.FillDataSet("SELECT * FROM CreditScores", _con);
+            DataSet ds = await SQLite.FillDataSet(_con, "SELECT * FROM CreditScores");
             if (ds.Tables[0].Rows.Count > 0)
             {
                 scores.AddRange(from DataRow dr in ds.Tables[0].Rows select new CreditScore(DateTimeHelper.Parse(dr["Date"]), dr["Source"].ToString(), Int32Helper.Parse(dr["Score"]), EnumHelper.Parse<Providers>(dr["Provider"].ToString()), BoolHelper.Parse(dr["FICO"])));
@@ -379,11 +379,9 @@ namespace Finances.Classes.Database
         /// <returns>Next Transactions ID value</returns>
         public async Task<int> GetNextTransactionsIndex()
         {
-            DataSet ds = await SQLite.FillDataSet("SELECT * FROM SQLITE_SEQUENCE WHERE name = 'Transactions'", _con);
+            DataSet ds = await SQLite.FillDataSet(_con, "SELECT * FROM SQLITE_SEQUENCE WHERE name = 'Transactions'");
 
-            if (ds.Tables[0].Rows.Count > 0)
-                return Int32Helper.Parse(ds.Tables[0].Rows[0]["seq"]) + 1;
-            return 1;
+            return ds.Tables[0].Rows.Count > 0 ? Int32Helper.Parse(ds.Tables[0].Rows[0]["seq"]) + 1 : 1;
         }
 
         /// <summary>Modifies the selected Transaction in the database.</summary>
