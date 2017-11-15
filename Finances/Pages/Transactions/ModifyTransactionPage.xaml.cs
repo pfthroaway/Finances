@@ -37,6 +37,7 @@ namespace Finances.Pages.Transactions
             CmbMajorCategory.SelectedItem = _allCategories.Find(category => category.Name == setTransaction.MajorCategory);
             CmbMinorCategory.SelectedItem = new MinorCategory(setTransaction.MinorCategory);
             TxtPayee.Text = setTransaction.Payee;
+            TxtMemo.Text = setTransaction.Memo;
             TxtOutflow.Text = setTransaction.Outflow.ToString(CultureInfo.InvariantCulture);
             TxtInflow.Text = setTransaction.Inflow.ToString(CultureInfo.InvariantCulture);
             _modifyTransaction = setTransaction;
@@ -83,15 +84,12 @@ namespace Finances.Pages.Transactions
         #region Text/Selection Changed
 
         /// <summary>Checks whether or not the Submit button should be enabled.</summary>
-        private void TextChanged()
-        {
-            BtnSave.IsEnabled = TransactionDate.SelectedDate != null &&
+        private void TextChanged() => BtnSave.IsEnabled = TransactionDate.SelectedDate != null &&
                 CmbMajorCategory.SelectedIndex >= 0 &&
                 CmbMinorCategory.SelectedIndex >= 0 &&
                 TxtPayee.Text.Length > 0 &&
                 TxtInflow.Text.Length > 0 | TxtOutflow.Text.Length > 0 &&
                 CmbAccount.SelectedIndex >= 0;
-        }
 
         private void Txt_TextChanged(object sender, TextChangedEventArgs e) => TextChanged();
 
