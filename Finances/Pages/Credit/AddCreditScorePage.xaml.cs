@@ -15,8 +15,8 @@ namespace Finances.Pages.Credit
     /// <summary>Interaction logic for AddCreditScorePage.xaml</summary>
     public partial class AddCreditScorePage
     {
-        private void TextChanged() => ToggleButtons(ScoreDate.SelectedDate != DateTime.MinValue &&
-            TxtSource.Text.Length > 0 && TxtScore.Text.Length > 0 && CmbProvider.SelectedIndex >= 0);
+        private void TextChanged() => ToggleButtons(ScoreDate.SelectedDate != DateTime.MinValue
+            && TxtSource.Text.Length > 0 && TxtScore.Text.Length > 0 && CmbProvider.SelectedIndex >= 0);
 
         /// <summary>Toggles whether the Save buttons are enabled.</summary>
         /// <param name="enabled"></param>

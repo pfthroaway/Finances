@@ -17,8 +17,8 @@ namespace Finances.Pages.Credit
     {
         internal CreditScore SelectedCreditScore { get; set; }
 
-        private void TextChanged() => BtnSave.IsEnabled = ScoreDate.SelectedDate != DateTime.MinValue &&
-            TxtSource.Text.Length > 0 && TxtScore.Text.Length > 0 && CmbProvider.SelectedIndex >= 0;
+        private void TextChanged() => BtnSave.IsEnabled = ScoreDate.SelectedDate != DateTime.MinValue
+            && TxtSource.Text.Length > 0 && TxtScore.Text.Length > 0 && CmbProvider.SelectedIndex >= 0;
 
         /// <summary>Resets all controls to their default state.</summary>
         private void Reset()

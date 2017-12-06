@@ -104,13 +104,13 @@ namespace Finances.Classes.Data
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left) ^ ReferenceEquals(null, right)) return false;
-            return left.ID == right.ID && DateTime.Equals(left.Date, right.Date) &&
-                   string.Equals(left.Payee, right.Payee, StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals(left.MajorCategory, right.MajorCategory, StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals(left.MinorCategory, right.MinorCategory, StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals(left.Memo, right.Memo, StringComparison.OrdinalIgnoreCase) &&
-                   left.Outflow == right.Outflow && left.Inflow == right.Inflow &&
-                   string.Equals(left.Account, right.Account, StringComparison.OrdinalIgnoreCase);
+            return left.ID == right.ID && DateTime.Equals(left.Date, right.Date)
+                   && string.Equals(left.Payee, right.Payee, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(left.MajorCategory, right.MajorCategory, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(left.MinorCategory, right.MinorCategory, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(left.Memo, right.Memo, StringComparison.OrdinalIgnoreCase)
+                   && left.Outflow == right.Outflow && left.Inflow == right.Inflow
+                   && string.Equals(left.Account, right.Account, StringComparison.OrdinalIgnoreCase);
         }
 
         public sealed override bool Equals(object obj) => Equals(this, obj as Transaction);

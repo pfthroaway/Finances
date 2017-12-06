@@ -48,7 +48,7 @@ namespace Finances.Pages.Reports
                 if (transaction.MajorCategory != "Transfer")
                 {
                     categorizedExpenses.Find(expense => expense.MajorCategory == transaction.MajorCategory && expense.MinorCategory == transaction.MinorCategory).AddTransactionValues(transaction.Outflow, transaction.Inflow);
-                    categorizedExpenses.Find(expense => expense.MajorCategory == transaction.MajorCategory && expense.MinorCategory == "").AddTransactionValues(transaction.Outflow, transaction.Inflow);
+                    categorizedExpenses.Find(expense => expense.MajorCategory == transaction.MajorCategory && expense.MinorCategory?.Length == 0).AddTransactionValues(transaction.Outflow, transaction.Inflow);
                 }
             }
 

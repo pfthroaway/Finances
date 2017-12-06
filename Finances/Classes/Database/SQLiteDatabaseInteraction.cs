@@ -131,7 +131,7 @@ namespace Finances.Classes.Database
         /// <summary>Adds an account to the database.</summary>
         /// <param name="account">Account to be added</param>
         /// <returns>Returns true if successful</returns>
-        public async Task<bool> AddAccount(Account account)
+        public Task<bool> AddAccount(Account account)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -142,25 +142,25 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@name", account.Name);
             cmd.Parameters.AddWithValue("@type", account.AccountType);
             cmd.Parameters.AddWithValue("@balance", account.Balance);
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Deletes an account from the database.</summary>
         /// <param name="account">Account to be deleted</param>
         /// <returns>Returns true if successful</returns>
-        public async Task<bool> DeleteAccount(Account account)
+        public Task<bool> DeleteAccount(Account account)
         {
             SQLiteCommand cmd = new SQLiteCommand { CommandText = "DELETE FROM Accounts WHERE [Name] = @name" };
             cmd.Parameters.AddWithValue("@name", account.Name);
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Renames an account in the database.</summary>
         /// <param name="account">Account to be renamed</param>
         /// <param name="newAccountName">New account's name</param>
         /// <returns>Returns true if successful</returns>
-        public async Task<bool> RenameAccount(Account account, string newAccountName)
+        public Task<bool> RenameAccount(Account account, string newAccountName)
         {
             string oldAccountName = account.Name;
             SQLiteCommand cmd = new SQLiteCommand
@@ -170,7 +170,7 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@newAccountName", newAccountName);
             cmd.Parameters.AddWithValue("@oldAccountName", oldAccountName);
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         #endregion Account Manipulation
@@ -182,7 +182,7 @@ namespace Finances.Classes.Database
         /// <param name="newName">Name for new Category</param>
         /// <param name="isMajor">Is the category being added a Major Category?</param>
         /// <returns>Returns true if successful.</returns>
-        public async Task<bool> AddCategory(Category selectedCategory, string newName, bool isMajor)
+        public Task<bool> AddCategory(Category selectedCategory, string newName, bool isMajor)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -199,7 +199,7 @@ namespace Finances.Classes.Database
                 cmd.Parameters.AddWithValue("@minorCategory", newName);
             }
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Rename a category in the database.</summary>
@@ -208,7 +208,7 @@ namespace Finances.Classes.Database
         /// <param name="oldName">Old name of the Category</param>
         /// <param name="isMajor">Is the category being renamed a Major Category?</param>
         /// <returns></returns>
-        public async Task<bool> RenameCategory(Category selectedCategory, string newName, string oldName, bool isMajor)
+        public Task<bool> RenameCategory(Category selectedCategory, string newName, string oldName, bool isMajor)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -220,13 +220,13 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@oldName", oldName);
             cmd.Parameters.AddWithValue("@majorCategory", selectedCategory.Name);
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Removes a Major Category from the database, as well as removes it from all Transactions which utilize it.</summary>
         /// <param name="selectedCategory">Selected Major Category to delete</param>
         /// <returns>Returns true if operation successful</returns>
-        public async Task<bool> RemoveMajorCategory(Category selectedCategory)
+        public Task<bool> RemoveMajorCategory(Category selectedCategory)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -236,14 +236,14 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@name", selectedCategory.Name);
             cmd.Parameters.AddWithValue("@newName", "");
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Removes a Major Category from the database, as well as removes it from all Transactions which utilize it.</summary>
         /// <param name="selectedCategory">Selected Major Category</param>
         /// <param name="minorCategory">Selected Minor Category to delete</param>
         /// <returns>Returns true if operation successful</returns>
-        public async Task<bool> RemoveMinorCategory(Category selectedCategory, string minorCategory)
+        public Task<bool> RemoveMinorCategory(Category selectedCategory, string minorCategory)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -254,7 +254,7 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@minorCategory", minorCategory);
             cmd.Parameters.AddWithValue("@newMinorName", "");
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         #endregion Category Management
@@ -264,7 +264,7 @@ namespace Finances.Classes.Database
         /// <summary>Adds a new credit score to the database.</summary>
         /// <param name="newScore">Score to be added</param>
         /// <returns>True if successful</returns>
-        public async Task<bool> AddCreditScore(CreditScore newScore)
+        public Task<bool> AddCreditScore(CreditScore newScore)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -277,13 +277,13 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@provider", newScore.ProviderToString);
             cmd.Parameters.AddWithValue("@fico", Int32Helper.Parse(newScore.FICO));
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Deletes a credit score from the database</summary>
         /// <param name="deleteScore">Score to be deleted</param>
         /// <returns>True if successful</returns>
-        public async Task<bool> DeleteCreditScore(CreditScore deleteScore)
+        public Task<bool> DeleteCreditScore(CreditScore deleteScore)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -296,14 +296,14 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@provider", deleteScore.ProviderToString);
             cmd.Parameters.AddWithValue("@fico", Int32Helper.Parse(deleteScore.FICO));
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Modifies a credit score in the database.</summary>
         /// <param name="oldScore">Original score</param>
         /// <param name="newScore">Modified score</param>
         /// <returns>True if successful</returns>
-        public async Task<bool> ModifyCreditScore(CreditScore oldScore, CreditScore newScore)
+        public Task<bool> ModifyCreditScore(CreditScore oldScore, CreditScore newScore)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -321,7 +321,7 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@oldProvider", oldScore.ProviderToString);
             cmd.Parameters.AddWithValue("@oldFico", Int32Helper.Parse(oldScore.FICO));
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         #endregion Credit Score Management
@@ -332,7 +332,7 @@ namespace Finances.Classes.Database
         /// <param name="transaction">Transaction to be added</param>
         /// <param name="account">Account the transaction will be added to</param>
         /// <returns>Returns true if successful</returns>
-        public async Task<bool> AddTransaction(Transaction transaction, Account account)
+        public Task<bool> AddTransaction(Transaction transaction, Account account)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -349,14 +349,14 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@name", transaction.Account);
             cmd.Parameters.AddWithValue("@balance", account.Balance);
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Deletes a transaction from the database.</summary>
         /// <param name="transaction">Transaction to be deleted</param>
         /// <param name="account">Account the transaction will be deleted from</param>
         /// <returns>Returns true if successful</returns>
-        public async Task<bool> DeleteTransaction(Transaction transaction, Account account)
+        public Task<bool> DeleteTransaction(Transaction transaction, Account account)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -372,7 +372,7 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@inflow", transaction.Inflow);
             cmd.Parameters.AddWithValue("@account", account.Name);
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         /// <summary>Gets the next Transaction ID autoincrement value in the database for the Transactions table.</summary>
@@ -388,7 +388,7 @@ namespace Finances.Classes.Database
         /// <param name="newTransaction">Transaction to replace the current one in the database</param>
         /// <param name="oldTransaction">Current Transaction in the database</param>
         /// <returns>Returns true if successful</returns>
-        public async Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
+        public Task<bool> ModifyTransaction(Transaction newTransaction, Transaction oldTransaction)
         {
             SQLiteCommand cmd = new SQLiteCommand
             {
@@ -412,7 +412,7 @@ namespace Finances.Classes.Database
             cmd.Parameters.AddWithValue("@oldInflow", oldTransaction.Inflow);
             cmd.Parameters.AddWithValue("@oldAccount", oldTransaction.Account);
 
-            return await SQLite.ExecuteCommand(_con, cmd);
+            return SQLite.ExecuteCommand(_con, cmd);
         }
 
         #endregion Transaction Management

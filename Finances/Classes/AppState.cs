@@ -86,7 +86,7 @@ namespace Finances.Classes
 
         /// <summary>Loads all credit scores from the database.</summary>
         /// <returns>List of all credit scores</returns>
-        public static async Task<List<CreditScore>> LoadCreditScores() => await DatabaseInteraction.LoadCreditScores();
+        public static Task<List<CreditScore>> LoadCreditScores() => DatabaseInteraction.LoadCreditScores();
 
         /// <summary>Loads all the Months from AllTransactions.</summary>
         private static void LoadMonths()
@@ -102,7 +102,7 @@ namespace Finances.Classes
                 do
                 {
                     AllMonths.Add(new Month(startMonth.AddMonths(start), new List<Transaction>()));
-                    start += 1;
+                    start++;
                 }
                 while (start <= months);
 
@@ -122,14 +122,14 @@ namespace Finances.Classes
 
             if (AllTransactions.Count > 0)
             {
-                int years = ((DateTime.Now.Year - AllTransactions[AllTransactions.Count - 1].Date.Year));
+                int years = (DateTime.Now.Year - AllTransactions[AllTransactions.Count - 1].Date.Year);
                 DateTime startYear = new DateTime(AllTransactions[AllTransactions.Count - 1].Date.Year, 1, 1);
 
                 int start = 0;
                 do
                 {
                     AllYears.Add(new Year(startYear.AddYears(start), new List<Transaction>()));
-                    start += 1;
+                    start++;
                 }
                 while (start <= years);
 
@@ -321,21 +321,21 @@ namespace Finances.Classes
         /// <summary>Adds a new credit score to the database.</summary>
         /// <param name="newScore">Score to be added</param>
         /// <returns>True if successful</returns>
-        public static async Task<bool> AddCreditScore(CreditScore newScore) =>
-            await DatabaseInteraction.AddCreditScore(newScore);
+        public static Task<bool> AddCreditScore(CreditScore newScore) =>
+            DatabaseInteraction.AddCreditScore(newScore);
 
         /// <summary>Deletes a credit score from the database</summary>
         /// <param name="deleteScore">Score to be deleted</param>
         /// <returns>True if successful</returns>
-        public static async Task<bool> DeleteCreditScore(CreditScore deleteScore) =>
-            await DatabaseInteraction.DeleteCreditScore(deleteScore);
+        public static Task<bool> DeleteCreditScore(CreditScore deleteScore) =>
+            DatabaseInteraction.DeleteCreditScore(deleteScore);
 
         /// <summary>Modifies a credit score in the database.</summary>
         /// <param name="oldScore">Original score</param>
         /// <param name="newScore">Modified score</param>
         /// <returns>True if successful</returns>
-        public static async Task<bool> ModifyCreditScore(CreditScore oldScore, CreditScore newScore) =>
-            await DatabaseInteraction.ModifyCreditScore(oldScore, newScore);
+        public static Task<bool> ModifyCreditScore(CreditScore oldScore, CreditScore newScore) =>
+            DatabaseInteraction.ModifyCreditScore(oldScore, newScore);
 
         #endregion Credit Score Management
 
@@ -345,7 +345,7 @@ namespace Finances.Classes
         /// <param name="message">Message to be displayed</param>
         /// <param name="title">Title of the Notification window</param>
         internal static void DisplayNotification(string message, string title) => Application.Current.Dispatcher.Invoke(
-            () => { new Notification(message, title, NotificationButtons.OK, MainWindow).ShowDialog(); });
+            () => new Notification(message, title, NotificationButtons.OK, MainWindow).ShowDialog());
 
         /// <summary>Displays a new Notification in a thread-safe way and retrieves a boolean result upon its closing.</summary>
         /// <param name="message">Message to be displayed</param>
@@ -386,7 +386,7 @@ namespace Finances.Classes
 
         /// <summary>Gets the next Transaction ID autoincrement value in the database for the Transactions table.</summary>
         /// <returns>Next Transactions ID value</returns>
-        public static async Task<int> GetNextTransactionsIndex() => await DatabaseInteraction.GetNextTransactionsIndex();
+        public static Task<int> GetNextTransactionsIndex() => DatabaseInteraction.GetNextTransactionsIndex();
 
         /// <summary>Modifies the selected Transaction in the database.</summary>
         /// <param name="newTransaction">Transaction to replace the current one in the database</param>

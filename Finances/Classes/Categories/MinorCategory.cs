@@ -37,7 +37,7 @@ namespace Finances.Classes.Categories
 
         public sealed override bool Equals(object obj) => Equals(this, obj as MinorCategory);
 
-        public bool Equals(MinorCategory otherMinorCategory) => Equals(this, otherMinorCategory);
+        public bool Equals(MinorCategory other) => Equals(this, other);
 
         public static bool operator ==(MinorCategory left, MinorCategory right) => Equals(left, right);
 
